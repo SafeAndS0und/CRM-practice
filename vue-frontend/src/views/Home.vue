@@ -14,6 +14,7 @@
 <style scoped lang="scss">
     .home {
         text-align: center;
+        margin-top: 150px;
         h1 {
             text-align: center;
             font-size: 42px;

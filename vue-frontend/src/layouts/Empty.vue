@@ -1,10 +1,12 @@
 <template>
-    
+    <div>
+        <slot/>
+    </div>
 </template>
 
 <script>
     export default {
-        name: "menu"
+        name: "Empty"
     }
 </script>
 

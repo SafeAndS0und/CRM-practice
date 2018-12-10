@@ -1,5 +1,7 @@
 <template>
-    
+    <nav>
+
+    </nav>
 </template>
 
 <script>
@@ -8,6 +10,10 @@
     }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+    nav{
+        height: 65px;
+        width: 100%;
+        background-color: rgb(133, 191, 130);
+    }
 </style>

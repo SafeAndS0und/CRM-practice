@@ -14,10 +14,12 @@ export default new Router({
             path: '/',
             component: () => import('./views/Home.vue')
         },
+
         {
             name: 'login',
             path: '/login',
-            component: () => import('./views/Login.vue')
+            component: () => import('./views/Login.vue'),
+            meta: {layout: 'none'}
         }
 
     ]
