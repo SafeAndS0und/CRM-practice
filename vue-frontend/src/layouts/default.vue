@@ -31,6 +31,8 @@
 
 <style scoped lang="scss">
 
+    @import '../assets/css/variables.scss';
+
     .toggleSidebar{
         position: fixed;
         top: 20px;
@@ -40,7 +42,13 @@
     }
 
     .sidebar{
-        width: 120px;
+        width: 140px;
+    }
+
+    @media screen and (max-width: $mobile) {
+        .sidebar{
+            width: 100vw;
+        }
     }
 
 </style>
