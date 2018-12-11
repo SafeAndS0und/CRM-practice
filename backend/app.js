@@ -6,7 +6,7 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 
 //Config
-const {DB_USER_PASSWORD, DB_USER_NAME, DB_NAME} = require('./config.json')
+const {DB_USER_PASSWORD, DB_USER_NAME, DB_NAME} = require('./constants.json')
 
 //Connect to db
 mongoose.connect(`mongodb+srv://${DB_USER_NAME}:${DB_USER_PASSWORD}@cluster0-hktd3.mongodb.net/${DB_NAME}`, {
