@@ -38,7 +38,7 @@
 
         .searchField {
             align-self: center;
-            grid-column: 6/8;
+            grid-column: 5/9;
             height: 24px;
         }
 
