@@ -30,7 +30,7 @@
         },
         methods: {
             login(){
-                this.axios.post(url + 'user/login', {
+                this.axios.post('user/login', {
                     username: this.username,
                     password: this.password
                 })

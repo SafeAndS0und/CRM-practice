@@ -21,6 +21,8 @@
     @import url('https://fonts.googleapis.com/css?family=Chivo');
 
     body, * {
+        -webkit-tap-highlight-color: transparent;
+
         margin: 0;
         padding: 0;
         font-family: 'Chivo', sans-serif;

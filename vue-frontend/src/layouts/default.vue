@@ -2,9 +2,13 @@
     <div>
         <navbar/>
 
-        <transition name="slide">
-            <sidebar v-if="showSidebar" class="sidebar"/>
-        </transition>
+
+        <v-touch @swipeleft="showSidebar = false">
+            <transition name="slide">
+                <sidebar v-if="showSidebar" class="sidebar"/>
+            </transition>
+        </v-touch>
+
 
         <v-icon name="bars" @click.native="showSidebar = !showSidebar" class="toggleSidebar"></v-icon>
 
@@ -38,9 +42,9 @@
 
     .toggleSidebar {
         position: fixed;
-        padding: 5px;
-        top: 20px;
-        left: 20px;
+        padding: 20px;
+        top: 5px;
+        left: 5px;
         color: #353336;
         transition: 200ms;
         cursor: pointer;
@@ -58,19 +62,30 @@
         .sidebar {
             width: 100vw;
         }
+
+        .slide-enter-active, .slide-leave-active {
+            transition: 0.8s;
+        }
+        .slide-enter {
+            transform: translateX(-480px);
+        }
+
+        .slide-leave-to {
+            transform: translateX(-480px);
+        }
     }
 
+    @media screen and (min-width: $mobile) {
+        .slide-enter-active, .slide-leave-active {
+            transition: .6s;
+        }
+        .slide-enter {
+            transform: translateX(-210px);
+        }
 
-
-    .slide-enter-active, .slide-leave-active {
-        transition: .8s;
-    }
-    .slide-enter{
-        transform: translateX(-350px);
-    }
-
-    .slide-leave-to{
-        transform: translateX(-350px);
+        .slide-leave-to {
+            transform: translateX(-210px);
+        }
     }
 
 </style>

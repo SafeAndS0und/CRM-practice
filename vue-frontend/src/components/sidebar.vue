@@ -79,10 +79,10 @@
                 }
             }
             article:nth-child(3) {
-                background-color: #de3f7b;
+                background-color: #cf2e6d;
                 border-bottom-right-radius: 6px;
                 &:hover {
-                    background-color: #be3764;
+                    background-color: #b22f65;
                 }
             }
         }
