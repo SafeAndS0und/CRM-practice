@@ -4,8 +4,9 @@
 
         <div class="user">
 
-            <img class="avatar" src="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-128.png" width="34"/>
-            <p>Nikodem Lorenz</p>
+            <img v-if="$store.state.user.token" class="avatar" src="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-128.png" width="34"/>
+            <p>{{$store.state.user.firstname}} {{$store.state.user.surname}}</p>
+            <v-icon v-if="$store.state.user.token" name="cog" scale="1.7" class="options"/>
 
         </div>
     </nav>
@@ -47,6 +48,7 @@
             align-self: center;
             position: relative;
 
+
             .avatar {
                 position: absolute;
                 line-height: 34px;
@@ -58,11 +60,26 @@
             }
 
             p {
-                margin-left: 51px;
+                margin-left:45px;
                 color: white;
                 font-size: 16px;
                 line-height: 34px;
                 display: inline-block;
+            }
+
+            .options{
+                margin-left: 12px;
+                color: #fdf8ff;
+                position: absolute;
+                line-height: 34px;
+                top: 50%;
+                transform: translateY(-50%);
+                cursor: pointer;
+                transition: 150ms;
+
+                &:hover{
+                    color: #504e4e;
+                }
             }
         }
     }
@@ -91,7 +108,14 @@
                 grid-column: 3/8;
             }
             .user {
-                grid-column: 9/13;
+                grid-column: 8/13;
+
+                p{
+                    margin-left: 8px;
+                }
+                .avatar{
+                    display: none;
+                }
             }
         }
     }

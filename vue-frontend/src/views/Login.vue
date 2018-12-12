@@ -41,11 +41,11 @@
                     password: this.password
                 })
                     .then(res => {
-                        console.log(res.data)
                         this.hasError = false
                         this.isLogged = true
                         this.msg = res.data.msg
 
+                        res.data.userData.token = res.data.token
                         this.$store.dispatch('fillUserData', res.data.userData)
 
                         setTimeout(() => {
@@ -53,7 +53,6 @@
                         }, 800)
                     })
                     .catch(err => {
-                        console.log(err)
                         err.response.data.errors.forEach(err => {
                             this.hasError = true
                             this.isLogged = false
