@@ -12,7 +12,7 @@
 
         <v-icon name="bars" @click.native="showSidebar = !showSidebar" class="toggleSidebar"></v-icon>
 
-        <div>
+        <div style="margin-bottom: 70px">
             <slot/>
         </div>
 
@@ -67,11 +67,11 @@
             transition: 0.8s;
         }
         .slide-enter {
-            transform: translateX(-480px);
+            transform: translateX(-670px);
         }
 
         .slide-leave-to {
-            transform: translateX(-480px);
+            transform: translateX(-670px);
         }
     }
 
