@@ -19,7 +19,7 @@
 
 <script>
     export default {
-        name: "sidebar"
+        name: "Sidebar"
     }
 </script>
 
@@ -64,23 +64,23 @@
                 }
             }
             article:nth-child(1) {
-                border-top-right-radius: 6px;
-                background-color: #347ccb;
+                border-top-right-radius: 5px;
+                background-color: #1e64cb;
 
                 &:hover {
-                    background-color: #0f6cb4;
+                    background-color: #1e5cb8;
                 }
             }
             article:nth-child(2) {
-                background-color: #de8244;
+                background-color: #de6b3e;
 
                 &:hover {
                     background-color: #ca5e34;
                 }
             }
             article:nth-child(3) {
-                background-color: #cf4f83;
-                border-bottom-right-radius: 6px;
+                background-color: #cf4371;
+                border-bottom-right-radius: 5px;
                 &:hover {
                     background-color: #b22f65;
                 }

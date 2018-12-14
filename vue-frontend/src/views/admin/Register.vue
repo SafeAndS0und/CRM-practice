@@ -6,10 +6,13 @@
             <CustomInput placeholder="Hasło" type="password" class="form-item" v-model="password"/>
             <CustomInput placeholder="Imię" class="form-item" v-model="firstname"/>
             <CustomInput placeholder="Nazwisko" class="form-item" v-model="surname"/>
-            <label for="admin">Uprawnienia administratora</label>
-            <input type="checkbox" id="admin"/>
+            <p>Uprawnienia Administratora</p>
+            <input type="checkbox" title="admin" id="admin" v-model="isAdmin"/>
 
-            <button @click="register">Dodaj użytkownika</button>
+            <v-icon name="arrow-circle-right" scale="1.8" class="register" @click.native="register"/>
+
+            <p class="msg"><span v-html="msg"></span></p>
+
         </section>
     </div>
 </template>
@@ -28,12 +31,13 @@
                 surname: '',
                 password: '',
                 firstname: '',
-                isAdmin: false
+                isAdmin: false,
+                msg: ''
             }
         },
         methods: {
             register(){
-                console.log(this.$store.state.user.token)
+                this.msg = ''
                 this.axios({
                         method: 'post',
                         url: 'user/register',
@@ -42,14 +46,16 @@
                             password: this.password,
                             firstname: this.firstname,
                             surname: this.surname,
-                            isAdmin: true
+                            isAdmin: this.isAdmin
                         }
                     })
                     .then(res =>{
-                        console.log(res)
+                        this.msg = res.data.msg
                     })
                     .catch(err =>{
-                        console.log(err.response)
+                        err.response.data.errors.forEach((err, index) => {
+                            this.msg += `${++index}.  ${ err}  <br/>`
+                        })
                     })
             }
         }
@@ -69,11 +75,46 @@
             input {
                 display: block;
                 margin: 10px;
-                width: 250px;
+                width: 220px;
                 height: 22px;
+
             }
-            label {
-                padding: 12px;
+            #admin{
+                display: inline;
+                width:22px;
+            }
+            p {
+                display: inline-block;
+                padding: 14px 16px;
+                font-size: 14px;
+            }
+
+            .register {
+                color: #2c5bc5;
+                cursor: pointer;
+                width: 90%;
+                padding: 10px 0;
+                display: block;
+                margin: auto;
+                transition: 250ms;
+                height: 40px;
+
+                &:hover {
+                    background-color: #3274f3;
+                    color: white;
+                }
+
+                &:active {
+                    transform: translateX(18px);
+                }
+            }
+
+            .msg{
+                max-width: 215px;
+                word-break: break-word;
+                font-size: 14px;
+                height: 40px;
+                padding: 10px 12px;
             }
         }
     }

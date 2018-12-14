@@ -4,9 +4,9 @@
 
         <div class="user">
 
-            <img v-if="$store.state.user.token" class="avatar" src="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-128.png" width="34"/>
+            <img v-if="$store.state.user.token" class="avatar" src="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-128.png" width="26"/>
             <p>{{$store.state.user.firstname}} {{$store.state.user.surname}}</p>
-            <v-icon v-if="$store.state.user.token" name="cog" scale="1.7" class="options"/>
+            <v-icon v-if="$store.state.user.token" @click.native="$emit('toggleDropdown')" name="cog" scale="1.7" class="options"/>
 
         </div>
     </nav>
@@ -60,7 +60,7 @@
             }
 
             p {
-                margin-left:45px;
+                margin-left:40px;
                 color: white;
                 font-size: 16px;
                 line-height: 34px;
