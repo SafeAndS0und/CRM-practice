@@ -33,7 +33,6 @@ export default {
             axiosInstance.defaults.headers.common['Authorization'] = state.token
         }
 
-        //TODO: Add a localstorage data keeping
     },
     actions: {
         fillUserData({commit}, payload){
