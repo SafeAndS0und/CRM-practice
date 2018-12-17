@@ -3,7 +3,7 @@ const {JWT_KEY} = require('../../constants.json')
 
 module.exports = (req, res, next) => {
     if(!req.headers.authorization) return res.status(400).json({
-        msg: "Twoja sesja wygasła. Musisz się zalogować by wykonać tę czynność.",
+        msg: "Brak tokenu uwierzytelniającego. Proszę zalogować się ponownie.",
         auth: false
     })
 

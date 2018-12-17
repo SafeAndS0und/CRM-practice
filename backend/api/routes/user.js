@@ -7,5 +7,6 @@ const userController = require('../controllers/user')
 
 Router.post('/login', userController.user_login)
 Router.post('/register', checkAuth, userController.user_register)
+Router.post('/checkToken', userController.user_checkToken) //for testing
 
 module.exports = Router

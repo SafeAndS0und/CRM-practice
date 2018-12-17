@@ -184,3 +184,29 @@ exports.user_register = (req, res, next) => {
         })
     })
 }
+
+exports.user_checkToken = (req, res, next) => {
+    if(!req.headers.authorization) {
+        return res.status(400).json({
+            msg: "Brak tokenu",
+            token: false
+        })
+    }
+
+    try {
+        const token = req.headers.authorization
+        const decoded = jwt.verify(token, JWT_KEY)
+        
+        res.status(200).json({
+            msg: "Token jest poprawny.",
+            token: true
+        })
+    }
+    catch(error) {
+        console.log(error)
+        res.status(401).json({
+            msg: "Błąd z tokenem. Zbugowany lub stracił ważność.",
+            token: false
+        })
+    }
+}
