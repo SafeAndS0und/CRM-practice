@@ -1,9 +1,8 @@
 import store from '../../store'
 
 export default {
-    //TODO: Change it on getter depending on localstorage
     isAdmin(to, from, next){
-        if(store.state.user.isAdmin){
+        if(store.getters.isAdmin){
             next()
         } else{
             next('/')
@@ -11,7 +10,7 @@ export default {
     },
 
     isntLogged(to, from, next){
-        if(!store.state.user.token){
+        if(!store.getters.authenticated){
             next()
         } else{
             next('/')

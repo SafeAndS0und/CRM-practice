@@ -3,6 +3,9 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import './registerServiceWorker'
+import bringBackUserData from './assets/js/onPageRefresh'
+
+bringBackUserData();
 
 // font awesome
 import 'vue-awesome/icons'

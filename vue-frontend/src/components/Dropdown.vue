@@ -11,6 +11,7 @@
         name: "Dropdown",
         methods: {
             logout(){
+                localStorage.clear();
             }
         }
     }

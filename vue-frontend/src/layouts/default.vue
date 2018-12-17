@@ -20,18 +20,21 @@
             <Dropdown v-if="showDropdown" class="dropdown"/>
         </transition>
 
+        <Footer/>
+
     </div>
 </template>
 
 <script>
     import Navbar from '../components/Navbar.vue'
+    import Footer from '../components/Footer.vue'
     import Dropdown from '../components/Dropdown.vue'
     import Sidebar from '../components/Sidebar.vue'
 
     export default {
         name: "default",
         components: {
-            Navbar, Sidebar, Dropdown
+            Navbar, Sidebar, Dropdown, Footer
         },
         data(){
             return {

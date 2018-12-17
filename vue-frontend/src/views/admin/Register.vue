@@ -2,6 +2,7 @@
     <div class="register">
 
         <section class="register-form">
+            <h3 class="form-title">Dodaj nowego użytkownika</h3>
             <CustomInput placeholder="Nazwa Użytkownika" class="form-item" v-model="username"/>
             <CustomInput placeholder="Hasło" type="password" class="form-item" v-model="password"/>
             <CustomInput placeholder="Imię" class="form-item" v-model="firstname"/>
@@ -72,6 +73,12 @@
         align-items: center;
 
         .register-form {
+            .form-title{
+                font-weight: lighter;
+                text-align: center;
+                font-size: 18px;
+            }
+
             input {
                 display: block;
                 margin: 10px;
