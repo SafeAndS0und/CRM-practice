@@ -11,7 +11,7 @@
 
             <v-icon name="arrow-circle-right" scale="2.2" :class="{logged: isLogged, error: hasError}" class="login" @click.native="login"/>
 
-            <p class="msg">{{msg}}</p>
+            <p class="msg"><span v-html="msg"></span></p>
         </section>
     </div>
 </template>
@@ -53,10 +53,10 @@
                         }, 800)
                     })
                     .catch(err => {
-                        err.response.data.errors.forEach(err => {
+                        err.response.data.errors.forEach((err, index) => {
                             this.hasError = true
                             this.isLogged = false
-                            this.msg += err + "\n"
+                            this.msg += `${++index}.  ${ err}  <br/>`
                         })
                     })
             }

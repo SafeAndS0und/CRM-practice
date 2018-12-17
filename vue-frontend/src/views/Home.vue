@@ -21,7 +21,7 @@
         margin-top: 150px;
         h1 {
             text-align: center;
-            font-size: 42px;
+            font-size: 38px;
             font-weight: lighter;
         }
         img {

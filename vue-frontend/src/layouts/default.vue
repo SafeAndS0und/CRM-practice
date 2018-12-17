@@ -1,11 +1,11 @@
 <template>
     <div>
-        <navbar/>
+        <Navbar @toggleDropdown="showDropdown = !showDropdown"/>
 
 
         <v-touch @swipeleft="showSidebar = false">
             <transition name="slide">
-                <sidebar v-if="showSidebar" class="sidebar"/>
+                <Sidebar v-if="showSidebar" class="sidebar"/>
             </transition>
         </v-touch>
 
@@ -16,21 +16,30 @@
             <slot/>
         </div>
 
+        <transition name="slideRight">
+            <Dropdown v-if="showDropdown" class="dropdown"/>
+        </transition>
+
+        <Footer/>
+
     </div>
 </template>
 
 <script>
-    import navbar from '../components/navbar.vue'
-    import sidebar from '../components/sidebar.vue'
+    import Navbar from '../components/Navbar.vue'
+    import Footer from '../components/Footer.vue'
+    import Dropdown from '../components/Dropdown.vue'
+    import Sidebar from '../components/Sidebar.vue'
 
     export default {
         name: "default",
         components: {
-            navbar, sidebar
+            Navbar, Sidebar, Dropdown, Footer
         },
         data(){
             return {
-                showSidebar: false
+                showSidebar: false,
+                showDropdown: false
             }
         }
     }
@@ -60,30 +69,46 @@
         width: 140px;
     }
 
+    .dropdown {
+        position: fixed;
+        top: 68px;
+        right: 0;
+        width: 250px;
+    }
+
     @media screen and (max-width: $mobile) {
 
         .toggleSidebar {
             padding: 26px 18px;
-            opacity: 0.5;
+            background-color: transparent;
+            opacity: 1;
         }
 
         .sidebar {
-            width: 100vw;
+            width: 50%;
+        }
+
+        .dropdown {
+            position: fixed;
+            top: 68px;
+            right: 0;
+            width: 50%;
         }
 
         .slide-enter-active, .slide-leave-active {
             transition: 0.8s;
         }
         .slide-enter {
-            transform: translateX(-670px);
+            transform: translateX(-470px);
         }
 
         .slide-leave-to {
-            transform: translateX(-670px);
+            transform: translateX(-470px);
         }
     }
 
     @media screen and (min-width: $mobile) {
+        /* Menu Slide */
         .slide-enter-active, .slide-leave-active {
             transition: .6s;
         }
@@ -94,6 +119,20 @@
         .slide-leave-to {
             transform: translateX(-210px);
         }
+
+    }
+
+    /* Dropdown Slide*/
+
+    .slideRight-enter-active, .slideRight-leave-active {
+        transition: 0.8s;
+    }
+    .slideRight-enter {
+        transform: translateX(400px);
+    }
+
+    .slideRight-leave-to {
+        transform: translateX(400px);
     }
 
 </style>

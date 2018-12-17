@@ -4,9 +4,9 @@
 
         <div class="user">
 
-            <img v-if="$store.state.user.token" class="avatar" src="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-128.png" width="34"/>
-            <p>{{$store.state.user.firstname}} {{$store.state.user.surname}}</p>
-            <v-icon v-if="$store.state.user.token" name="cog" scale="1.7" class="options"/>
+            <img v-if="$store.state.user.token" class="avatar" src="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-128.png" width="26"/>
+            <router-link class="name" to="/">{{$store.state.user.firstname}} {{$store.state.user.surname}}</router-link>
+            <v-icon v-if="$store.state.user.token" @click.native="$emit('toggleDropdown')" name="cog" scale="1.7" class="options"/>
 
         </div>
     </nav>
@@ -59,12 +59,18 @@
                 border-radius: 50%;
             }
 
-            p {
-                margin-left:45px;
+            .name {
+                margin-left:40px;
                 color: white;
                 font-size: 16px;
                 line-height: 34px;
+                text-decoration: none;
+                transition: 150ms;
                 display: inline-block;
+
+                &:hover{
+                    color: #efefef;
+                }
             }
 
             .options{
@@ -95,7 +101,7 @@
                 align-self: center;
                 position: relative;
 
-                p {
+                .name {
                     line-height: 1em;
                 }
             }
@@ -110,7 +116,7 @@
             .user {
                 grid-column: 8/13;
 
-                p{
+                .name{
                     margin-left: 8px;
                 }
                 .avatar{
