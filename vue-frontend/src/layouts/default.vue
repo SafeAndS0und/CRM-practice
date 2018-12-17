@@ -12,7 +12,7 @@
 
         <v-icon name="bars" @click.native="showSidebar = !showSidebar" class="toggleSidebar"></v-icon>
 
-        <div>
+        <div style="margin-bottom: 70px">
             <slot/>
         </div>
 
@@ -42,15 +42,17 @@
 
     .toggleSidebar {
         position: fixed;
-        padding: 20px;
-        top: 5px;
-        left: 5px;
+        padding: 26px 30px;
+        top: 0;
+        left: 0;
         color: #353336;
         transition: 200ms;
         cursor: pointer;
+        background-color: rgba(182, 89, 85, 0.95);
 
         &:hover, &:active {
             color: #e7e7e7;
+            background-color: rgba(132, 57, 52, 0.95);
         }
     }
 
@@ -59,6 +61,12 @@
     }
 
     @media screen and (max-width: $mobile) {
+
+        .toggleSidebar {
+            padding: 26px 18px;
+            opacity: 0.5;
+        }
+
         .sidebar {
             width: 100vw;
         }
@@ -67,11 +75,11 @@
             transition: 0.8s;
         }
         .slide-enter {
-            transform: translateX(-480px);
+            transform: translateX(-670px);
         }
 
         .slide-leave-to {
-            transform: translateX(-480px);
+            transform: translateX(-670px);
         }
     }
 

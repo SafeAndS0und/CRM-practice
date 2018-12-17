@@ -65,21 +65,21 @@
             }
             article:nth-child(1) {
                 border-top-right-radius: 6px;
-                background-color: #0077cb;
+                background-color: #347ccb;
 
                 &:hover {
-                    background-color: #0062b4;
+                    background-color: #0f6cb4;
                 }
             }
             article:nth-child(2) {
-                background-color: #de5a19;
+                background-color: #de8244;
 
                 &:hover {
-                    background-color: #c35727;
+                    background-color: #ca5e34;
                 }
             }
             article:nth-child(3) {
-                background-color: #cf2e6d;
+                background-color: #cf4f83;
                 border-bottom-right-radius: 6px;
                 &:hover {
                     background-color: #b22f65;
