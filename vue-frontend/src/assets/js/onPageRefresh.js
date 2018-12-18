@@ -14,7 +14,7 @@ export default function(){
             .then(res => {
                 console.log("res" ,res)
                 // If so, add him to vuex
-                // localStorage saves boolean as String so we need to check it one more time
+                // localStorage saves boolean as String so we need to parse it
                 const isAdmin = localStorage.getItem('isAdmin') === 'true'
                 const userData = {
                     firstname: localStorage.getItem('firstname'),
