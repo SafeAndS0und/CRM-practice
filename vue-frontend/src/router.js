@@ -33,6 +33,19 @@ export default new Router({
             path: '/admin/register',
             component: () => import('./views/admin/Register.vue'),
             beforeEnter: middlewares.isAdmin
+        },
+
+        {
+            name: 'contacts',
+            path: '/contacts',
+            component: () => import('./views/modules/Contacts.vue'),
+            beforeEnter: middlewares.isLogged,
+            children: [
+                {
+                    path: "details",
+                    component: () => import('./components/modules/BlockList.vue')
+                }
+            ]
         }
 
     ]

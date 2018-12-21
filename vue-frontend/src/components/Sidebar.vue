@@ -1,7 +1,7 @@
 <template>
     <div class="sidebar">
         <section>
-            <article>
+            <article @click="$router.push('/contacts')">
                 <v-icon name="regular/address-book" scale="2.6" class="icon"/>
                 <h3>Kontakty</h3>
             </article>
@@ -85,6 +85,12 @@
                     background-color: #b22f65;
                 }
             }
+        }
+    }
+
+    @media screen and (min-width: $tablet) {
+        .sidebar{
+            top: 0;
         }
     }
 

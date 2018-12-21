@@ -95,6 +95,13 @@
         }
     }
 
+    @media screen and (min-width: $tablet){
+        nav{
+            top: 0;
+            position: fixed;
+        }
+    }
+
     @media screen and (max-width: $tablet) {
         nav {
             .searchField {
