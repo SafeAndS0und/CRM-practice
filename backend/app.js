@@ -24,9 +24,11 @@ app.use(cors())
 
 //Routes
 const userRouter = require('./api/routes/user')
+const contactRouter = require('./api/routes/contact')
 
 //Use routes
 app.use('/user', userRouter)
+app.use('/contact', contactRouter)
 
 //Handling error(Not found)
 app.use((req, res, next) => {
