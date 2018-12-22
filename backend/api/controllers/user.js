@@ -70,7 +70,7 @@ exports.user_login = (req, res, next) => {
         console.log(err)
         return res.status(400).json({
             msg: 'Logowanie nie powiodło się.',
-            errors: ['Użytkownik nie istnieje.'],
+            errors: ['Użytkownik nie istnieje.'], // zmienić
             logged: false
         })
     })

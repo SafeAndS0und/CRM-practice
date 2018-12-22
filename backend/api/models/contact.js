@@ -15,18 +15,21 @@ const contactSchema = mongoose.Schema({
     business: {
         type: String
     },
-    owner: {
+    recordOwner: {
         type: String
     },
     creationTime : {
         type: Date,
         default: Date.now
     },
+    modificationTime: {
+        type: Date
+    },
     //contact info
-    basicPhoneContact: {
+    basicPhone: {
         type: String
     },
-    additionalPhoneContact: {
+    additionalPhone: {
         type: String
     },
     basicEmail: {
@@ -66,5 +69,6 @@ const contactSchema = mongoose.Schema({
     country: {
         type: String
     }
-    
 })
+
+module.exports = mongoose.model('contact', contactSchema)
