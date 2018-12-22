@@ -50,6 +50,7 @@
     @import '../assets/css/variables.scss';
 
     .toggleSidebar {
+        z-index: 102;
         position: fixed;
         padding: 26px 30px;
         top: 0;

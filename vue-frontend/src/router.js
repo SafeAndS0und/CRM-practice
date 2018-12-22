@@ -42,7 +42,7 @@ export default new Router({
             beforeEnter: middlewares.isLogged,
             children: [
                 {
-                    path: "details",
+                    path: "details/:id",
                     component: () => import('./components/modules/BlockList.vue')
                 }
             ]

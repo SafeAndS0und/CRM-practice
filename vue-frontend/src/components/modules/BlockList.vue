@@ -1,5 +1,6 @@
 <template>
     <div class="block-list">
+        {{$route.params.id}}
         <Block block-name="Informacje Podstawowe" class="block"/>
         <Block block-name="Informacje Kontaktowe" class="block"/>
     </div>

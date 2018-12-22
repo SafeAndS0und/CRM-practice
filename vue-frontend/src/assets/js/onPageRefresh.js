@@ -9,10 +9,8 @@ export default function(){
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token')
 
         // Check if the token is still valid
-        console.log(localStorage.getItem('token'))
         axios.post('user/checkToken')
             .then(res => {
-                console.log("res" ,res)
                 // If so, add him to vuex
                 // localStorage saves boolean as String so we need to parse it
                 const isAdmin = localStorage.getItem('isAdmin') === 'true'

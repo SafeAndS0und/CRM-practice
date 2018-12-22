@@ -1,0 +1,129 @@
+<template>
+    <div class="list">
+        <router-link :to="`/contacts/details/${contact.firstname}`">
+            <article>
+                <h5>Imię</h5>
+                <p>{{contact.firstname}}</p>
+            </article>
+            <article>
+                <h5>Nazwisko</h5>
+                <p>{{contact.surname}}</p>
+            </article>
+            <article>
+                <h5>Firma</h5>
+                <p>{{contact.business}}</p>
+            </article>
+            <article>
+                <h5>Właściciel rekordu</h5>
+                <p>{{contact.recordOwner.slice(0, 20)}}</p>
+            </article>
+            <article>
+                <h5>Telefon</h5>
+                <p>{{contact.basicPhone}}</p>
+            </article>
+            <article>
+                <h5>Email</h5>
+                <p>{{contact.basicEmail}}</p>
+            </article>
+        </router-link>
+
+        <div class="icons">
+            <v-icon name="trash" scale="1.3" class="icon"/>
+            <v-icon name="pencil-alt" scale="1.3" class="icon"/>
+            <v-icon name="check-square" scale="1.3" class="icon"/>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: "List",
+        props: {
+            contact: Object
+        }
+    }
+</script>
+
+<style scoped lang="scss">
+
+    @import '../../assets/css/variables';
+
+    .list {
+        position: relative;
+
+        a {
+            border-radius: 6px;
+            text-decoration: none;
+            display: grid;
+            width: 100%;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            background-color: #232323;
+            padding: 8px;
+            grid-gap: 5px;
+            transition: 120ms;
+
+            article {
+                border-radius: 3px;
+                color: #dadada;
+                text-align: center;
+                padding: 5px;
+                background-color: #323232;
+                display: inline-block;
+                cursor: pointer;
+                transition: 100ms;
+
+                h5 {
+                    font-size: 14px;
+                    font-weight: lighter;
+                    letter-spacing: 2px;
+                    margin-bottom: 5px;
+                }
+
+                p {
+                    font-size: 13px;
+                    margin-bottom: 0;
+                }
+
+            }
+
+
+            &:hover {
+                background-color: #1d1c1d;
+
+                article {
+                    background-color: rgba(49, 52, 61, 0.95);
+                }
+            }
+        }
+
+        .icons {
+            padding: 5px;
+            position: absolute;
+            top: 10px;
+            right: -120px;
+            border-radius: 10px;
+
+            .icon {
+                grid-row: 1;
+                justify-self: center;
+                align-self: center;
+                padding: 5px;
+                transition: 200ms;
+                cursor: pointer;
+                /*border-radius: 50%;*/
+                color: #2f2f2f;
+
+                &:first-child:hover {
+                    color: #ab1a2a;
+                }
+                &:nth-child(2):hover {
+                    color: #125ac8;
+                }
+                &:last-child:hover {
+                    color: #575657;
+                }
+            }
+        }
+    }
+
+</style>

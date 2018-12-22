@@ -22,6 +22,7 @@
 <style scoped lang="scss">
 
     .dropdown{
+        z-index: 101;
 
         article{
             height: 50px;

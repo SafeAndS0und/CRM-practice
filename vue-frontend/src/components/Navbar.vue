@@ -36,6 +36,7 @@
     @import '../assets/css/variables.scss';
 
     nav {
+        z-index: 100;
         height: 68px;
         width: 100%;
         background-color: $navbarC;

@@ -27,6 +27,7 @@
     @import '.././assets/css/variables.scss';
 
     .sidebar {
+        z-index: 101;
         height: calc(100vh - 68px);
         position: fixed;
         background-color: transparent;
