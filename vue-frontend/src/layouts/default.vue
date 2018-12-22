@@ -17,7 +17,7 @@
         </div>
 
         <transition name="slideRight">
-            <Dropdown v-if="showDropdown" class="dropdown"/>
+            <Dropdown v-if="showDropdown" @hideDropdown="showDropdown = false" class="dropdown"/>
         </transition>
 
         <Footer/>

@@ -1,7 +1,7 @@
 import axiosInstance from "../assets/js/axiosInstance";
 import store from "../store";
 
-//TODO: Make getters: one for if the user is logged in, and the other one if it's an admin
+
 export default {
     state: {
         firstname: '',
@@ -10,20 +10,24 @@ export default {
         token: ''
     },
     getters: {
-        authenticated: state =>{
-            return localStorage.getItem('token') ? !!state.token : false
-        },
+        authenticated: state => !!state.token,
         isAdmin: (state, getters) =>{
             return getters.authenticated ? !!state.isAdmin : false
         }
     },
     mutations: {
+        clearUserData(state){
+            state.firstname = ''
+            state.surname = ''
+            state.isAdmin = ''
+            state.token = ''
+        },
+
         fillUserData(state, payload){
             state.firstname = payload.firstname
             state.surname = payload.surname
             state.isAdmin = payload.isAdmin
             state.token = payload.token
-
 
             localStorage.setItem('token', payload.token)
             localStorage.setItem('firstname', payload.firstname)
@@ -33,9 +37,12 @@ export default {
             axiosInstance.defaults.headers.common['Authorization'] = state.token
         }
 
-        //TODO: Add a localstorage data keeping
     },
     actions: {
+        clearUserData({commit}){
+            commit('clearUserData')
+        },
+
         fillUserData({commit}, payload){
             commit('fillUserData', payload)
         }

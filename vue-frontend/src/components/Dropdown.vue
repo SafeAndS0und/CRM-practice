@@ -11,7 +11,9 @@
         name: "Dropdown",
         methods: {
             logout(){
-                localStorage.clear();
+                localStorage.clear()
+                this.$store.dispatch('clearUserData')
+                this.$emit('hideDropdown')
             }
         }
     }

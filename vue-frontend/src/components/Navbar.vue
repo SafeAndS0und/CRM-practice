@@ -4,9 +4,14 @@
 
         <div class="user">
 
-            <img v-if="$store.state.user.token" class="avatar" src="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-128.png" width="26"/>
-            <router-link class="name" to="/">{{$store.state.user.firstname}} {{$store.state.user.surname}}</router-link>
-            <v-icon v-if="$store.state.user.token" @click.native="$emit('toggleDropdown')" name="cog" scale="1.7" class="options"/>
+            <img v-if="$store.getters.authenticated" class="avatar" src="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-128.png" width="26"/>
+            <router-link class="name" :to="$store.getters.authenticated ? '/' : '/login'">
+                {{$store.state.user.firstname ? $store.state.user.firstname : "Zaloguj się"}} {{$store.state.user.surname}}
+            </router-link>
+            <v-icon  @click.native="$store.getters.authenticated ? $emit('toggleDropdown') : $router.push('/login')"
+                    :name="$store.getters.authenticated ? 'cog' : 'sign-in-alt'"
+                     scale="1.7"
+                     class="options"/>
 
         </div>
     </nav>
