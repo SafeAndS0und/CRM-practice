@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const User = require('../models/user')
+const Contact = require('../models/contact')
 const bcrypt = require('bcrypt')
 const {JWT_KEY} = require('../../constants.json')
 const jwt = require('jsonwebtoken')
@@ -157,7 +158,7 @@ exports.user_register = (req, res, next) => {
                             const preparedNewUser = new User(newUser)
                             preparedNewUser
                             .save() //Add new user to DB
-                            .then(result => {
+                            .then(newUser => {
                                 res.status(201).json({
                                     msg: 'Dodano nowego użytkownika.',
                                     registered: true

@@ -16,7 +16,8 @@ const contactSchema = mongoose.Schema({
         type: String
     },
     recordOwner: {
-        type: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user'
     },
     creationTime : {
         type: Date,
