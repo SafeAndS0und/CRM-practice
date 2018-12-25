@@ -3,22 +3,22 @@
         <nav>
             <router-link to="/contacts">Lista</router-link>
             <!--<router-link to="/contacts/details/blabla">Szczegóły</router-link>-->
-            <router-link to="/contacts">Edycja</router-link>
-            <router-link to="/contacts">Dodaj</router-link>
+            <router-link to="/contacts">Dodaj Nowy</router-link>
+            <router-link to="/contacts">Komentarze</router-link>
         </nav>
 
         <div class="content" :style="{gridColumn: gridWidth }">
+
             <router-view v-if="$route.path !== '/contacts'"/>
 
             <div class="list-container">
-
                 <List v-for="contact in contacts"
                       :contact="contact"
                       v-if="$route.path === '/contacts'"
                       class="list"
                 />
-
             </div>
+
 
         </div>
     </div>
@@ -38,9 +38,9 @@
             }
         },
         computed: {
-           gridWidth(){
-               return this.$route.path === '/contacts' ? "2/11" : "2/12"
-           }
+            gridWidth(){
+                return this.$route.path === '/contacts' ? "2/11" : "2/12"
+            }
         },
         created(){
             this.axios.get('/contact/list')

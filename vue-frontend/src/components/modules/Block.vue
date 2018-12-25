@@ -1,38 +1,11 @@
 <template>
     <section>
         <h1>{{blockName}}</h1>
-
         <div class="info">
-            <article>
-                <h5>Numer</h5>
-                <p>C3</p>
+            <article v-for="field of fields">
+                <h5>{{field}}</h5>
+                <p>{{value(field)}}</p>
             </article>
-
-            <article>
-                <h5>Imię</h5>
-                <p>Nikodem</p>
-            </article>
-
-            <article>
-                <h5>Nazwisko</h5>
-                <p>Lorenz</p>
-            </article>
-
-            <article>
-                <h5>Firma</h5>
-                <p>Google</p>
-            </article>
-
-            <article>
-                <h5>Czas Utworzenia</h5>
-                <p>24.01.2017 </p>
-            </article>
-
-            <article>
-                <h5>Czas Edycji</h5>
-                <p>24.01.2017</p>
-            </article>
-
         </div>
 
     </section>
@@ -43,8 +16,17 @@
         name: "Block",
         props: {
             blockName: String,
-
-
+            fields: Array,
+            values: Array
+        },
+        methods: {
+            value(field){
+                const element = this.values.find(el => el.f === field)
+                if(element) {
+                    if(element.f === "Właściciel") return element.v.surname
+                    else return element.v
+                }
+            }
         }
     }
 </script>
@@ -67,7 +49,6 @@
             margin-bottom: 20px;
             letter-spacing: 3px;
         }
-
 
         .info {
             width: 100%;
@@ -96,7 +77,7 @@
                     margin-bottom: 5px;
                 }
 
-                &:hover{
+                &:hover {
                     background-color: #3f3f3f;
                 }
             }

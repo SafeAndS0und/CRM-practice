@@ -1,6 +1,6 @@
 <template>
     <div class="list">
-        <router-link :to="`/contacts/details/${contact.firstname}`">
+        <router-link :to="`/contacts/details/${contact._id}`">
             <article>
                 <h5>Imię</h5>
                 <p>{{contact.firstname}}</p>
@@ -39,7 +39,7 @@
     export default {
         name: "List",
         props: {
-            contact: Object
+            contact: Object,
         }
     }
 </script>
@@ -58,7 +58,7 @@
             width: 100%;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             background-color: #232323;
-            padding: 8px;
+            padding: 6px;
             grid-gap: 5px;
             transition: 120ms;
 
@@ -70,7 +70,7 @@
                 background-color: #323232;
                 display: inline-block;
                 cursor: pointer;
-                transition: 100ms;
+                transition: 150ms;
 
                 h5 {
                     font-size: 14px;
@@ -89,9 +89,11 @@
 
             &:hover {
                 background-color: #1d1c1d;
+                transform: translateX(8px);
 
                 article {
-                    background-color: rgba(49, 52, 61, 0.95);
+                    background-color: rgba(59, 58, 60, 0.95);
+                    ;
                 }
             }
         }

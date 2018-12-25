@@ -1,8 +1,11 @@
 <template>
     <div class="block-list">
-        {{$route.params.id}}
-        <Block block-name="Informacje Podstawowe" class="block"/>
+        <Block block-name="Informacje Podstawowe"
+               :fields="fields.basic"
+               :values="values.basic"
+               class="block"/>
         <Block block-name="Informacje Kontaktowe" class="block"/>
+        <Block block-name="Informacje Adresowe" class="block"/>
     </div>
 </template>
 
@@ -11,16 +14,45 @@
 
     export default {
         name: "BlockList",
-        components:{
+        components: {
             Block
+        },
+        data(){
+            return {
+                fields: {
+                    basic: ["Numer", "Imię", "Nazwisko", "Firma", "Czas Utworzenia", "Właściciel"]
+                },
+                values: {
+                    basic: []
+                }
+            }
+        },
+        created(){
+            this.axios.get('/contact/c/' + this.$route.params.id)
+                .then(res =>{
+                    this.assignBasicValues(res.data.contact)
+                })
+                .catch(err => console.log(err.response))
+        },
+        methods: {
+            assignBasicValues({firstname, surname, number, business, creationTime, recordOwner}){
+                const arr = [
+                    {f: "Imię", v: firstname},
+                    {f: "Nazwisko", v: surname},
+                    {f: "Numer", v: number},
+                    {f: "Firma", v: business},
+                    {f: "Czas Utworzenia", v: creationTime},
+                    {f: "Właściciel", v: recordOwner},
+                    ]
+                this.values.basic = [].concat(arr)
+            }
         }
     }
 </script>
 
 <style scoped lang="scss">
-    .block-list{
-
-        .block{
+    .block-list {
+        .block {
             margin: 15px auto;
             width: 90%;
         }
