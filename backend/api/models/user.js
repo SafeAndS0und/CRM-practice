@@ -19,6 +19,9 @@ const userSchema = mongoose.Schema({
     isAdmin: {
         type: Boolean
     },
+    birth: {
+        type: Date
+    }
 })
 
 module.exports = mongoose.model('user', userSchema)
