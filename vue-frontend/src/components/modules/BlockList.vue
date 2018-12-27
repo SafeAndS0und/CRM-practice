@@ -4,13 +4,24 @@
                :fields="fields.basic"
                :values="values.basic"
                class="block"/>
-        <Block block-name="Informacje Kontaktowe" class="block"/>
-        <Block block-name="Informacje Adresowe" class="block"/>
+        <Block block-name="Informacje Kontaktowe"
+               :fields="fields.contact"
+               :values="values.contact"
+               class="block"/>
+        <Block block-name="Informacje Adresowe"
+               :fields="fields.address"
+               :values="values.address"
+               class="block"/>
     </div>
 </template>
 
+
 <script>
     import Block from '../../components/modules/Block.vue'
+    import {values} from '../../assets/js/modules/contactData'
+    import contactData from '../../assets/js/modules/contactData'
+
+
 
     export default {
         name: "BlockList",
@@ -19,37 +30,24 @@
         },
         data(){
             return {
-                fields: {
-                    basic: ["Numer", "Imię", "Nazwisko", "Firma", "Czas Utworzenia", "Właściciel"]
-                },
-                values: {
-                    basic: []
-                }
+                fields: {},
+                values: {}
             }
         },
         created(){
+            this.fields = contactData.fields
+            this.values = values
+
             this.axios.get('/contact/c/' + this.$route.params.id)
                 .then(res =>{
-                    this.assignBasicValues(res.data.contact)
+                    contactData.activateControllers(res.data.contact)
+                    console.log(values)
+                    this.values = values
                 })
                 .catch(err => console.log(err.response))
         },
-        methods: {
-            assignBasicValues({firstname, surname, number, business, creationTime, recordOwner}){
-                const arr = [
-                    {f: "Imię", v: firstname},
-                    {f: "Nazwisko", v: surname},
-                    {f: "Numer", v: number},
-                    {f: "Firma", v: business},
-                    {f: "Czas Utworzenia", v: creationTime},
-                    {f: "Właściciel", v: recordOwner},
-                    ]
-                this.values.basic = [].concat(arr)
-            }
-        }
     }
 </script>
-
 <style scoped lang="scss">
     .block-list {
         .block {

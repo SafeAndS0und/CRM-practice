@@ -65,6 +65,7 @@
                 cursor: pointer;
 
                 h5 {
+                    width: 100%;
                     font-size: 15px;
                     font-weight: lighter;
                     letter-spacing: 2px;
