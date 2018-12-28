@@ -7,6 +7,47 @@
             <router-link to="/contacts">Komentarze</router-link>
         </nav>
 
+        <div class="sorting">
+            <h2 class="sorting-title">Sortowanie po: </h2>
+            <section>
+                <div class="icon-container">
+                    <p>Imieniu</p>
+                    <v-icon name="sort-alpha-up" scale="1.5" class="icon" @click.native="sortTable('a_fn')"/>
+                    <v-icon name="sort-alpha-down" scale="1.5" class="icon" @click.native="sortTable('d_fn')"/>
+                </div>
+
+                <div class="icon-container">
+                    <p>Nazwisku</p>
+                    <v-icon name="sort-alpha-up" scale="1.5" class="icon" @click.native="sortTable('a_sn')"/>
+                    <v-icon name="sort-alpha-down" scale="1.5" class="icon" @click.native="sortTable('d_sn')"/>
+                </div>
+
+                <div class="icon-container">
+                    <p>Firmie</p>
+                    <v-icon name="sort-alpha-up" scale="1.5" class="icon" @click.native="sortTable('a_b')"/>
+                    <v-icon name="sort-alpha-down" scale="1.5" class="icon" @click.native="sortTable('d_b')"/>
+                </div>
+
+                <div class="icon-container">
+                    <p>Właść. rek.</p>
+                    <v-icon name="sort-alpha-up" scale="1.5" class="icon" @click.native="sortTable('a_ro')"/>
+                    <v-icon name="sort-alpha-down" scale="1.5" class="icon" @click.native="sortTable('d_ro')"/>
+                </div>
+
+                <div class="icon-container">
+                    <p>Telefonie</p>
+                    <v-icon name="sort-numeric-up" scale="1.5" class="icon" @click.native="sortTable('a_n')"/>
+                    <v-icon name="sort-numeric-down" scale="1.5" class="icon" @click.native="sortTable('d_n')"/>
+                </div>
+
+                <div class="icon-container">
+                    <p>Emailu</p>
+                    <v-icon name="sort-alpha-up" scale="1.5" class="icon"/>
+                    <v-icon name="sort-alpha-down" scale="1.5" class="icon"/>
+                </div>
+            </section>
+        </div>
+
         <div class="content" :style="{gridColumn: gridWidth }">
 
             <router-view v-if="$route.path !== '/contacts'"/>
@@ -50,13 +91,18 @@
         },
         methods: {
             filterTable(id){
-                this.contacts.find((item, index) => {
-                    if(item._id === id) {
+                this.contacts.find((item, index) =>{
+                    if(item._id === id){
                         this.contacts.splice(index, 1)
                     }
                 })
-
-
+            },
+            sortTable(method){
+                this.axios.get('/contact/list/1/' + method)
+                    .then(res => {
+                        this.contacts = res.data.contacts
+                    })
+                    .catch(err => console.log(err.response))
             }
         }
 
@@ -93,7 +139,57 @@
             }
         }
 
+        .sorting {
+            grid-row: 2;
+            grid-column: 2/11;
+
+            .sorting-title {
+                margin-left: 20px;
+                font-weight: normal;
+                margin-bottom: 15px;
+                font-size: 18px;
+            }
+
+            section {
+                display: grid;
+
+                .icon-container {
+                    grid-row: 2;
+                    display: grid;
+
+                    p {
+                        grid-row: 1;
+                        grid-column: 1/3;
+                        /*display: none;*/
+                        text-align: center;
+                    }
+                    .icon {
+                        grid-row: 2;
+                        padding: 12px;
+                        align-self: center;
+                        cursor: pointer;
+                        color: #7b7b7b;
+                        transition: 150ms;
+                        margin: 6px 0;
+
+                        &:hover {
+                            background-color: #dcdcdc;
+                        }
+
+                        &:nth-child(2) {
+                            justify-self: end;
+                        }
+
+                        &:last-child {
+                            justify-self: start;
+                        }
+                    }
+                }
+            }
+        }
+
         .content {
+            grid-row: 3;
 
             .list-container {
 
