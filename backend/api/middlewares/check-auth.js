@@ -14,7 +14,7 @@ module.exports = (req, res, next) => {
         next()
     }
     catch(error) {
-        console.log(error)
+        console.log("Błąd z sesją. Proszę zalogować się ponownie.")
         res.status(401).json({
             msg: "Błąd z sesją. Proszę zalogować się ponownie.",
             auth: false
