@@ -118,13 +118,20 @@ exports.contact_list = (req, res, next) => {
     .catch(err => {
         console.log(err)
         return res.status(400).json({
-            msg: 'Coś poszło nie tak'
+            msg: 'Coś poszło nie tak.'
         })
     })
 }
 
 exports.contact_detailed = (req, res, next) => {
     const contact_id = req.params.contact_id
+
+    if(!contact_id || !mongoose.Types.ObjectId.isValid(contact_id)) {
+        return res.status(401).json({
+            msg: 'Brak lub niepoprawne id kontaktu.',
+            updated: false
+        })
+    }
     
     Contact
     .findOne({_id: contact_id})
@@ -139,14 +146,14 @@ exports.contact_detailed = (req, res, next) => {
         }
         else {
             return res.status(400).json({
-                msg: 'Kontakt nie istnieje'
+                msg: 'Kontakt nie istnieje.'
             })
         }
     })
     .catch(err => {
         console.log(err)
         return res.status(400).json({
-            msg: 'Cos poszło nie tak'
+            msg: 'Cos poszło nie tak.'
         })
     })
 }
@@ -156,7 +163,8 @@ exports.contact_update = (req, res, next) => {
 
     if(!contact_id || !mongoose.Types.ObjectId.isValid(contact_id)) {
         return res.status(401).json({
-            msg: 'Brak lub niepoprawne id'
+            msg: 'Brak lub niepoprawne id kontaktu.',
+            updated: false
         })
     }
     const updateContact = {
@@ -183,17 +191,72 @@ exports.contact_update = (req, res, next) => {
         country: req.body.country ? req.body.country : ''
     }
 
-    Contact.findOneAndUpdate({_id: contact_id}, updateContact, (err, result) => {
-        if(err) {
-            console.log(err)
-            res.status(400).json({
-                msg: 'Error.'
+    Contact
+    .findOne({_id: contact_id})
+    .then(result => {
+        if(result) {
+            Contact
+            .findOneAndUpdate({_id: contact_id}, updateContact)
+            .then(contact => {
+                console.log(contact)
+        
+                return res.status(200).json({
+                    msg: `Zaktualizowano kontakt ${contact.number}.`,
+                    updated: true
+                })
             })
         }
-
-        return res.status(200).json({
-            msg: `Zaktualizowano kontakt ${result.number}`
+        else { 
+            return res.status(400).json({
+                msg: `Kontakt nie istnieje.`,
+                updated: false
+            })
+        }
+    })
+    .catch(err => {
+        console.log(err)
+        return res.status(400).json({
+            msg: 'Coś poszło nie tak.',
+            updated: false
         })
     })
+}
 
+exports.contact_delete = (req, res, next) => {
+    const contact_id = req.params.contact_id
+
+    if(!contact_id || !mongoose.Types.ObjectId.isValid(contact_id)) {
+        return res.status(401).json({
+            msg: 'Brak lub niepoprawne id kontaktu.',
+            deleted: false
+        })
+    }
+
+    Contact
+    .findOne({_id: contact_id})
+    .then(contact => {
+        if(contact) {
+            Contact
+            .deleteOne({_id: contact_id})
+            .then(result => {
+                res.status(200).json({
+                    msg: `Usunięto kontakt ${contact.number}`,
+                    deleted: true
+                })
+            })
+        }
+        else {
+            res.status(400).json({
+                msg: `Kontakt nie istnieje.`,
+                deleted: false
+            })
+        }
+    })
+    .catch(err => {
+        console.log(err)
+        res.status(400).json({
+            msg: 'Coś poszło nie tak.',
+            deleted: false
+        })
+    })
 }
