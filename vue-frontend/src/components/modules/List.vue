@@ -28,7 +28,7 @@
         </router-link>
 
         <div class="icons">
-            <v-icon name="trash" scale="1.3" class="icon"/>
+            <v-icon name="trash" scale="1.3" @click.native="del(contact._id)" class="icon"/>
             <v-icon name="pencil-alt" scale="1.3" class="icon"/>
             <v-icon name="check-square" scale="1.3" class="icon"/>
         </div>
@@ -40,6 +40,16 @@
         name: "List",
         props: {
             contact: Object,
+        },
+        methods: {
+            del(id){
+
+                this.axios.delete('/contact/c/' + id)
+                    .then(res => {
+                       this.$emit('contactDeleted', id)
+                    })
+                    .catch(err => console.log(err.response))
+            }
         }
     }
 </script>

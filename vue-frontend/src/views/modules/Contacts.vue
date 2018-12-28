@@ -15,6 +15,7 @@
                 <List v-for="contact in contacts"
                       :contact="contact"
                       v-if="$route.path === '/contacts'"
+                      @contactDeleted="filterTable"
                       class="list"
                 />
             </div>
@@ -43,9 +44,20 @@
             }
         },
         created(){
-            this.axios.get('/contact/list')
+            this.axios.get('/contact/list/1/a_fn')
                 .then(res => this.contacts = res.data.contacts)
                 .catch(err => console.log(err.response))
+        },
+        methods: {
+            filterTable(id){
+                this.contacts.find((item, index) => {
+                    if(item._id === id) {
+                        this.contacts.splice(index, 1)
+                    }
+                })
+
+
+            }
         }
 
     }
