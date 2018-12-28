@@ -24,7 +24,8 @@ const contactSchema = mongoose.Schema({
         default: Date.now
     },
     modificationTime: {
-        type: Date
+        type: Date,
+        default: Date.now
     },
     //contact info
     basicPhone: {
