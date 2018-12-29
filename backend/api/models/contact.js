@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const Stats = require('../controllers/stats')
 
 const contactSchema = mongoose.Schema({
     //basic information
@@ -71,6 +72,11 @@ const contactSchema = mongoose.Schema({
     country: {
         type: String
     }
+})
+
+contactSchema.pre('save', async function(next) {
+    await Stats.stats_increase(0, 1)
+    next()
 })
 
 module.exports = mongoose.model('contact', contactSchema)
