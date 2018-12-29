@@ -239,14 +239,14 @@ exports.contact_delete = (req, res, next) => {
             Contact
             .deleteOne({_id: contact_id})
             .then(result => {
-                res.status(200).json({
-                    msg: `Usunięto kontakt ${contact.number}`,
+                return res.status(200).json({
+                    msg: `Usunięto kontakt ${contact.number}.`,
                     deleted: true
                 })
             })
         }
         else {
-            res.status(400).json({
+            return res.status(400).json({
                 msg: `Kontakt nie istnieje.`,
                 deleted: false
             })
@@ -254,7 +254,7 @@ exports.contact_delete = (req, res, next) => {
     })
     .catch(err => {
         console.log(err)
-        res.status(400).json({
+        return res.status(400).json({
             msg: 'Coś poszło nie tak.',
             deleted: false
         })
