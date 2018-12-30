@@ -102,6 +102,7 @@ exports.contact_list = (req, res, next) => {
 
     Contact
     .find({}, null, {skip: skipDocs, limit: docsPerPage})
+    .populate('recordOwner', 'firstname surname')
     .sort(sortObj)
     .select("_id number firstname surname business basicEmail basicPhone recordOwner")
     .then(contacts => {
