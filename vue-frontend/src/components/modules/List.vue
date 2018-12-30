@@ -29,7 +29,7 @@
 
         <div class="icons">
             <v-icon name="trash" scale="1.2" @click.native="del(contact._id)" class="icon"/>
-            <v-icon name="pencil-alt" scale="1.2" class="icon"/>
+            <v-icon name="pencil-alt" scale="1.2" class="icon" @click.native="$router.push('/contacts/update/' + contact._id)"/>
             <v-icon name="check-square" scale="1.2" class="icon"/>
         </div>
     </div>

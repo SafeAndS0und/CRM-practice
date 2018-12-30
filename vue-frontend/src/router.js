@@ -47,8 +47,13 @@ export default new Router({
                 },
                 {
                     path: "new",
-                    component: () => import('./components/modules/New.vue')
-                }
+                    component: () => import('./components/modules/Form.vue')
+                },
+                {
+                    path: "update/:id",
+                    component: () => import('./components/modules/Form.vue')
+                },
+
             ]
         }
 

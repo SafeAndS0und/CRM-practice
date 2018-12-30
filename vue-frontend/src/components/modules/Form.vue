@@ -5,7 +5,7 @@
             <p>{{key}}</p>
             <section>
                 <article v-for="field of value">
-                    <CustomInput :placeholder="field" v-if="module === 'contact'"/>
+                    <CustomInput :placeholder="field" v-model="formOutput[field]"/>
                 </article>
             </section>
 
@@ -25,7 +25,8 @@
             return {
                 // TODO: change to dynamic module
                 module: 'contact',
-                fields: []
+                fields: [],
+                formOutput: {}
             }
         },
         created(){
@@ -40,6 +41,13 @@
         },
         methods: {
             addContact(){
+                this.axios.post('/contact/addContact', {
+                    firstname: this.formOutput["Imię"],
+                    surname: this.formOutput['Nazwisko'],
+                    business: this.formOutput['Firma'],
+                    basicPhone: this.formOutput['Telefon podstawowy'],
+                    basicEmail: this.formOutput['Email podstawowy']
+                })
 
             }
         }
@@ -89,6 +97,7 @@
                 background-color: #353336;
                 cursor: pointer;
                 transition: 150ms;
+                font-size: 16px;
 
                 &:hover{
                     background-color: #403e41;

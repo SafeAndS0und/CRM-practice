@@ -1,5 +1,5 @@
 <template>
-    <div class="contacts" style="margin-bottom: 600px">
+    <div class="contacts">
         <nav>
             <router-link to="/contacts">Lista</router-link>
             <!--<router-link to="/contacts/details/blabla">Szczegóły</router-link>-->
