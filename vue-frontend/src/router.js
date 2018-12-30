@@ -44,6 +44,10 @@ export default new Router({
                 {
                     path: "details/:id",
                     component: () => import('./components/modules/BlockList.vue')
+                },
+                {
+                    path: "new",
+                    component: () => import('./components/modules/New.vue')
                 }
             ]
         }

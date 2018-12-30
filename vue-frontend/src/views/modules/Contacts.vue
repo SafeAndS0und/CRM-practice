@@ -3,47 +3,47 @@
         <nav>
             <router-link to="/contacts">Lista</router-link>
             <!--<router-link to="/contacts/details/blabla">Szczegóły</router-link>-->
-            <router-link to="/contacts">Dodaj Nowy</router-link>
+            <router-link to="/contacts/new">Dodaj Nowy</router-link>
             <router-link to="/contacts">Komentarze</router-link>
         </nav>
 
-        <div class="sorting">
+        <div class="sorting"  v-if="$route.path === '/contacts'">
             <h2 class="sorting-title">Sortowanie po: </h2>
             <section>
                 <div class="icon-container">
                     <p>Imieniu</p>
-                    <v-icon name="sort-alpha-up" scale="1.5" class="icon" @click.native="sortTable('a_fn')"/>
-                    <v-icon name="sort-alpha-down" scale="1.5" class="icon" @click.native="sortTable('d_fn')"/>
+                    <v-icon name="sort-alpha-up" scale="1.2" class="icon" @click.native="sortTable('a_fn')"/>
+                    <v-icon name="sort-alpha-down" scale="1.2" class="icon" @click.native="sortTable('d_fn')"/>
                 </div>
 
                 <div class="icon-container">
                     <p>Nazwisku</p>
-                    <v-icon name="sort-alpha-up" scale="1.5" class="icon" @click.native="sortTable('a_sn')"/>
-                    <v-icon name="sort-alpha-down" scale="1.5" class="icon" @click.native="sortTable('d_sn')"/>
+                    <v-icon name="sort-alpha-up" scale="1.2" class="icon" @click.native="sortTable('a_sn')"/>
+                    <v-icon name="sort-alpha-down" scale="1.2" class="icon" @click.native="sortTable('d_sn')"/>
                 </div>
 
                 <div class="icon-container">
                     <p>Firmie</p>
-                    <v-icon name="sort-alpha-up" scale="1.5" class="icon" @click.native="sortTable('a_b')"/>
-                    <v-icon name="sort-alpha-down" scale="1.5" class="icon" @click.native="sortTable('d_b')"/>
+                    <v-icon name="sort-alpha-up" scale="1.2" class="icon" @click.native="sortTable('a_b')"/>
+                    <v-icon name="sort-alpha-down" scale="1.2" class="icon" @click.native="sortTable('d_b')"/>
                 </div>
 
                 <div class="icon-container">
                     <p>Właść. rek.</p>
-                    <v-icon name="sort-alpha-up" scale="1.5" class="icon" @click.native="sortTable('a_ro')"/>
-                    <v-icon name="sort-alpha-down" scale="1.5" class="icon" @click.native="sortTable('d_ro')"/>
+                    <v-icon name="sort-alpha-up" scale="1.2" class="icon" @click.native="sortTable('a_ro')"/>
+                    <v-icon name="sort-alpha-down" scale="1.2" class="icon" @click.native="sortTable('d_ro')"/>
                 </div>
 
                 <div class="icon-container">
                     <p>Telefonie</p>
-                    <v-icon name="sort-numeric-up" scale="1.5" class="icon" @click.native="sortTable('a_n')"/>
-                    <v-icon name="sort-numeric-down" scale="1.5" class="icon" @click.native="sortTable('d_n')"/>
+                    <v-icon name="sort-numeric-up" scale="1.2" class="icon" @click.native="sortTable('a_n')"/>
+                    <v-icon name="sort-numeric-down" scale="1.2" class="icon" @click.native="sortTable('d_n')"/>
                 </div>
 
                 <div class="icon-container">
                     <p>Emailu</p>
-                    <v-icon name="sort-alpha-up" scale="1.5" class="icon"/>
-                    <v-icon name="sort-alpha-down" scale="1.5" class="icon"/>
+                    <v-icon name="sort-alpha-up" scale="1.2" class="icon"/>
+                    <v-icon name="sort-alpha-down" scale="1.2" class="icon"/>
                 </div>
             </section>
         </div>
@@ -147,7 +147,7 @@
                 margin-left: 20px;
                 font-weight: normal;
                 margin-bottom: 15px;
-                font-size: 18px;
+                font-size: 17px;
             }
 
             section {
@@ -160,7 +160,7 @@
                     p {
                         grid-row: 1;
                         grid-column: 1/3;
-                        /*display: none;*/
+                        font-size: 14px;
                         text-align: center;
                     }
                     .icon {
