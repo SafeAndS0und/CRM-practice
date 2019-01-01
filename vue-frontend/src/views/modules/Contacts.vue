@@ -7,7 +7,7 @@
             <router-link to="/contacts">Komentarze</router-link>
         </nav>
 
-        <div class="sorting"  v-if="$route.path === '/contacts'">
+        <div class="sorting" v-if="$route.path === '/contacts'">
             <h2 class="sorting-title">Sortowanie po: </h2>
             <section>
                 <div class="icon-container">
@@ -99,7 +99,7 @@
             },
             sortTable(method){
                 this.axios.get('/contact/list/1/' + method)
-                    .then(res => {
+                    .then(res =>{
                         this.contacts = res.data.contacts
                     })
                     .catch(err => console.log(err.response))

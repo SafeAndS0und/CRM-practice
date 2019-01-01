@@ -15,7 +15,7 @@
             </article>
             <article>
                 <h5>Właściciel rekordu</h5>
-                <p>{{contact.recordOwner.slice(0, 20)}}</p>
+                <p>{{contact.recordOwner.surname}}</p>
             </article>
             <article>
                 <h5>Telefon</h5>

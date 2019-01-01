@@ -41,7 +41,6 @@
             this.axios.get('/contact/c/' + this.$route.params.id)
                 .then(res =>{
                     contactData.activateControllers(res.data.contact)
-                    console.log(values)
                     this.values = values
                 })
                 .catch(err => console.log(err.response))

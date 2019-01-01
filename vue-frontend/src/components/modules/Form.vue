@@ -10,7 +10,8 @@
             </section>
 
             <!-- Make fields object into an array, take the last item and see if it matches with the current one from iteration -->
-            <button v-if="Object.keys(fields)[Object.keys(fields).length - 1] === key" @click="addContact">Zapisz</button>
+            <button v-if="Object.keys(fields)[Object.keys(fields).length - 1] === key" @click="addContact">Zapisz
+            </button>
         </div>
     </div>
 </template>
@@ -23,31 +24,60 @@
         components: {CustomInput},
         data(){
             return {
-                // TODO: change to dynamic module
-                module: 'contact',
                 fields: [],
                 formOutput: {}
             }
         },
+        computed:{
+            action(){
+                return this.$route.path.includes('update') ? 'update' : 'new'
+            },
+
+            module(){
+                if(this.$route.path.includes('contacts')) return 'contacts'
+            }
+        },
         created(){
             // TODO: Change if to switch
-            if(this.module === 'contact'){
-                import('../../assets/js/modules/contactData')
-                    .then(module =>{
-                        this.fields = module.default.fields
-                        console.log()
-                    })
+            switch(this.module){
+                case 'contacts' :
+                    import('../../assets/js/modules/contactData')
+                        .then(module => this.fields = module.default.fields)
+                        .catch(err => console.log(err.response))
+
+                    if(this.action === 'update'){
+                        this.axios.get('/contact/c/' + this.$route.params.id)
+                            .then(res => console.log(res.data))
+                    }
+                break;
             }
         },
         methods: {
             addContact(){
-                this.axios.post('/contact/addContact', {
-                    firstname: this.formOutput["Imię"],
-                    surname: this.formOutput['Nazwisko'],
-                    business: this.formOutput['Firma'],
-                    basicPhone: this.formOutput['Telefon podstawowy'],
-                    basicEmail: this.formOutput['Email podstawowy']
-                })
+                console.log(this.action)
+                switch(this.action)
+                {
+                    case 'new':
+                        this.axios.post('/contact/addContact', {
+                            firstname: this.formOutput["Imię"],
+                            surname: this.formOutput['Nazwisko'],
+                            business: this.formOutput['Firma'],
+                            basicPhone: this.formOutput['Telefon podstawowy'],
+                            basicEmail: this.formOutput['Email podstawowy']
+                        })
+                        break;
+                    case 'update':
+                        this.axios.patch('/contact/c/' + this.$route.params.id, {
+                            firstname: this.formOutput["Imię"],
+                            surname: this.formOutput['Nazwisko'],
+                            business: this.formOutput['Firma'],
+                            basicPhone: this.formOutput['Telefon podstawowy'],
+                            basicEmail: this.formOutput['Email podstawowy']
+                        })
+                        break;
+
+                }
+
 
             }
         }
@@ -99,7 +129,7 @@
                 transition: 150ms;
                 font-size: 16px;
 
-                &:hover{
+                &:hover {
                     background-color: #403e41;
                 }
 
