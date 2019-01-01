@@ -1,19 +1,15 @@
 <template>
-    <input type="text" :placeholder="placeholder" v-model="content" @input="$emit('input', content)">
+    <input type="text"
+           :placeholder="placeholder"
+           v-bind:value="value"
+           v-on:input="$emit('input', $event.target.value)">
 </template>
 
 <script>
     export default {
         name: "CustomInput",
-        props:{
-            placeholder: String,
-            value: String
-        },
-        data(){
-            return {
-                content: this.value
-            }
-        }
+        props:['placeholder','value'],
+
     }
 </script>
 

@@ -6,6 +6,7 @@
             <section>
                 <article v-for="field of value">
                     <CustomInput :placeholder="field" v-model="formOutput[field]"/>
+                    <!--<input type="text" v-model="formOutput[field]">-->
                 </article>
             </section>
 
@@ -13,6 +14,9 @@
             <button v-if="Object.keys(fields)[Object.keys(fields).length - 1] === key" @click="addContact">Zapisz
             </button>
         </div>
+
+        <p>{{formOutput}}</p>
+
     </div>
 </template>
 
@@ -25,10 +29,15 @@
         data(){
             return {
                 fields: [],
-                formOutput: {}
+                formOutput: {
+                    Imię: '',
+                    Nazwisko: '',
+                    Firma: '',
+                    Number: ''
+                }
             }
         },
-        computed:{
+        computed: {
             action(){
                 return this.$route.path.includes('update') ? 'update' : 'new'
             },
@@ -38,6 +47,7 @@
             }
         },
         created(){
+
             switch(this.module){
                 case 'contacts' :
                     import('../../assets/js/modules/contactData')
@@ -46,16 +56,19 @@
 
                     if(this.action === 'update'){
                         this.axios.get('/contact/c/' + this.$route.params.id)
-                            .then(res => console.log(res.data))
+                            .then(res =>{
+                                // Replace formOutput with requested data
+                                this.formOutput.Imię = res.data.contact.firstname
+                                this.formOutput.Nazwisko = res.data.contact.surname
+                                this.formOutput.Firma = res.data.contact.business
+                            })
                     }
-                break;
+                    break;
             }
         },
         methods: {
             addContact(){
-                console.log(this.action)
-                switch(this.action)
-                {
+                switch(this.action){
                     case 'new':
                         this.axios.post('/contact/addContact', {
                             firstname: this.formOutput["Imię"],
@@ -74,10 +87,7 @@
                             basicEmail: this.formOutput['Email podstawowy']
                         })
                         break;
-
                 }
-
-
             }
         }
     }
