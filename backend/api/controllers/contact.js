@@ -2,11 +2,10 @@ const mongoose = require('mongoose')
 const Contact = require('../models/contact')
 
 exports.contact_addContact = (req, res, next) => {
-    Contact.countDocuments({}, (err, c) => {
         const newContact = {
             _id: mongoose.Types.ObjectId(),
             //basic info
-            number: `C${c + 1}`,
+            number: '', //The number to which will be automatically attached prefix and number e.g C5 thanks pre save middleware in contact module
             firstname: req.body.firstname ? req.body.firstname : '',
             surname: req.body.surname ? req.body.surname : '',
             business: req.body.business ? req.body.business : '',
@@ -38,7 +37,6 @@ exports.contact_addContact = (req, res, next) => {
                 added: true
             })
         })
-    })
     .catch(err => {
         console.log(err)
         return res.status(400).json({
