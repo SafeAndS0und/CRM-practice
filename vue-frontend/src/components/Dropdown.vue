@@ -21,6 +21,8 @@
 
 <style scoped lang="scss">
 
+    @import '../assets/css/variables.scss';
+
     .dropdown{
         z-index: 101;
 
@@ -29,14 +31,14 @@
             text-align: center;
             line-height: 50px;
             color: white;
-            background-color: #323232;
+            background-color: $blockBgC;
             width: 100%;
             border-bottom: 1px solid #3b3b3b;
             transition: 150ms;
             cursor: pointer;
 
             &:hover{
-                background-color: #232323;
+                background-color: #1b1b1b;
             }
         }
     }

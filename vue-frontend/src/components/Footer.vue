@@ -1,9 +1,11 @@
 <template>
     <footer>
-        <h3>CRM System © 2018</h3>
-        <a href="https://github.com/SafeAndS0und/CRM-practice" target="_blank">
-            <v-icon name="brands/github" scale="2" class="github" @click.native=""/>
-        </a>
+        <div>
+            <h3>CRM System © 2018</h3>
+            <a href="https://github.com/SafeAndS0und/CRM-practice" target="_blank">
+                <v-icon name="brands/github" scale="2" class="github" @click.native=""/>
+            </a>
+        </div>
     </footer>
 </template>
 
@@ -15,35 +17,42 @@
 
 <style scoped lang="scss">
 
+    @import '../assets/css/variables.scss';
+
     footer {
         width: 100%;
         margin-top: 30px;
-        height: 60px;
-        background-color: #323232;
-        position: relative;
+        height: 50px;
+        background-color: $blockBgC;
+        position: fixed;
+        bottom: 0;
 
-        h3 {
-            position: absolute;
-            bottom: 19px;
-            right: 30px;
-            font-weight: lighter;
-            font-size: 16px;
-            color: #767477;
-        }
+        div {
+            position: relative;
+            height: 100%;
 
-        .github {
-            position: absolute;
-            bottom: 12px;
-            left: 30px;
-            color: #626063;
-            transition: 200ms;
+            h3 {
+                position: absolute;
+                bottom: 15px;
+                right: 30px;
+                font-weight: lighter;
+                font-size: 16px;
+                color: #767477;
+            }
 
-            &:hover {
-                color: #ababab;
-                cursor: pointer;
+            .github {
+                position: absolute;
+                bottom: 7px;
+                left: 30px;
+                color: #626063;
+                transition: 200ms;
+
+                &:hover {
+                    color: #ababab;
+                    cursor: pointer;
+                }
             }
         }
     }
 
 </style>
-<!--TODO: Footer to bottom-->

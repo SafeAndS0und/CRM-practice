@@ -2,15 +2,15 @@
     <div class="sidebar">
         <section>
             <article @click="$router.push('/contacts')">
-                <v-icon name="regular/address-book" scale="2.6" class="icon"/>
+                <v-icon name="regular/address-book" scale="2" class="icon"/>
                 <h3>Kontakty</h3>
             </article>
             <article>
-                <v-icon name="regular/handshake" scale="2.6" class="icon"/>
+                <v-icon name="regular/handshake" scale="2" class="icon"/>
                 <h3>Kontrahenci</h3>
             </article>
             <article>
-                <v-icon name="file-alt" scale="2.6" class="icon"/>
+                <v-icon name="file-alt" scale="2" class="icon"/>
                 <h3>Faktury</h3>
             </article>
         </section>
@@ -41,8 +41,8 @@
             transform: translateY(-50%);
 
             article {
-                width: 100%;
-                height: 140px;
+                width:100%;
+                height: 110px;
                 transition: 250ms;
                 cursor: pointer;
                 display: grid;
@@ -53,7 +53,6 @@
                 .icon {
                     grid-row: 2;
                     color: #ffffff;
-
                 }
 
                 h3 {
@@ -61,27 +60,27 @@
                     grid-row: 3;
                     color: #e6e6e6;
                     letter-spacing: 3px;
-                    font-size: 16px;
+                    font-size: 14px;
                 }
             }
             article:nth-child(1) {
-                border-top-right-radius: 5px;
-                background-color: #1e64cb;
+                border-top-right-radius: 3px;
+                background-color: $blockBgC;
 
                 &:hover {
                     background-color: #1e5cb8;
                 }
             }
             article:nth-child(2) {
-                background-color: #de6b3e;
+                background-color:$blockBgC;
 
                 &:hover {
                     background-color: #ca5e34;
                 }
             }
             article:nth-child(3) {
-                background-color: #cf4371;
-                border-bottom-right-radius: 5px;
+                background-color: $blockBgC;
+                border-bottom-right-radius: 3px;
                 &:hover {
                     background-color: #b22f65;
                 }

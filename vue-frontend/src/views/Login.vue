@@ -7,7 +7,7 @@
         <section class="login-form">
             <h1 class="form-title">Zaloguj się</h1>
             <CustomInput placeholder="Nazwa Użytkownika" class="form-item" v-model="username"/>
-            <CustomInput placeholder="Hasło" type="password" class="form-item" v-model="password"/>
+            <CustomInput placeholder="Hasło" type="password" class="form-item" v-model="password" @keyup.enter.native="login"/>
 
             <v-icon name="arrow-circle-right" scale="2.2" :class="{logged: isLogged, error: hasError}" class="login" @click.native="login"/>
 

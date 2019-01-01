@@ -2,8 +2,6 @@
     <div class="home">
         <h1 class="text">CRM - projekt stażowy</h1>
         <img alt="Vue logo" src="../assets/logo.png">
-        <img alt="Vue logo" src="../assets/logo.png">
-        <img alt="Vue logo" src="../assets/logo.png">
         <router-link to="/admin/register" v-if="$store.state.user.token">Dodaj użytkownika</router-link>
 
     </div>

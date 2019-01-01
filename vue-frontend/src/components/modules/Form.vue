@@ -38,7 +38,6 @@
             }
         },
         created(){
-            // TODO: Change if to switch
             switch(this.module){
                 case 'contacts' :
                     import('../../assets/js/modules/contactData')
@@ -86,11 +85,13 @@
 
 <style scoped lang="scss">
 
+    @import '../../assets/css/variables.scss';
+
     .new-container {
         display: grid;
-        background-color: #272528;
+        background-color: $blockBgC;
         border-radius: 5px;
-        color: #d7d7d7;
+        color: $blockFontC;
         padding: 15px;
 
         div {
@@ -100,7 +101,7 @@
                 grid-column: 1/-1;
                 text-transform: uppercase;
                 letter-spacing: 2px;
-                color: #949196;
+                color: $blockFontC;
             }
 
             section {

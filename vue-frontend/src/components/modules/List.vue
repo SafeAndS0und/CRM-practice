@@ -67,7 +67,7 @@
             display: grid;
             width: 100%;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            background-color: #232323;
+            background-color: #222023;
             padding: 6px;
             grid-gap: 5px;
             transition: 120ms;
@@ -77,7 +77,7 @@
                 color: #dadada;
                 text-align: center;
                 padding: 5px;
-                background-color: #323232;
+                background-color: #323033;
                 display: inline-block;
                 cursor: pointer;
                 transition: 150ms;
