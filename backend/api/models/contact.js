@@ -75,7 +75,7 @@ const contactSchema = mongoose.Schema({
 })
 
 contactSchema.pre('save', async function(next) {
-    await Stats.stats_increase(0, 1)
+    this.number = await Stats.stats_increase('C')
     next()
 })
 
