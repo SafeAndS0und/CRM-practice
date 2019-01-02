@@ -4,7 +4,31 @@ export const values = {
     contact: [],
     address: []
 }
+export const dictionary = {
+    firstname: "Imię",
+    surname: "Nazwisko",
+    number: "Numer",
+    business: "Firma",
+    creationTime: "Czas Utworzenia",
+    recordOwner: "Właściciel",
 
+    basicPhone: "Telefon podstawowy",
+    additionalNumber: "Telefon dodatkowy",
+    basicEmail: "Email podstawowy",
+    additionalEmail: "Email dodatkowy",
+    skype: "Skype",
+    canContactViaEmail: "Zgoda na kontakt mail.",
+    canContactViaPhone: "Zgoda na kontakt tel.",
+
+    street: "Ulica",
+    buildingNumber: "Nr budynku",
+    apartmentNumber: "Nr lokalu",
+    postCode: "Kod pocztowy",
+    city: "Miasto",
+    voivodeship: "Województwo",
+    country: "Kraj"
+}
+export const blackList = ['number', 'creationTime', 'recordOwner', "Numer", "Czas Utworzenia", "Właściciel"]
 export default {
     fields: {
         basic: ["Numer", "Imię", "Nazwisko", "Firma", "Czas Utworzenia", "Właściciel"],

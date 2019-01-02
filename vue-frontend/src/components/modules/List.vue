@@ -99,7 +99,7 @@
 
             &:hover {
                 background-color: #1d1c1d;
-                transform: translateX(8px);
+                /*transform: translateX(8px);*/
 
                 article {
                     background-color: rgba(59, 58, 60, 0.95);

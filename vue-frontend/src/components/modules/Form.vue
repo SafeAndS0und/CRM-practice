@@ -5,8 +5,7 @@
             <p>{{key}}</p>
             <section>
                 <article v-for="field of value">
-                    <CustomInput :placeholder="field" v-model="formOutput[field]"/>
-                    <!--<input type="text" v-model="formOutput[field]">-->
+                    <CustomInput :placeholder="field" v-model="polishOutput[field]"/>
                 </article>
             </section>
 
@@ -14,27 +13,22 @@
             <button v-if="Object.keys(fields)[Object.keys(fields).length - 1] === key" @click="addContact">Zapisz
             </button>
         </div>
-
-        <p>{{formOutput}}</p>
-
     </div>
 </template>
 
 <script>
     import CustomInput from '../partials/CustomInput.vue'
+    import {dictionary, blackList} from "../../assets/js/modules/contactData";
 
     export default {
         name: "New",
         components: {CustomInput},
         data(){
             return {
-                fields: [],
-                formOutput: {
-                    Imię: '',
-                    Nazwisko: '',
-                    Firma: '',
-                    Number: ''
-                }
+                fields: {},
+                polishOutput: {Nazwisko: ''}, // Keeps polish fields and values
+                englishOutput: {surname: ''} // Keeps english fields and values
+
             }
         },
         computed: {
@@ -51,41 +45,48 @@
             switch(this.module){
                 case 'contacts' :
                     import('../../assets/js/modules/contactData')
-                        .then(module => this.fields = module.default.fields)
+                        .then(module => {
+
+                            this.fields = JSON.parse(JSON.stringify(module.default.fields)) // copying so we would not change the source object
+
+                            // Delete useless inputs
+                            blackList.forEach(field => {
+                                let index = this.fields.basic.findIndex(f => f === field)
+                                if(index !== -1) this.fields.basic.splice(index, 1)
+                            })
+
+                        })
                         .catch(err => console.log(err.response))
 
                     if(this.action === 'update'){
                         this.axios.get('/contact/c/' + this.$route.params.id)
                             .then(res =>{
-                                // Replace formOutput with requested data
-                                this.formOutput.Imię = res.data.contact.firstname
-                                this.formOutput.Nazwisko = res.data.contact.surname
-                                this.formOutput.Firma = res.data.contact.business
+                                // Replace polishOutput with requested data
+                                Object.keys(dictionary).forEach(item =>{
+                                    if(!blackList.find(el => el === item)){ // if the iterated item isnt in the black list
+                                        this.polishOutput[dictionary[item]] = res.data.contact[item] //Fill the inputs with data from server
+                                    }
+                                })
+                                console.log(this.polishOutput)
                             })
+                            .catch(err => console.log(err.response))
                     }
                     break;
             }
         },
         methods: {
             addContact(){
+                Object.keys(dictionary).forEach(item =>{
+                    this.englishOutput[item] = this.polishOutput[dictionary[item]] // create english field-value pair, for the server
+                })
+
                 switch(this.action){
                     case 'new':
-                        this.axios.post('/contact/addContact', {
-                            firstname: this.formOutput["Imię"],
-                            surname: this.formOutput['Nazwisko'],
-                            business: this.formOutput['Firma'],
-                            basicPhone: this.formOutput['Telefon podstawowy'],
-                            basicEmail: this.formOutput['Email podstawowy']
-                        })
+                        this.axios.post('/contact/addContact', this.englishOutput)
+                            .catch(err => console.log(err.response))
                         break;
                     case 'update':
-                        this.axios.patch('/contact/c/' + this.$route.params.id, {
-                            firstname: this.formOutput["Imię"],
-                            surname: this.formOutput['Nazwisko'],
-                            business: this.formOutput['Firma'],
-                            basicPhone: this.formOutput['Telefon podstawowy'],
-                            basicEmail: this.formOutput['Email podstawowy']
-                        })
+                        this.axios.patch('/contact/c/' + this.$route.params.id, this.englishOutput)
                         break;
                 }
             }
@@ -118,7 +119,7 @@
                 margin-bottom: 20px;
                 padding: 10px;
                 display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
                 grid-gap: 8px;
                 justify-items: center;
 
