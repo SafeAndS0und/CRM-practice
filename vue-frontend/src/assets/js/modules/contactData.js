@@ -13,7 +13,7 @@ export const dictionary = {
     recordOwner: "Właściciel",
 
     basicPhone: "Telefon podstawowy",
-    additionalNumber: "Telefon dodatkowy",
+    additionalPhone: "Telefon dodatkowy",
     basicEmail: "Email podstawowy",
     additionalEmail: "Email dodatkowy",
     skype: "Skype",
@@ -49,10 +49,10 @@ export default {
             values.basic = [].concat(arr)
 
         },
-        assignContactValues({basicEmail, basicPhone, additionalEmail, additionalNumber, skype, canContactViaEmail, canContactViaPhone}){
+        assignContactValues({basicEmail, basicPhone, additionalEmail, additionalPhone, skype, canContactViaEmail, canContactViaPhone}){
             const arr = [
                 {f: "Telefon podstawowy", v: basicPhone},
-                {f: "Telefon dodatkowy", v: additionalNumber},
+                {f: "Telefon dodatkowy", v: additionalPhone},
                 {f: "Email podstawowy", v: basicEmail},
                 {f: "Email dodatkowy", v: additionalEmail},
                 {f: "Skype", v: skype},

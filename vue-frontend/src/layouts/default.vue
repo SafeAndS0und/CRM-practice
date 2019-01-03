@@ -1,7 +1,8 @@
 <template>
     <div>
-        <Navbar @toggleDropdown="showDropdown = !showDropdown"/>
-
+        <transition name="hideNav">
+            <Navbar @toggleDropdown="showDropdown = !showDropdown" v-if="showNavbar"/>
+        </transition>
 
         <v-touch @swipeleft="showSidebar = false">
             <transition name="slide">
@@ -20,7 +21,9 @@
             <Dropdown v-if="showDropdown" @hideDropdown="showDropdown = false" class="dropdown"/>
         </transition>
 
-        <Footer/>
+        <transition name="hideFooter">
+            <Footer v-if="showFooter"/>
+        </transition>
 
     </div>
 </template>
@@ -36,10 +39,28 @@
         components: {
             Navbar, Sidebar, Dropdown, Footer
         },
+        created(){
+            window.addEventListener('scroll', this.changeYOffset)
+        },
         data(){
             return {
                 showSidebar: false,
-                showDropdown: false
+                showDropdown: false,
+                pageYOffset: 0
+            }
+        },
+        computed: {
+            showNavbar(){
+                return this.pageYOffset <= 30
+            },
+
+            showFooter(){
+                return this.pageYOffset + window.innerHeight >= document.documentElement.offsetHeight
+            }
+        },
+        methods: {
+            changeYOffset(){
+                this.pageYOffset = window.pageYOffset
             }
         }
     }
@@ -58,7 +79,6 @@
         color: #353336;
         transition: 200ms;
         cursor: pointer;
-        background-color: rgba(182, 89, 85, 0.95);
 
         &:hover, &:active {
             color: #e7e7e7;
@@ -128,12 +148,57 @@
     .slideRight-enter-active, .slideRight-leave-active {
         transition: 0.8s;
     }
+
     .slideRight-enter {
         transform: translateX(400px);
     }
 
     .slideRight-leave-to {
         transform: translateX(400px);
+    }
+
+
+
+
+    /* TRANSITIONS */
+
+    /* Nav */
+    .hideNav-enter-active{
+        transition: 300ms;
+    }
+    .hideNav-leave-active{
+        transition: 300ms;
+    }
+
+    .hideNav-enter{
+        transform: translateY(-70px);
+    }
+    .hideNav-enter-to{
+        transform: translateY(0px);;
+    }
+
+    .hideNav-leave-to{
+        transform: translateY(-70px);
+    }
+
+
+    /* Footer */
+    .hideFooter-enter-active{
+        transition: 300ms;
+    }
+    .hideFooter-leave-active{
+        transition: 300ms;
+    }
+
+    .hideFooter-enter{
+        transform: translateY(60px);
+    }
+    .hideFooter-enter-to{
+        transform: translateY(0px);;
+    }
+
+    .hideFooter-leave-to{
+        transform: translateY(60px);
     }
 
 </style>
