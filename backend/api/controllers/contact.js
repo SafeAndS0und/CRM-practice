@@ -47,71 +47,80 @@ exports.contact_addContact = (req, res, next) => {
 }
 
 exports.contact_list = (req, res, next) => {
-    const page = req.params.page
-    if(page <= 0) page = 1
+    Contact.countDocuments({}, (err, contactCount) => {
+        let page = req.params.page
+        if(page <= 0) page = 1
 
-    const docsPerPage = 15 //Documents per page
-    const skipDocs = page * docsPerPage - docsPerPage
-    
-    const sort = req.params.sort
-    let sortObj = {}
+        
+        let docsPerPage = 15 //Documents per page
+        const skipDocs = page * docsPerPage - docsPerPage
 
-    switch(sort) {
-        case 'a_ct': //asc creation time
-            sortObj = {creationTime: 1}
-            break;
-        case 'd_ct': //desc creation time
-            sortObj = {creationTime: -1}
-            break;
-        case 'a_ro': //asc record owner
-            sortObj = {recordOwner: 1}
-            break;
-        case 'd_ro': //desc record owner
-            sortObj = {recordOwner: -1}
-            break;
-        case 'a_n': //asc number
-            sortObj = {number: 1}
-            break;
-        case 'd_n': //desc number
-            sortObj = {number: -1}
-            break;
-        case 'a_fn': //asc firstname
-            sortObj = {firstname: 1}
-            break;
-        case 'd_fn': //desc firstname
-            sortObj = {firstname: -1}
-            break;
-        case 'a_sn': //asc surname
-            sortObj = {surname: 1}
-            break;
-        case 'd_sn': //desc surname
-            sortObj = {surname: -1}
-            break;
-        case 'a_b': //asc business
-            sortObj = {business: 1}
-            break;
-        case 'd_b': //desc business
-            sortObj = {business: -1}
-            break;
-        default: //default asc creation time
-            sortObj = {creationTime: 1}
-            break;
-    }
+        let numOfPages = Math.ceil(contactCount / docsPerPage)
+        
+        const sort = req.params.sort
+        let sortObj = {}
 
-    Contact
-    .find({}, null, {skip: skipDocs, limit: docsPerPage})
-    .populate('recordOwner', 'firstname surname')
-    .sort(sortObj)
-    .select("_id number firstname surname business basicEmail basicPhone recordOwner")
-    .then(contacts => {
-        let msg = ''
-
-        if(contacts.length == 0) {
-            msg = `Brak kontaktów. Strona: ${page}`
+        if(page > numOfPages) {
+            if(page > numOfPages) {
+                return res.status(200).json({
+                    msg: `Brak kontaktów. Strona: ${page}`,
+                    numOfPages: numOfPages
+                })
+            }   
         }
-        return res.status(200).json({
-            msg: msg,
-            contacts: contacts
+
+        switch(sort) {
+            case 'a_ct': //asc creation time
+                sortObj = {creationTime: 1}
+                break;
+            case 'd_ct': //desc creation time
+                sortObj = {creationTime: -1}
+                break;
+            case 'a_ro': //asc record owner
+                sortObj = {recordOwner: 1}
+                break;
+            case 'd_ro': //desc record owner
+                sortObj = {recordOwner: -1}
+                break;
+            case 'a_n': //asc number
+                sortObj = {number: 1}
+                break;
+            case 'd_n': //desc number
+                sortObj = {number: -1}
+                break;
+            case 'a_fn': //asc firstname
+                sortObj = {firstname: 1}
+                break;
+            case 'd_fn': //desc firstname
+                sortObj = {firstname: -1}
+                break;
+            case 'a_sn': //asc surname
+                sortObj = {surname: 1}
+                break;
+            case 'd_sn': //desc surname
+                sortObj = {surname: -1}
+                break;
+            case 'a_b': //asc business
+                sortObj = {business: 1}
+                break;
+            case 'd_b': //desc business
+                sortObj = {business: -1}
+                break;
+            default: //default asc creation time
+                sortObj = {creationTime: 1}
+                break;
+        }
+
+        Contact
+        .find({}, null, {skip: skipDocs, limit: docsPerPage})
+        .populate('recordOwner', 'firstname surname')
+        .sort(sortObj)
+        .select("_id number firstname surname business basicEmail basicPhone recordOwner")
+        .then(contacts => {
+            return res.status(200).json({
+                numOfPages: numOfPages,
+                contacts: contacts
+            })
         })
     })
     .catch(err => {
