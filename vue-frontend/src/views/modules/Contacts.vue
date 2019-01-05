@@ -76,10 +76,11 @@
                          v-model="searchValues['basicEmail']"></CustomInput>
         </div>
 
-        <router-link to="/contacts/new" class="addNew" v-if="$route.path === '/contacts'">
-            <v-icon name="plus-circle" class="icon" scale="1.3"/>
-        </router-link>
+        <CreatePopUp v-if="showCreatePopUp" @closePopUp="showCreatePopUp = false"/>
 
+        <v-icon name="plus-circle" class="icon-new addNew"
+                @click.native="showCreatePopUp = !showCreatePopUp"
+                scale="1.3"/>
 
         <div class="content" :style="{gridColumn: gridWidth }">
 
@@ -108,11 +109,12 @@
 <script>
     import List from '../../components/modules/List.vue'
     import CustomInput from '../../components/partials/CustomInput.vue'
+    import CreatePopUp from '../../components/modules/CreatePopUp.vue'
 
     export default {
         name: "Contacts",
         components: {
-            List, CustomInput
+            List, CustomInput, CreatePopUp
         },
         data(){
             return {
@@ -120,7 +122,8 @@
                 searchValues: {},
                 pages: '',
                 activePage: 1,
-                sortMethod: 'a_ct'
+                sortMethod: 'a_ct',
+                showCreatePopUp: false
             }
         },
         computed: {
@@ -272,7 +275,7 @@
                         }
                     }
 
-                    .active{
+                    .active {
                         background-color: #93393d;
                         color: white;
                     }
@@ -299,19 +302,19 @@
             grid-column: 11/12;
             justify-self: end;
             align-self: center;
+            cursor: pointer;
+        }
+        .icon-new {
+            border-radius: 15px;
+            color: white;
+            background-color: #2f353e;
+            padding: 10px 12px;
+            transition: 200ms;
 
-            .icon {
-                border-radius: 15px;
-                color: white;
-                background-color: #2f353e;
-                padding: 10px 12px;
-                transition: 200ms;
-
-                &:hover {
-                    background-color: #2b75e4;
-                    padding: 10px 25px;
-                    border-radius: 0;
-                }
+            &:hover {
+                background-color: #2b75e4;
+                padding: 10px 25px;
+                border-radius: 0;
             }
         }
 
@@ -361,15 +364,17 @@
     }
 
     .list-enter-active, .list-leave-active {
-        transition: 300ms;
+        transition: 400ms;
     }
 
     .list-enter {
-        opacity: 0;
+        filter: blur(5px);
+        opacity: 0.5;
     }
 
     .list-leave-to {
-        opacity: 0;
+        filter: blur(6px);
+        opacity: 0.5;
     }
 
 </style>

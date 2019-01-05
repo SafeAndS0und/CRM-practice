@@ -46,10 +46,6 @@ export default new Router({
                     component: () => import('./components/modules/BlockList.vue')
                 },
                 {
-                    path: "new",
-                    component: () => import('./components/modules/Form.vue')
-                },
-                {
                     path: "update/:id",
                     component: () => import('./components/modules/Form.vue')
                 },

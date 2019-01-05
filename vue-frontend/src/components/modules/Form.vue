@@ -32,10 +32,6 @@
             }
         },
         computed: {
-            action(){
-                return this.$route.path.includes('update') ? 'update' : 'new'
-            },
-
             module(){
                 if(this.$route.path.includes('contacts')) return 'contacts'
             }
@@ -45,12 +41,11 @@
             switch(this.module){
                 case 'contacts' :
                     import('../../assets/js/modules/contactData')
-                        .then(module => {
-
+                        .then(module =>{
                             this.fields = JSON.parse(JSON.stringify(module.default.fields)) // copying so we would not change the source object
 
                             // Delete useless inputs
-                            blackList.forEach(field => {
+                            blackList.forEach(field =>{
                                 let index = this.fields.basic.findIndex(f => f === field)
                                 if(index !== -1) this.fields.basic.splice(index, 1)
                             })
@@ -58,19 +53,19 @@
                         })
                         .catch(err => console.log(err.response))
 
-                    if(this.action === 'update'){
-                        this.axios.get('/contact/c/' + this.$route.params.id)
-                            .then(res =>{
-                                // Replace polishOutput with requested data
-                                Object.keys(dictionary).forEach(item =>{
-                                    if(!blackList.find(el => el === item)){ // if the iterated item isnt in the black list
-                                        this.polishOutput[dictionary[item]] = res.data.contact[item] //Fill the inputs with data from server
-                                    }
-                                })
-                                console.log(this.polishOutput)
+                    this.axios.get('/contact/c/' + this.$route.params.id)
+                        .then(res =>{
+                            // Replace polishOutput with requested data
+                            Object.keys(dictionary)
+                                .forEach(item =>{
+                                if(!blackList.find(el => el === item)){ // if the iterated item isnt in the black list
+                                    this.polishOutput[dictionary[item]] = res.data.contact[item] //Fill the inputs with data from server
+                                }
                             })
-                            .catch(err => console.log(err.response))
-                    }
+                            console.log(this.polishOutput)
+                        })
+                        .catch(err => console.log(err.response))
+
                     break;
             }
         },
@@ -80,15 +75,7 @@
                     this.englishOutput[item] = this.polishOutput[dictionary[item]] // create english field-value pair, for the server
                 })
 
-                switch(this.action){
-                    case 'new':
-                        this.axios.post('/contact/addContact', this.englishOutput)
-                            .catch(err => console.log(err.response))
-                        break;
-                    case 'update':
-                        this.axios.patch('/contact/c/' + this.$route.params.id, this.englishOutput)
-                        break;
-                }
+                this.axios.patch('/contact/c/' + this.$route.params.id, this.englishOutput)
             }
         }
     }
