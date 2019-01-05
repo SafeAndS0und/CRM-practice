@@ -5,32 +5,52 @@
             <section>
                 <div class="icon-container">
                     <p>Imieniu</p>
-                    <v-icon name="chevron-up" scale="1.2" class="icon" @click.native="sortTable('a_fn')"/>
-                    <v-icon name="chevron-down" scale="1.2" class="icon" @click.native="sortTable('d_fn')"/>
+                    <v-icon name="chevron-up" scale="1.2" class="icon"
+                            :class="{active: sortMethod === 'a_fn'}"
+                            @click.native="sortTable('a_fn')"/>
+                    <v-icon name="chevron-down" scale="1.2" class="icon"
+                            :class="{active: sortMethod === 'd_fn'}"
+                            @click.native="sortTable('d_fn')"/>
                 </div>
 
                 <div class="icon-container">
                     <p>Nazwisku</p>
-                    <v-icon name="chevron-up" scale="1.2" class="icon" @click.native="sortTable('a_sn')"/>
-                    <v-icon name="chevron-down" scale="1.2" class="icon" @click.native="sortTable('d_sn')"/>
+                    <v-icon name="chevron-up" scale="1.2" class="icon"
+                            :class="{active: sortMethod === 'a_sn'}"
+                            @click.native="sortTable('a_sn')"/>
+                    <v-icon name="chevron-down" scale="1.2" class="icon"
+                            :class="{active: sortMethod === 'd_sn'}"
+                            @click.native="sortTable('d_sn')"/>
                 </div>
 
                 <div class="icon-container">
                     <p>Firmie</p>
-                    <v-icon name="chevron-up" scale="1.2" class="icon" @click.native="sortTable('a_b')"/>
-                    <v-icon name="chevron-down" scale="1.2" class="icon" @click.native="sortTable('d_b')"/>
+                    <v-icon name="chevron-up" scale="1.2" class="icon"
+                            :class="{active: sortMethod === 'a_b'}"
+                            @click.native="sortTable('a_b')"/>
+                    <v-icon name="chevron-down" scale="1.2" class="icon"
+                            :class="{active: sortMethod === 'd_b'}"
+                            @click.native="sortTable('d_b')"/>
                 </div>
 
                 <div class="icon-container">
                     <p>Właść. rek.</p>
-                    <v-icon name="chevron-up" scale="1.2" class="icon" @click.native="sortTable('a_ro')"/>
-                    <v-icon name="chevron-down" scale="1.2" class="icon" @click.native="sortTable('d_ro')"/>
+                    <v-icon name="chevron-up" scale="1.2" class="icon"
+                            :class="{active: sortMethod === 'a_ro'}"
+                            @click.native="sortTable('a_ro')"/>
+                    <v-icon name="chevron-down" scale="1.2" class="icon"
+                            :class="{active: sortMethod === 'd_ro'}"
+                            @click.native="sortTable('d_ro')"/>
                 </div>
 
                 <div class="icon-container">
                     <p>Czasie dod.</p>
-                    <v-icon name="chevron-up" scale="1.2" class="icon" @click.native="sortTable('a_ct')"/>
-                    <v-icon name="chevron-down" scale="1.2" class="icon" @click.native="sortTable('d_ct')"/>
+                    <v-icon name="chevron-up" scale="1.2" class="icon"
+                            :class="{active: sortMethod === 'a_ct'}"
+                            @click.native="sortTable('a_ct')"/>
+                    <v-icon name="chevron-down" scale="1.2" class="icon"
+                            :class="{active: sortMethod === 'd_ct'}"
+                            @click.native="sortTable('d_ct')"/>
                 </div>
 
             </section>
@@ -42,12 +62,18 @@
         />
 
         <div class="search" v-if="$route.path === '/contacts'">
-            <CustomInput placeholder="Imię"></CustomInput>
-            <CustomInput placeholder="Nazwisko"></CustomInput>
-            <CustomInput placeholder="Firma"></CustomInput>
-            <CustomInput placeholder="Właściciel"></CustomInput>
-            <CustomInput placeholder="Telefon"></CustomInput>
-            <CustomInput placeholder="Email"></CustomInput>
+            <CustomInput placeholder="Imię" @keyup.native="search"
+                         v-model="searchValues['firstname']"></CustomInput>
+            <CustomInput placeholder="Nazwisko" @keyup.native="search"
+                         v-model="searchValues['surname']"></CustomInput>
+            <CustomInput placeholder="Firma" @keyup.native="search"
+                         v-model="searchValues['business']"></CustomInput>
+            <CustomInput placeholder="Właściciel" @keyup.native="search"
+                         v-model="searchValues['recordOwner']"></CustomInput>
+            <CustomInput placeholder="Telefon" @keyup.native="search"
+                         v-model="searchValues['basicPhone']"></CustomInput>
+            <CustomInput placeholder="Email" @keyup.native="search"
+                         v-model="searchValues['basicEmail']"></CustomInput>
         </div>
 
         <router-link to="/contacts/new" class="addNew" v-if="$route.path === '/contacts'">
@@ -91,6 +117,7 @@
         data(){
             return {
                 contacts: [],
+                searchValues: {},
                 pages: '',
                 activePage: 1,
                 sortMethod: 'a_ct'
@@ -119,9 +146,9 @@
                 })
             },
             sortTable(method){
-                this.sortMethod = method
                 this.axios.get('/contact/list/1/' + method)
                     .then(res =>{
+                        this.sortMethod = method //
                         this.contacts = res.data.contacts
                     })
                     .catch(err => console.log(err.response))
@@ -133,6 +160,9 @@
                         this.contacts = res.data.contacts
                     })
                     .catch(err => console.log(err.response))
+            },
+            search(){
+
             }
         }
 
@@ -224,7 +254,7 @@
                     p {
                         font-size: 12px;
                         text-align: center;
-                        padding: 8px 0;
+                        padding: 7px 0;
                     }
                     .icon {
                         height: 100%;
@@ -234,12 +264,17 @@
                         cursor: pointer;
                         color: #7b7b7b;
                         transition: 150ms;
-                        padding: 0 7px;
+                        padding: 0 8px;
 
                         &:hover {
                             background-color: #93393d;
                             color: white;
                         }
+                    }
+
+                    .active{
+                        background-color: #93393d;
+                        color: white;
                     }
                 }
             }
@@ -283,39 +318,8 @@
         .content {
             grid-row: 4;
 
-            .list-container {
-
-                .icons {
-                    margin: 5px;
-                    display: grid;
-
-                    .icon {
-                        grid-row: 1;
-                        margin: 0;
-                        transition: 100ms;
-                        padding: 12px;
-                        cursor: pointer;
-
-                        &:first-child {
-                            justify-self: end;
-                            color: #3db132;
-                        }
-                        &:last-child {
-                            justify-self: start;
-                            color: #a50f18;
-                        }
-
-                        &:hover {
-                            border-radius: 50%;
-                            background-color: #ebebeb;
-                        }
-                    }
-                }
-
-                .list {
-                    margin-bottom: 5px;
-
-                }
+            .list {
+                margin-bottom: 5px;
             }
         }
 
@@ -357,17 +361,15 @@
     }
 
     .list-enter-active, .list-leave-active {
-        transition: 500ms;
+        transition: 300ms;
     }
 
-    .list-enter
-    {
+    .list-enter {
         opacity: 0;
     }
 
-    .list-leave-to{
+    .list-leave-to {
         opacity: 0;
-        transform: translateX(-300px);
     }
 
 </style>

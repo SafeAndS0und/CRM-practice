@@ -82,7 +82,7 @@
 
         &:hover, &:active {
             color: #e7e7e7;
-            background-color: rgba(132, 57, 52, 0.95);
+            background-color: rgb(203, 63, 72);
         }
     }
 

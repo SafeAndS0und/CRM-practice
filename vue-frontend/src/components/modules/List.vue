@@ -30,7 +30,7 @@
         <div class="icons">
             <v-icon name="trash" scale="1.2" @click.native="del(contact._id)" class="icon"/>
             <v-icon name="pencil-alt" scale="1.2" class="icon" @click.native="$router.push('/contacts/update/' + contact._id)"/>
-            <v-icon name="check-square" scale="1.2" class="icon"/>
+            <v-icon name="check-square" scale="1.2" class="icon" :class="{active: selected}" @click.native="select"/>
         </div>
     </div>
 </template>
@@ -43,12 +43,19 @@
         },
         methods: {
             del(id){
-
                 this.axios.delete('/contact/c/' + id)
                     .then(res => {
                        this.$emit('contactDeleted', id)
                     })
                     .catch(err => console.log(err.response))
+            },
+            select(){
+                this.selected = !this.selected
+            }
+        },
+        data(){
+            return {
+                selected: false
             }
         }
     }
@@ -62,35 +69,35 @@
         position: relative;
 
         a {
-            border-radius: 6px;
+            border-radius: 4px;
             text-decoration: none;
             display: grid;
             width: 100%;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             background-color: #222023;
             padding: 6px;
-            grid-gap: 5px;
+            grid-gap: 4px;
             transition: 120ms;
 
             article {
                 border-radius: 3px;
                 color: #dadada;
                 text-align: center;
-                padding: 5px;
+                padding: 4px;
                 background-color: #323033;
                 display: inline-block;
                 cursor: pointer;
                 transition: 150ms;
 
                 h5 {
-                    font-size: 14px;
+                    font-size: 13px;
                     font-weight: lighter;
-                    letter-spacing: 2px;
-                    margin-bottom: 5px;
+                    letter-spacing: 1px;
+                    margin-bottom: 3px;
                 }
 
                 p {
-                    font-size: 13px;
+                    font-size: 12px;
                     margin-bottom: 0;
                 }
 
@@ -103,7 +110,6 @@
 
                 article {
                     background-color: rgba(59, 58, 60, 0.95);
-                    ;
                 }
             }
         }
@@ -116,6 +122,7 @@
             border-radius: 10px;
 
             .icon {
+
                 grid-row: 1;
                 justify-self: center;
                 align-self: center;
@@ -129,13 +136,18 @@
                     color: #ab1a2a;
                 }
                 &:nth-child(2):hover {
-                    color: #125ac8;
+                    color: #c87356;
                 }
                 &:last-child:hover {
-                    color: #575657;
+                    color: #285897;
                 }
             }
         }
+
+        .active {
+            color: #2776e2 !important;
+        }
+
     }
 
 </style>

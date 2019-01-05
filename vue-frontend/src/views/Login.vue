@@ -13,6 +13,7 @@
 
             <p class="msg"><span v-html="msg"></span></p>
         </section>
+
     </div>
 </template>
 
@@ -26,6 +27,7 @@
         },
         data(){
             return {
+
                 username: '',
                 password: '',
                 msg: '',
