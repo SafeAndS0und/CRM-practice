@@ -76,9 +76,13 @@
                          v-model="searchValues['basicEmail']"></CustomInput>
         </div>
 
-        <CreatePopUp v-if="showCreatePopUp" @closePopUp="showCreatePopUp = false"/>
+        <CreatePopUp v-if="showCreatePopUp"
+                     name="kontakt"
+                     :inputs="['Imię', 'Nazwisko']"
+                     @closePopUp="showCreatePopUp = false"/>
 
         <v-icon name="plus-circle" class="icon-new addNew"
+                v-if="$route.path === '/contacts'"
                 @click.native="showCreatePopUp = !showCreatePopUp"
                 scale="1.3"/>
 
@@ -122,7 +126,7 @@
                 searchValues: {},
                 pages: '',
                 activePage: 1,
-                sortMethod: 'a_ct',
+                sortMethod: 'd_ct',
                 showCreatePopUp: false
             }
         },
@@ -132,7 +136,7 @@
             }
         },
         created(){
-            this.axios.get('/contact/list/1/a_fn')
+            this.axios.get('/contact/list/1/d_ct')
                 .then(res =>{
                     this.pages = res.data.numOfPages
                     this.contacts = res.data.contacts
@@ -313,7 +317,7 @@
 
             &:hover {
                 background-color: #2b75e4;
-                padding: 10px 25px;
+                padding: 10px 33px;
                 border-radius: 0;
             }
         }
