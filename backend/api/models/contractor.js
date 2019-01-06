@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const contractorSchema = mognoose.Schema({
+const contractorSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     //basic
     name: {
@@ -90,4 +90,4 @@ const contractorSchema = mognoose.Schema({
     }
 })
 
-module.exports = mongoose.module('contractor', contractorSchema)
+module.exports = mongoose.model('contractor', contractorSchema)
