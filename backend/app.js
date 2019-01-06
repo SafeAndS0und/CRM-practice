@@ -25,10 +25,12 @@ app.use(cors())
 //Routes
 const userRouter = require('./api/routes/user')
 const contactRouter = require('./api/routes/contact')
+const searchRouter = require('./api/routes/search')
 
 //Use routes
 app.use('/user', userRouter)
 app.use('/contact', contactRouter)
+app.use('/search', searchRouter)
 
 //Handling error(Not found)
 app.use((req, res, next) => {
