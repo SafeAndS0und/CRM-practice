@@ -17,8 +17,8 @@ export const dictionary = {
     basicEmail: "Email podstawowy",
     additionalEmail: "Email dodatkowy",
     skype: "Skype",
-    canContactViaEmail: "Zgoda na kontakt mail.",
-    canContactViaPhone: "Zgoda na kontakt tel.",
+    canContactViaEmail: "Zgoda na kont. mail.",
+    canContactViaPhone: "Zgoda na kont. tel.",
 
     street: "Ulica",
     buildingNumber: "Nr budynku",
@@ -33,7 +33,7 @@ export default {
     fields: {
         basic: ["Numer", "Imię", "Nazwisko", "Firma", "Czas Utworzenia", "Właściciel"],
         contact: ["Telefon podstawowy", "Telefon dodatkowy", "Email podstawowy", "Email dodatkowy",
-            "Skype", "Zgoda na kontakt mail.", "Zgoda na kontakt tel."],
+            "Skype", "Zgoda na kont. mail.", "Zgoda na kont. tel."],
         address: ["Ulica", "Nr budynku", "Nr lokalu", "Kod pocztowy", "Miasto", "Województwo", "Kraj"]
     },
     controllers: {
@@ -56,8 +56,8 @@ export default {
                 {f: "Email podstawowy", v: basicEmail},
                 {f: "Email dodatkowy", v: additionalEmail},
                 {f: "Skype", v: skype},
-                {f: "Zgoda na kontakt mail.", v: canContactViaEmail},
-                {f: "Zgoda na kontakt tel.", v: canContactViaPhone}
+                {f: "Zgoda na kont. mail.", v: canContactViaEmail},
+                {f: "Zgoda na kont. tel.", v: canContactViaPhone}
             ]
             values.contact = [].concat(arr)
         },

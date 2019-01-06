@@ -134,7 +134,7 @@
                     width: 100%;
                     font-size: 14px;
                     font-weight: lighter;
-                    letter-spacing: 2px;
+                    letter-spacing: 1px;
                     margin-bottom: 5px;
 
                 }

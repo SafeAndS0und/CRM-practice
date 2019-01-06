@@ -96,7 +96,7 @@
                           :key="contact._id"
                           :contact="contact"
                           v-if="$route.path === '/contacts'"
-                          @contactDeleted="filterTable"
+                          @contactDeleted="deleteFromTable"
                           class="list"
                     />
                 </transition-group>
@@ -124,15 +124,20 @@
             return {
                 contacts: [],
                 searchValues: {},
-                pages: '',
+
+                pages: 1,
                 activePage: 1,
                 sortMethod: 'd_ct',
+
                 showCreatePopUp: false
             }
         },
         computed: {
             gridWidth(){
                 return this.$route.path === '/contacts' ? "2/11" : "2/12"
+            },
+            isUsingFilters(){
+                return Object.values(this.searchValues).filter(value => value !== "" && value !== undefined).length > 0
             }
         },
         created(){
@@ -144,7 +149,8 @@
                 .catch(err => console.log(err.response))
         },
         methods: {
-            filterTable(id){
+
+            deleteFromTable(id){
                 this.contacts.find((item, index) =>{
                     if(item)
                         if(item._id === id){
@@ -152,14 +158,23 @@
                         }
                 })
             },
+
             sortTable(method){
+                //If there is any filter on, execute sorting trough that
+                if(this.isUsingFilters){
+                    this.search(method)
+                    return
+                }
+                // Else, search as usual
                 this.axios.get('/contact/list/1/' + method)
                     .then(res =>{
+                        this.activePage = 1
                         this.sortMethod = method //
                         this.contacts = res.data.contacts
                     })
                     .catch(err => console.log(err.response))
             },
+
             changePage(page){
                 this.activePage = page
                 this.axios.get(`/contact/list/${page}/${this.sortMethod}`)
@@ -168,8 +183,27 @@
                     })
                     .catch(err => console.log(err.response))
             },
-            search(){
 
+            search(method = this.sortMethod){
+                this.sortMethod = method
+                this.pages = 1 //disable pagination for filtering search
+                const filledInputs = []
+                // Keep in the array only the filled inputs
+                Object.keys(this.searchValues).forEach(key => {
+                    if(this.searchValues[key]) {
+                        filledInputs.push({[key]: this.searchValues[key]})
+                    }
+                })
+
+                let str = ''
+
+                filledInputs.forEach(input => {
+                    str += `&${Object.keys(input)[0]}=${Object.values(input)[0]}`
+                })
+
+                this.axios.get(`/search/contact?sortBy=${method}${str}`)
+                    .then(res => this.contacts = res.data.result)
+                    .catch(err => console.log(err.response))
             }
         }
 

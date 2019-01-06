@@ -4,7 +4,7 @@
 
         <div class="user">
 
-            <img v-if="$store.getters.authenticated" class="avatar" src="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-128.png" width="26"/>
+            <!--<img v-if="$store.getters.authenticated" class="avatar" src="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-128.png" width="26"/>-->
             <router-link class="name" :to="$store.getters.authenticated ? '/' : '/login'">
                 {{$store.state.user.firstname ? $store.state.user.firstname : "Zaloguj się"}} {{$store.state.user.surname}}
             </router-link>
