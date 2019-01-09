@@ -1,59 +1,43 @@
 <template>
     <div class="comments">
-        <textarea placeholder="Zostaw komentarz..." v-model="commentValue"></textarea>
 
-        <article>
-            <h3>{{$store.state.user.firstname}} {{$store.state.user.surname}}</h3>
+        <h1>Komentarze</h1>
+
+        <article style="border-radius: 3px; margin-bottom: 50px">
+            <h3 style="font-size: 17px">{{$store.state.user.firstname}} {{$store.state.user.surname}}</h3>
             <p>{{commentValue}}</p>
+
+            <textarea placeholder="Zostaw komentarz..." v-model="commentValue"></textarea>
             <button class="send">
                 Dodaj komentarz
             </button>
         </article>
 
-        <article>
-            <h3>Maciej z Dąbrowy Górniczej</h3>
-            <span class="date">12.04.2018 14:10</span>
+        <article v-for="comment of comments">
+            <h3>{{comment.author.firstname}} {{comment.author.surname}}</h3>
+            <span class="date">{{comment.postedAt}}</span>
             <p>
-                Nie podoba mi się ten kontakt... Nie pozwala na kontakt telefoniczny, ani mailowy...
-                To jaki z niego kontakt, hm?
-                1/10
+                {{comment.content}}
             </p>
 
             <textarea placeholder="Odpowiedz" v-if="showResponseInput" v-model="response"></textarea>
 
-
-            <div class="interact" >
+            <div class="interact">
                 <button @click="showResponseInput = !showResponseInput">Odpowiedz</button>
                 <button>Zgłoś</button>
             </div>
 
-            <article class="answer">
-                <h3>Ninja</h3>
-                <span class="date">21.03.2018 17:54</span>
+            <article class="answer" v-for="reply of comment.replies">
+                <h3>{{reply.author.firstname}} {{reply.author.surname}}</h3>
+                <span class="date">{{reply.postedAt}}</span>
                 <p>
-                    THE FUCK YOU SAY TO ME YOU LITTLE SHIT?
-                    AHAHAHAHAHAHAH HOW ARE YOU NOT IN FUCKING SCHOOL? YOU KISS YOUR MOTHER WITH THAT MOUTH?
-                    ITS CALLED YOU KISS YOUR MOTHER WITH THAT FUCKING MOUTH? HUH HUH? AHHAHAHAHAHA
-                    "WHY ARE YOU SO" AHAHAHHA, BECAUSE THE FUCKING YOUTH OF AHAHHDGSJGDA YOU SHUT UP WHEN IM TALKING TO
-                    YOU, YOU
-                    SHUT YOUR MOUTH.
+                    {{reply.content}}
                 </p>
 
                 <div class="interact">
-                    <button>Odpowiedz</button>
                     <button>Zgłoś</button>
                 </div>
             </article>
-
-        </article>
-
-
-        <article>
-            <h3>Michał z Wawelu</h3>
-            <span class="date">16.01.2018 12:02</span>
-            <p>
-                Wszystko super, towar zgodny z opisem! :)
-            </p>
         </article>
 
 
@@ -63,6 +47,7 @@
 <script>
     export default {
         name: "Comments",
+        props: ['comments'],
         data(){
             return {
                 commentValue: '',
@@ -80,33 +65,42 @@
         width: 100%;
         margin: auto;
 
-        textarea {
-            margin: auto auto 25px auto;
-            display: block;
-            width: 90%;
-            padding: 12px;
-            resize: vertical;
-
-            font-size: 15px;
-            background-color: #232323;
-            color: #7d7776;
-            outline: none;
-            transition: 300ms;
-            border: 5px solid #4f4f4f;
-            height: 60px;
-
-            &:focus {
-                border-color: #2a68b1;
-                background-color: #191818;
-            }
+        h1{
+            font-weight: normal;
+            text-align: center;
+            margin-bottom: 35px;
+            font-size: 25px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
         }
 
         article {
             width: 88%;
-            margin: 20px auto 20px auto;
-            padding: 16px 16px 25px 16px;
+            margin: 20px auto 15px auto;
+            padding: 16px 16px 35px 16px;
             background-color: #191919;
             position: relative;
+
+            textarea {
+                margin: 15px auto 15px auto;
+                display: block;
+                width: 95%;
+                padding: 12px;
+                resize: vertical;
+
+                font-size: 15px;
+                background-color: #232323;
+                color: #7d7776;
+                outline: none;
+                transition: 300ms;
+                border: 5px solid #4f4f4f;
+                height: 60px;
+
+                &:focus {
+                    border-color: #2a68b1;
+                    background-color: #191818;
+                }
+            }
 
             h3 {
                 font-weight: normal;
@@ -182,8 +176,8 @@
             .answer {
                 clear: both;
                 width: 95%;
-                margin: 20px auto 15px 35px;
-                padding: 10px 0 15px 10px;
+                margin: 20px auto 0 35px;
+                padding: 10px 0 10px 10px;
                 border-top: 1px solid #2d2d2d;
 
             }
