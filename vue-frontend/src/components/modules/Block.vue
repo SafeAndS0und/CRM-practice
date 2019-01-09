@@ -7,7 +7,7 @@
                 <div class="popup" v-if="showPopup[i]">
                     <div class="top"></div>
                     <div>
-                        <p>Kopiuj</p>
+                        <p @click="makeCopy(field)">Kopiuj</p>
                     </div>
                     <div>
                         <p>Edytuj</p>
@@ -46,6 +46,9 @@
                 // JS cant detect changes on an array, so we need to make another one
                 this.showPopup = this.showPopup.map((el, i) => i === index ? !el : false) //find the element and change its state
 
+            },
+            makeCopy(field){
+                navigator.clipboard.writeText(this.value(field))
             }
         },
         data(){

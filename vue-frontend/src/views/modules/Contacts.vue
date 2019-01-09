@@ -149,12 +149,11 @@
                 .catch(err => console.log(err.response))
         },
         methods: {
-
             deleteFromTable(id){
                 this.contacts.find((item, index) =>{
                     if(item)
                         if(item._id === id){
-                            this.contacts.splice(index, 1)
+                            this.contacts.push(index, 1)
                         }
                 })
             },
@@ -189,15 +188,15 @@
                 this.pages = 1 //disable pagination for filtering search
                 const filledInputs = []
                 // Keep in the array only the filled inputs
-                Object.keys(this.searchValues).forEach(key => {
-                    if(this.searchValues[key]) {
+                Object.keys(this.searchValues).forEach(key =>{
+                    if(this.searchValues[key]){
                         filledInputs.push({[key]: this.searchValues[key]})
                     }
                 })
 
                 let str = ''
 
-                filledInputs.forEach(input => {
+                filledInputs.forEach(input =>{
                     str += `&${Object.keys(input)[0]}=${Object.values(input)[0]}`
                 })
 
@@ -402,7 +401,7 @@
     }
 
     .list-enter-active, .list-leave-active {
-        transition: 400ms;
+        transition: 150ms;
     }
 
     .list-enter {

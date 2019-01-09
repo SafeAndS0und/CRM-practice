@@ -50,7 +50,6 @@
                     obj[translator(dictionary, field)] = this.contact[field]
                 })
 
-
                 this.axios.post('/contact/addContact', obj)
                     .then(res => {
                         this.id = res.data.newContactId

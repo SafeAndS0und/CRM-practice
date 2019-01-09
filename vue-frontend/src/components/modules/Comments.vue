@@ -8,22 +8,23 @@
             <p>{{commentValue}}</p>
 
             <textarea placeholder="Zostaw komentarz..." v-model="commentValue"></textarea>
-            <button class="send">
+            <button class="send" @click="addComment">
                 Dodaj komentarz
             </button>
         </article>
 
-        <article v-for="comment of comments">
+        <article v-for="(comment, index) of commentsSorted">
             <h3>{{comment.author.firstname}} {{comment.author.surname}}</h3>
             <span class="date">{{comment.postedAt}}</span>
             <p>
                 {{comment.content}}
             </p>
 
-            <textarea placeholder="Odpowiedz" v-if="showResponseInput" v-model="response"></textarea>
+            <textarea placeholder="Odpowiedz" v-if="showResponseInput[index]" @keyup.enter="reply(comment._id, index)"
+                      v-model="replyMsg[index]"></textarea>
 
             <div class="interact">
-                <button @click="showResponseInput = !showResponseInput">Odpowiedz</button>
+                <button @click="toggleReplyInput(index)">Odpowiedz</button>
                 <button>Zgłoś</button>
             </div>
 
@@ -50,10 +51,60 @@
         props: ['comments'],
         data(){
             return {
+                replyMsg: {},
                 commentValue: '',
-                showResponseInput: false
+                showResponseInput: {}
+            }
+        },
+        created(){
+            console.log(this.comments)
+            // initialize showResponseInput
+            this.comments.forEach((comment, index) => {
+                // THIS MAKES VUE OBJECTS PROPERTIES REACTIVE!
+                this.$set(this.showResponseInput, index, false)
+            })
+        },
+        computed: {
+            commentsSorted(){
+                return this.comments.reverse()
+            }
+        },
+        methods: {
+            loadComments(){
+                this.axios.get('/comment/content/' + this.$route.params.id)
+                    .then(res => {
+                        this.comments = res.data.result
+                    })
+                    .catch(err => console.log(err.response))
+            },
+
+            addComment(){
+                this.axios.post('/comment', {
+                    "content_id": this.$route.params.id,
+                    "content": this.commentValue
+                })
+                    .then(res => {
+                        //Show it after adding
+                        this.loadComments()
+
+                    })
+                    .catch(err => console.log(err))
+            },
+            reply(id, index){
+                console.log('asd', id)
+                this.axios.post('/comment/reply', {
+                    "comment_id": id,
+                    "content": this.replyMsg[index]
+                })
+                    .then(res => this.loadComments())
+                    .catch(err => console.log(err))
+            },
+
+            toggleReplyInput(index){
+                this.showResponseInput[index] = !this.showResponseInput[index]
             }
         }
+
     }
 </script>
 
@@ -65,7 +116,7 @@
         width: 100%;
         margin: auto;
 
-        h1{
+        h1 {
             font-weight: normal;
             text-align: center;
             margin-bottom: 35px;
@@ -80,6 +131,7 @@
             padding: 16px 16px 35px 16px;
             background-color: #191919;
             position: relative;
+            border-radius: 2px;
 
             textarea {
                 margin: 15px auto 15px auto;
@@ -133,7 +185,7 @@
                 padding: 5px;
                 margin-bottom: 15px;
 
-                button{
+                button {
                     background-color: transparent;
                     border: none;
                     color: #413f42;
@@ -145,7 +197,6 @@
                     }
 
                 }
-
 
             }
 
@@ -162,12 +213,12 @@
                 color: #7d7d7d;
             }
 
-            textarea{
+            textarea {
                 height: 30px;
                 border: 2px solid #4f4f4f;
                 margin-bottom: 10px;
 
-                &:focus{
+                &:focus {
                     border-color: #2a68b1;
                     background-color: #191818;
                 }

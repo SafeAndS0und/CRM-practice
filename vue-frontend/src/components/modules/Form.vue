@@ -13,6 +13,7 @@
             <button v-if="Object.keys(fields)[Object.keys(fields).length - 1] === key" @click="addContact">Zapisz
             </button>
         </div>
+        <p v-if="added" style="text-align: center; color: #518a57">Zapisano zmiany</p>
     </div>
 </template>
 
@@ -27,8 +28,8 @@
             return {
                 fields: {},
                 polishOutput: {Nazwisko: ''}, // Keeps polish fields and values
-                englishOutput: {surname: ''} // Keeps english fields and values
-
+                englishOutput: {surname: ''}, // Keeps english fields and values
+                added: false
             }
         },
         computed: {
@@ -37,7 +38,6 @@
             }
         },
         created(){
-
             switch(this.module){
                 case 'contacts' :
                     import('../../assets/js/modules/contactData')
@@ -76,6 +76,8 @@
                 })
 
                 this.axios.patch('/contact/c/' + this.$route.params.id, this.englishOutput)
+                    .then(res => this.added = true)
+                    .catch(err => console.log(err.response))
             }
         }
     }
