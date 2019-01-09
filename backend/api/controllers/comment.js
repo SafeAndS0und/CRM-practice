@@ -34,8 +34,21 @@ exports.getCommets = (req, res, next) => {
 
     Comment
     .find({content_id})
-    // .select('-content_id -__v')
-    .populate('replies')
+    .populate([
+        {
+            path: 'author',
+            model: 'user',
+            select: 'firstname surname _id'
+        },
+        {
+        path: 'replies',
+        model: 'commentReply',
+        populate: {
+            path: 'author',
+            model: 'user',
+            select: 'firstname surname _id'
+        }
+    }])
     .then(result => {
         return res.status(200).json({
             result
