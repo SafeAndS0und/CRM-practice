@@ -50,6 +50,7 @@
         }
 
         .user {
+            height: 100%;
             grid-column: 11/13;
             align-self: center;
             position: relative;
@@ -69,7 +70,7 @@
                 margin-left:40px;
                 color: white;
                 font-size: 16px;
-                line-height: 34px;
+                line-height: 68px;
                 text-decoration: none;
                 transition: 150ms;
                 display: inline-block;
@@ -115,7 +116,7 @@
                 position: relative;
 
                 .name {
-                    line-height: 1em;
+                    line-height: 68px;
                 }
             }
         }

@@ -36,7 +36,7 @@
                 bottom: 15px;
                 right: 30px;
                 font-weight: lighter;
-                font-size: 16px;
+                font-size: 14px;
                 color: #767477;
             }
 

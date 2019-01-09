@@ -12,12 +12,17 @@
                :fields="fields.address"
                :values="values.address"
                class="block"/>
+
+        <Comments class="comments"/>
     </div>
+
+
 </template>
 
 
 <script>
     import Block from '../../components/modules/Block.vue'
+    import Comments from '../../components/modules/Comments.vue'
     import {values} from '../../assets/js/modules/contactData'
     import contactData from '../../assets/js/modules/contactData'
 
@@ -26,7 +31,7 @@
     export default {
         name: "BlockList",
         components: {
-            Block
+            Block, Comments
         },
         data(){
             return {
@@ -52,6 +57,11 @@
         .block {
             margin: 15px auto;
             width: 90%;
+        }
+
+        .comments{
+            margin-top: 90px;
+            margin-bottom: 50px;
         }
     }
 </style>
