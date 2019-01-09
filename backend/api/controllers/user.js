@@ -44,7 +44,7 @@ exports.user_login = (req, res, next) => {
                     },
                     JWT_KEY,
                     {
-                        expiresIn: "1h"
+                        expiresIn: "24h"
                     }
                 )
 
