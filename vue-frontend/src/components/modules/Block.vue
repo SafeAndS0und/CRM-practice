@@ -6,11 +6,11 @@
 
                 <div class="popup" v-if="showPopup[i]">
                     <div class="top"></div>
-                    <div>
-                        <p @click="makeCopy(field)">Kopiuj</p>
+                    <div @click="makeCopy(field)">
+                        <p>Kopiuj wartość</p>
                     </div>
-                    <div>
-                        <p>Edytuj</p>
+                    <div @click="turnOnEdit(i)">
+                        <p>Szybka edycja</p>
                     </div>
                     <div>
                         <p>Wyszukaj pozostałe</p>
@@ -19,7 +19,10 @@
                 </div>
 
                 <h5>{{field}}</h5>
-                <p>{{value(field)}}</p>
+                <CustomInput v-if="editing[i]" placeholder="Edytuj"
+                             :ref="'editInput'+i"
+                             @keydown.enter.native="updateSingular(field, i, $event)" class="editInput"/>
+                <p v-if="!editing[i]">{{value(field)}}</p>
             </article>
         </div>
 
@@ -27,17 +30,29 @@
 </template>
 
 <script>
+    import CustomInput from '../partials/CustomInput.vue'
+    import {dictionary} from '../../assets/js/modules/contactData'
+    import translate from '../../assets/js/modules/translator'
+
     export default {
         name: "Block",
+        components: {CustomInput},
         props: {
             blockName: String,
             fields: Array,
             values: Array
         },
+        created(){
+            //initalize editing obj
+            this.fields.map((field, i) =>{
+                this.$set(this.editing, i, false)
+            })
+
+        },
         methods: {
             value(field){
                 const element = this.values.find(el => el.f === field)
-                if(element) {
+                if(element){
                     if(element.f === "Właściciel") return element.v.surname
                     else return element.v
                 }
@@ -49,11 +64,45 @@
             },
             makeCopy(field){
                 navigator.clipboard.writeText(this.value(field))
+            },
+
+            turnOnEdit(i){
+                this.editing[i] = !this.editing[i]
+                const str = 'editInput' + i
+                this.$nextTick(() => {
+                    this.$refs[str][0].$el.focus()
+                })
+            },
+
+            updateSingular(field, i, e){
+                const contact = {}
+
+                // Make a new contact object with new data
+                this.fields.forEach(f =>{
+                    let engField = translate(dictionary, f) // make polish to english field name
+                    let ef = translate(dictionary, field)
+                    if(ef !== engField) // if the current field and the iterated field are not the same
+                        contact[engField] = this.value(f) // leave it as it was
+                    else contact[engField] = e.target.value // otherwise, change it for the value the user typed
+                })
+
+                this.axios.patch('/contact/c/' + this.$route.params.id, contact)
+                    .then(res =>{
+                        this.editing[i] = false
+                        this.showPopup[i] = false
+                        this.$emit('quickUpdate')
+                            .then(() => {
+                                this.editing[i] = false
+                                this.showPopup[i] = false
+                            })
+                    })
+                    .catch(err => console.log(err.response))
             }
         },
         data(){
             return {
-                showPopup: [false,false,false,false,false,false,false,false]
+                editing: {},
+                showPopup: [false, false, false, false, false, false, false, false]
             }
         }
     }
@@ -96,7 +145,7 @@
                 border-radius: 2px;
                 position: relative;
 
-                .popup{
+                .popup {
                     position: absolute;
                     right: 0;
                     top: -135px;
@@ -109,22 +158,24 @@
                     display: grid;
                     grid-template-rows: 0.25fr 1fr 1fr 1fr 0.25fr;
 
-                    .top{
+                    .top {
                         background-color: #3b393c;
                         border: none;
-                        &:hover{background-color: #3b393c}
+                        &:hover {
+                            background-color: #3b393c
+                        }
                     }
 
-                    div{
+                    div {
                         height: 100%;
                         display: grid;
                         border-bottom: 1px solid #282729;
 
-                        &:hover{
+                        &:hover {
                             background-color: #353436;
                         }
 
-                        p{
+                        p {
                             font-size: 13px;
                             color: #cccccc;
                             align-self: center;
@@ -146,6 +197,13 @@
                     font-size: 12px;
                     margin-bottom: 5px;
                     color: #dcdcdc;
+                }
+
+                .editInput {
+                    height: 12px;
+                    padding: 5px;
+                    font-size: 13px;
+                    width: 90%;
                 }
 
                 &:hover {

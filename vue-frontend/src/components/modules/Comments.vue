@@ -57,7 +57,6 @@
             }
         },
         created(){
-            console.log(this.comments)
             // initialize showResponseInput
             this.comments.forEach((comment, index) => {
                 // THIS MAKES VUE OBJECTS PROPERTIES REACTIVE!

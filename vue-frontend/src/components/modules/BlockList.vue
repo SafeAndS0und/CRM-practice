@@ -1,6 +1,7 @@
 <template>
     <div class="block-list">
         <Block block-name="Informacje Podstawowe"
+               @quickUpdate="updateData"
                :fields="fields.basic"
                :values="values.basic"
                class="block"/>
@@ -23,7 +24,6 @@
 
 <script>
     import Block from '../../components/modules/Block.vue'
-    // import Comments from '../../components/modules/Comments.vue'
     import {values} from '../../assets/js/modules/contactData'
     import contactData from '../../assets/js/modules/contactData'
 
@@ -55,12 +55,22 @@
             this.axios.get('/comment/content/' + this.$route.params.id)
                 .then(res => {
                     this.comms = res.data.result
+                    //import asychronically
                     this.component = () => import('../../components/modules/Comments.vue')
                 })
                 .catch(err => console.log(err.response))
-
-
         },
+        methods: {
+            updateData(){
+                return this.axios.get('/contact/c/' + this.$route.params.id)
+                    .then(res =>{
+                        contactData.activateControllers(res.data.contact)
+                        this.values = values
+                    })
+                    .catch(err => console.log(err.response))
+
+            }
+        }
     }
 </script>
 <style scoped lang="scss">

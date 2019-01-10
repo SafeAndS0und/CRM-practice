@@ -153,7 +153,7 @@
                 this.contacts.find((item, index) =>{
                     if(item)
                         if(item._id === id){
-                            this.contacts.push(index, 1)
+                            this.contacts.splice(index, 1)
                         }
                 })
             },
