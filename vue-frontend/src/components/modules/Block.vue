@@ -19,7 +19,8 @@
                 </div>
 
                 <h5>{{field}}</h5>
-                <CustomInput v-if="editing[i]" placeholder="Edytuj"
+                <CustomInput v-if="editing[i]"
+                             placeholder="Edytuj"
                              :ref="'editInput'+i"
                              @keydown.enter.native="updateSingular(field, i, $event)" class="editInput"/>
                 <p v-if="!editing[i]">{{value(field)}}</p>
@@ -75,28 +76,41 @@
             },
 
             updateSingular(field, i, e){
-                const contact = {}
+                // const contact = {}
 
-                // Make a new contact object with new data
-                this.fields.forEach(f =>{
-                    let engField = translate(dictionary, f) // make polish to english field name
-                    let ef = translate(dictionary, field)
-                    if(ef !== engField) // if the current field and the iterated field are not the same
-                        contact[engField] = this.value(f) // leave it as it was
-                    else contact[engField] = e.target.value // otherwise, change it for the value the user typed
+                this.$emit('quickUpdate', {
+                    field: translate(dictionary, field),
+                    value: e.target.value
                 })
 
-                this.axios.patch('/contact/c/' + this.$route.params.id, contact)
-                    .then(res =>{
+                this.editing[i] = false
+                this.showPopup[i] = false
+                this.$emit('quickUpdate')
+                    .then(() => {
                         this.editing[i] = false
                         this.showPopup[i] = false
-                        this.$emit('quickUpdate')
-                            .then(() => {
-                                this.editing[i] = false
-                                this.showPopup[i] = false
-                            })
                     })
-                    .catch(err => console.log(err.response))
+                // // Make a new contact object with new data
+                // this.fields.forEach(f =>{
+                //     console.log(field, f)
+                //     let engField = translate(dictionary, f) // make polish to english field name
+                //     let ef = translate(dictionary, field)
+                //     if(ef !== engField) // if the current field and the iterated field are not the same
+                //         contact[engField] = this.value(f) // leave it as it was
+                //     else contact[engField] = e.target.value // otherwise, change it for the value the user typed
+                // })
+
+                // this.axios.patch('/contact/c/' + this.$route.params.id, contact)
+                //     .then(res =>{
+                //         this.editing[i] = false
+                //         this.showPopup[i] = false
+                //         this.$emit('quickUpdate')
+                //             .then(() => {
+                //                 this.editing[i] = false
+                //                 this.showPopup[i] = false
+                //             })
+                //     })
+                //     .catch(err => console.log(err.response))
             }
         },
         data(){
