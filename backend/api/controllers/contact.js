@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const Contact = require('../models/contact')
+const Stats = require('../models/stats')
 
 exports.contact_addContact = (req, res, next) => {
         const newContact = {
@@ -27,24 +28,37 @@ exports.contact_addContact = (req, res, next) => {
             voivodeship: req.body.voivodeship ? req.body.voivodeship : '',
             country: req.body.country ? req.body.country : ''
         }
-    
-        const preparedNewContact = new Contact(newContact)
-        preparedNewContact
-        .save()
-        .then(result => {
-            return res.status(201).json({
-                msg: 'Dodano nowy kontakt',
-                newContactId: result._id,
-                added: true
+        
+        //Here will be validation
+        
+        Stats.findOne({}, (err, stats) => {
+            if(err) throw err
+
+            stats.numOfContacts++;
+            newContact.number = `C${stats.numOfContacts}`
+
+            stats.save((err,updatedStats) => {
+                if(err) throw err
+
+                const preparedNewContact = new Contact(newContact)
+                preparedNewContact
+                .save()
+                .then(result => {
+                    return res.status(201).json({
+                        msg: 'Dodano nowy kontakt',
+                        newContactId: result._id,
+                        added: true
+                    })
+                })
+                .catch(err => {
+                    console.log(err)
+                    return res.status(400).json({
+                        msg: 'Ups, cos poszlo nie tak',
+                        added: false
+                    })
+                })
             })
         })
-    .catch(err => {
-        console.log(err)
-        return res.status(400).json({
-            msg: 'Ups, cos poszlo nie tak',
-            added: false
-        })
-    })
 }
 
 exports.contact_list = (req, res, next) => {
