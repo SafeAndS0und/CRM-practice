@@ -2,7 +2,9 @@
     <section>
         <h1>{{blockName}}</h1>
         <div class="info">
-            <article v-for="(field, i) of fields" @click="togglePopup(i)">
+            <article v-for="(field, i) of fields"
+                     @click="!isCheckbox(field) ? togglePopup(i) : checkBoxActive[i] = !checkBoxActive[i]"
+                     :class="{'checkF': isCheckbox(field), 'checkT': checkBoxActive[i] && isCheckbox(field)}">
 
                 <div class="popup" v-if="showPopup[i]">
                     <div class="top"></div>
@@ -19,11 +21,11 @@
                 </div>
 
                 <h5>{{field}}</h5>
+                <p v-if="!editing[i]">{{(value(field) === false || value(field) === true) ? '' : value(field)}}</p>
                 <CustomInput v-if="editing[i]"
                              placeholder="Edytuj"
                              :ref="'editInput'+i"
                              @keydown.enter.native="updateSingular(field, i, $event)" class="editInput"/>
-                <p v-if="!editing[i]">{{value(field)}}</p>
             </article>
         </div>
 
@@ -43,14 +45,29 @@
             fields: Array,
             values: Array
         },
+        data(){
+            return {
+                editing: {},
+                showPopup: [],
+                checkBoxActive: {}
+            }
+        },
         created(){
-            //initalize editing obj
+            //initalize editing obj and showPopup array so vue could 'react' to them
             this.fields.map((field, i) =>{
+                this.$set(this.checkBoxActive, i , false)
                 this.$set(this.editing, i, false)
+                this.showPopup.push(false)
             })
 
         },
         methods: {
+
+            isCheckbox(fieldName){
+                console.log(fieldName === 'Zgoda na kont. mail.' || fieldName === 'Zgoda na kont. tel.')
+                return fieldName === 'Zgoda na kont. mail.' || fieldName === 'Zgoda na kont. tel.'
+            },
+
             value(field){
                 const element = this.values.find(el => el.f === field)
                 if(element){
@@ -76,7 +93,6 @@
             },
 
             updateSingular(field, i, e){
-                // const contact = {}
 
                 this.$emit('quickUpdate', {
                     field: translate(dictionary, field),
@@ -90,35 +106,9 @@
                         this.editing[i] = false
                         this.showPopup[i] = false
                     })
-                // // Make a new contact object with new data
-                // this.fields.forEach(f =>{
-                //     console.log(field, f)
-                //     let engField = translate(dictionary, f) // make polish to english field name
-                //     let ef = translate(dictionary, field)
-                //     if(ef !== engField) // if the current field and the iterated field are not the same
-                //         contact[engField] = this.value(f) // leave it as it was
-                //     else contact[engField] = e.target.value // otherwise, change it for the value the user typed
-                // })
-
-                // this.axios.patch('/contact/c/' + this.$route.params.id, contact)
-                //     .then(res =>{
-                //         this.editing[i] = false
-                //         this.showPopup[i] = false
-                //         this.$emit('quickUpdate')
-                //             .then(() => {
-                //                 this.editing[i] = false
-                //                 this.showPopup[i] = false
-                //             })
-                //     })
-                //     .catch(err => console.log(err.response))
-            }
-        },
-        data(){
-            return {
-                editing: {},
-                showPopup: [false, false, false, false, false, false, false, false]
             }
         }
+
     }
 </script>
 
@@ -149,6 +139,21 @@
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             grid-gap: 5px;
 
+            .checkF{
+                color: white;
+                background-color: #435569;
+                &:hover{
+                    background-color: #354559;
+                }
+            }
+            .checkT{
+                color: white;
+                background-color: #3164ac;
+                &:hover{
+                    background-color: #3072b8;
+                }
+            }
+
             article {
                 background-color: #312f32;
                 padding: 5px;
@@ -158,6 +163,8 @@
                 cursor: pointer;
                 border-radius: 2px;
                 position: relative;
+
+
 
                 .popup {
                     position: absolute;
