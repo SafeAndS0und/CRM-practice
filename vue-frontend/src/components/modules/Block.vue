@@ -141,9 +141,9 @@
 
             .checkF{
                 color: white;
-                background-color: #435569;
+                background-color: #55242b;
                 &:hover{
-                    background-color: #354559;
+                    background-color: #5d242a;
                 }
             }
             .checkT{

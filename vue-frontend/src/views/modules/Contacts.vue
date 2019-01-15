@@ -56,11 +56,6 @@
             </section>
         </div>
 
-        <v-icon name="arrow-left" class="back" scale="1.8"
-                v-if="$route.path !== '/contacts'"
-                @click.native="$router.push('/contacts')"
-        />
-
         <div class="search" v-if="$route.path === '/contacts'">
             <CustomInput placeholder="Imię" @keyup.native="search"
                          v-model="searchValues['firstname']"></CustomInput>
