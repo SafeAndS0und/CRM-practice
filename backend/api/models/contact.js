@@ -74,9 +74,4 @@ const contactSchema = mongoose.Schema({
     }
 })
 
-contactSchema.pre('save', async function(next) {
-    this.number = await Stats.stats_increase('C')
-    next()
-})
-
 module.exports = mongoose.model('contact', contactSchema)
