@@ -14,6 +14,19 @@
             </button>
         </div>
         <p v-if="added" style="text-align: center; color: #518a57">Zapisano zmiany</p>
+
+
+        <div class="menu">
+            <v-icon name="list-ul" class="icon" scale="1.2"
+                    @click.native="$router.push('/contacts')"
+            />
+            <v-icon name="address-card" class="icon" scale="1.35"
+                    @click.native="$router.push('/contacts/details/' + $route.params.id)"
+            />
+            <v-icon name="trash" class="icon" scale="1.2"
+                    @click.native="$router.push('/contacts')"
+            />
+        </div>
     </div>
 </template>
 
@@ -93,6 +106,36 @@
         border-radius: 5px;
         color: $blockFontC;
         padding: 15px;
+
+        .menu {
+            display: grid;
+            width: 92%;
+            margin: 10px auto 0 auto;
+            grid-template-columns: 1fr 1fr 1fr;
+
+            .icon {
+                justify-self: center;
+                color: #cdc5d1;
+                width: 100%;
+                padding: 15px 0;
+                cursor: pointer;
+                transition: 250ms;
+
+
+                &:first-child:hover {
+                    background-color: #2a80d0;
+                    color: white;
+                }
+                &:nth-child(2):hover {
+                    background-color: #d66937;
+                    color: white;
+                }
+                &:last-child:hover {
+                    background-color: #d04f50;
+                    color: white;
+                }
+            }
+        }
 
         div {
 

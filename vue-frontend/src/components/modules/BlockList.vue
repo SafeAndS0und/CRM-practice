@@ -18,7 +18,7 @@
                class="block"/>
 
         <div class="menu">
-            <v-icon name="arrow-left" class="icon" scale="1.5"
+            <v-icon name="list-ul" class="icon" scale="1.5"
                     @click.native="$router.push('/contacts')"
             />
             <v-icon name="pencil-alt" class="icon" scale="1.5"

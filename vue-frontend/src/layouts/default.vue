@@ -76,7 +76,7 @@
         padding: 26px 30px;
         top: 0;
         left: 0;
-        color: #353336;
+        color: #ebe1ef;
         transition: 200ms;
         cursor: pointer;
 

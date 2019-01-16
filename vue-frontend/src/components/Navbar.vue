@@ -39,20 +39,25 @@
         z-index: 100;
         height: 68px;
         width: 100%;
-        background-color: $navbarC;
+        background-color: #181818;
         display: grid;
         grid-template-columns: repeat(12, 1fr);
 
         .searchField {
             align-self: center;
+            background-color: #2f2f2f;
             grid-column: 5/9;
             height: 24px;
+
+            &:focus{
+                background-color: #462428;
+            }
         }
 
         .user {
+            float: right;
             height: 100%;
             grid-column: 11/13;
-            align-self: center;
             position: relative;
 
 
@@ -67,9 +72,10 @@
             }
 
             .name {
-                margin-left:40px;
+
                 color: white;
-                font-size: 16px;
+                letter-spacing: 2px;
+                font-size: 14px;
                 line-height: 68px;
                 text-decoration: none;
                 transition: 150ms;
@@ -81,7 +87,7 @@
             }
 
             .options{
-                margin-left: 12px;
+                margin-left: 8px;
                 color: #fdf8ff;
                 position: absolute;
                 line-height: 34px;
@@ -91,7 +97,7 @@
                 transition: 150ms;
 
                 &:hover{
-                    color: #504e4e;
+                    color: #da6359;
                 }
             }
         }
@@ -112,11 +118,16 @@
 
             .user {
                 grid-column: 10/13;
-                align-self: center;
+                align-self: start;
                 position: relative;
 
                 .name {
+                    font-size: 12px;
+                    letter-spacing: 1px;
                     line-height: 68px;
+                }
+                .options{
+                    transform: translateY(-50%) scale(0.8);
                 }
             }
         }
