@@ -77,7 +77,7 @@ exports.contact_list = (req, res, next) => {
 
         if(page > numOfPages) {
             if(page > numOfPages) {
-                return res.status(200).json({
+                return res.status(204).json({
                     msg: `Brak kontaktów. Strona: ${page}`,
                     numOfPages: numOfPages
                 })
@@ -164,7 +164,7 @@ exports.contact_detailed = (req, res, next) => {
 
         if(contact) {
             return res.status(200).json({
-                contact: contact
+                contact
             })
         }
         else {
@@ -221,7 +221,6 @@ exports.contact_update = (req, res, next) => {
             Contact
             .findOneAndUpdate({_id: contact_id}, updateContact)
             .then(contact => {
-                console.log(contact)
         
                 return res.status(200).json({
                     msg: `Zaktualizowano kontakt ${contact.number}.`,
