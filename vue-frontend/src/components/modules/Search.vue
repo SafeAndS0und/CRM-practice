@@ -1,5 +1,5 @@
 <template>
-    <div class="search" v-if="$route.path === '/contacts'">
+    <div class="search" v-if="$route.path === '/' +  moduleName">
         <CustomInput v-for="val of searchFor"
                      :placeholder="val.pl"
                      @keyup.native="search"
@@ -13,7 +13,7 @@
 
     export default {
         name: "Search",
-        props: ['searchFor', 'method'],
+        props: ['searchFor', 'method', 'moduleName'],
         data(){
             return {
                 searchValues: {}

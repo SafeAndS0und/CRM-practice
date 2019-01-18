@@ -3,11 +3,13 @@
 
         <Sorting class="sorting"
                  @sort="sort($event)"
+                 module-name="contacts"
                  :sortFields="sortFields"
                  />
 
         <Search class="search"
                 @search="search($event)"
+                module-name="contacts"
                 :searchFor="searchFor"
                 :method="sortMethod"/>
 
@@ -92,7 +94,6 @@
             gridWidth(){
                 return this.$route.path === '/contacts' ? "2/11" : "2/12"
             },
-
         },
         created(){
             this.axios.get('/contact/list/1/d_ct')
@@ -149,53 +150,6 @@
         display: grid;
         grid-template-columns: repeat(12, 1fr);
 
-        .back {
-            grid-column: 1/2;
-            grid-row: 4;
-            margin-right: 15px;
-            color: #272528;
-            padding: 15px;
-            justify-self: end;
-            cursor: pointer;
-            transition: 250ms;
-
-            &:hover {
-                background-color: #d04f50;
-                color: white;
-            }
-
-        }
-
-        nav {
-            grid-column: 1/-1;
-            height: 60px;
-            padding: 0;
-            margin-bottom: 30px;
-            background-color: #373332;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-
-            a {
-                align-self: center;
-                justify-self: center;
-
-                grid-row: 1;
-                width: 100%;
-                height: 100%;
-
-                font-size: 16px;
-                text-decoration: none;
-                text-align: center;
-                color: white;
-                line-height: 60px;
-                background-color: #282523;
-
-                &:hover {
-                    background-color: #264f9b;
-                    color: white;
-                }
-            }
-        }
 
         .sorting {
             grid-row: 2;

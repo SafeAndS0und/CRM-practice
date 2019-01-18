@@ -1,5 +1,5 @@
 <template>
-    <div class="sorting" v-if="$route.path === '/contacts'">
+    <div class="sorting" v-if="$route.path=== '/' + moduleName">
         <h2 class="sorting-title">Sortowanie po: </h2>
         <section>
             <div class="icon-container" v-for="field of sortFields">
@@ -19,7 +19,7 @@
 
     export default {
         name: "Sorting",
-        props:['sortFields'],
+        props:['sortFields' ,'moduleName'],
         data(){
             return {
                 sortMethod: "d_ct",
