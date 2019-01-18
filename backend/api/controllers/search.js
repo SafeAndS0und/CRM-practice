@@ -95,7 +95,7 @@ exports.search = async (req, res, next) => {
     })
 
     if(errors.length)
-        return res.status(200).json({
+        return res.status(400).json({
             msg: 'Błąd',
             errors
         })

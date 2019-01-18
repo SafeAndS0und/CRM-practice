@@ -51,10 +51,12 @@ const contractorSchema = mongoose.Schema({
     },
     //finances
     sumOfInvoices: {
-        type: Number
+        type: Number,
+        default: 0
     },
     accountingBalance: {
-        type: Number
+        type: Number,
+        default: 0
     },
     //registration information
     nip: {
