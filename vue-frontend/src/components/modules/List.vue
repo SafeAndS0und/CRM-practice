@@ -1,30 +1,11 @@
 <template>
     <div class="list">
         <router-link :to="`/contacts/details/${contact._id}`">
-            <article>
-                <h5>Imię</h5>
-                <p>{{contact.firstname}}</p>
+            <article v-for="field of fields">
+                <h5>{{field.pl}}</h5>
+                <p>{{field.eng === 'recordOwner' ? contact[field.eng].surname : contact[field.eng]}}</p>
             </article>
-            <article>
-                <h5>Nazwisko</h5>
-                <p>{{contact.surname}}</p>
-            </article>
-            <article>
-                <h5>Firma</h5>
-                <p>{{contact.business}}</p>
-            </article>
-            <article>
-                <h5>Właściciel rekordu</h5>
-                <p>{{contact.recordOwner.surname}}</p>
-            </article>
-            <article>
-                <h5>Telefon</h5>
-                <p>{{contact.basicPhone}}</p>
-            </article>
-            <article>
-                <h5>Email</h5>
-                <p>{{contact.basicEmail}}</p>
-            </article>
+
         </router-link>
 
         <div class="icons">
@@ -40,6 +21,7 @@
         name: "List",
         props: {
             contact: Object,
+            fields: Array
         },
         methods: {
             del(id){

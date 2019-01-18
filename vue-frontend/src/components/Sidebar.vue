@@ -5,11 +5,11 @@
                 <v-icon name="regular/address-book" scale="2" class="icon"/>
                 <h3>Kontakty</h3>
             </article>
-            <article>
+            <article @click="$router.push('/contractors')">
                 <v-icon name="regular/handshake" scale="2" class="icon"/>
                 <h3>Kontrahenci</h3>
             </article>
-            <article>
+            <article @click="$router.push('/invoices')">
                 <v-icon name="file-alt" scale="2" class="icon"/>
                 <h3>Faktury</h3>
             </article>

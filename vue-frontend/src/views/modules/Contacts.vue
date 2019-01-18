@@ -1,75 +1,15 @@
 <template>
     <div class="contacts">
-        <div class="sorting" v-if="$route.path === '/contacts'">
-            <h2 class="sorting-title">Sortowanie po: </h2>
-            <section>
-                <div class="icon-container">
-                    <p>Imieniu</p>
-                    <v-icon name="chevron-up" scale="1.2" class="icon"
-                            :class="{active: sortMethod === 'a_fn'}"
-                            @click.native="sortTable('a_fn')"/>
-                    <v-icon name="chevron-down" scale="1.2" class="icon"
-                            :class="{active: sortMethod === 'd_fn'}"
-                            @click.native="sortTable('d_fn')"/>
-                </div>
 
-                <div class="icon-container">
-                    <p>Nazwisku</p>
-                    <v-icon name="chevron-up" scale="1.2" class="icon"
-                            :class="{active: sortMethod === 'a_sn'}"
-                            @click.native="sortTable('a_sn')"/>
-                    <v-icon name="chevron-down" scale="1.2" class="icon"
-                            :class="{active: sortMethod === 'd_sn'}"
-                            @click.native="sortTable('d_sn')"/>
-                </div>
+        <Sorting class="sorting"
+                 @sort="sort($event)"
+                 :sortFields="sortFields"
+                 />
 
-                <div class="icon-container">
-                    <p>Firmie</p>
-                    <v-icon name="chevron-up" scale="1.2" class="icon"
-                            :class="{active: sortMethod === 'a_b'}"
-                            @click.native="sortTable('a_b')"/>
-                    <v-icon name="chevron-down" scale="1.2" class="icon"
-                            :class="{active: sortMethod === 'd_b'}"
-                            @click.native="sortTable('d_b')"/>
-                </div>
-
-                <div class="icon-container">
-                    <p>Właść. rek.</p>
-                    <v-icon name="chevron-up" scale="1.2" class="icon"
-                            :class="{active: sortMethod === 'a_ro'}"
-                            @click.native="sortTable('a_ro')"/>
-                    <v-icon name="chevron-down" scale="1.2" class="icon"
-                            :class="{active: sortMethod === 'd_ro'}"
-                            @click.native="sortTable('d_ro')"/>
-                </div>
-
-                <div class="icon-container">
-                    <p>Czasie dod.</p>
-                    <v-icon name="chevron-up" scale="1.2" class="icon"
-                            :class="{active: sortMethod === 'a_ct'}"
-                            @click.native="sortTable('a_ct')"/>
-                    <v-icon name="chevron-down" scale="1.2" class="icon"
-                            :class="{active: sortMethod === 'd_ct'}"
-                            @click.native="sortTable('d_ct')"/>
-                </div>
-
-            </section>
-        </div>
-
-        <div class="search" v-if="$route.path === '/contacts'">
-            <CustomInput placeholder="Imię" @keyup.native="search"
-                         v-model="searchValues['firstname']"></CustomInput>
-            <CustomInput placeholder="Nazwisko" @keyup.native="search"
-                         v-model="searchValues['surname']"></CustomInput>
-            <CustomInput placeholder="Firma" @keyup.native="search"
-                         v-model="searchValues['business']"></CustomInput>
-            <CustomInput placeholder="Właściciel" @keyup.native="search"
-                         v-model="searchValues['recordOwner']"></CustomInput>
-            <CustomInput placeholder="Telefon" @keyup.native="search"
-                         v-model="searchValues['basicPhone']"></CustomInput>
-            <CustomInput placeholder="Email" @keyup.native="search"
-                         v-model="searchValues['basicEmail']"></CustomInput>
-        </div>
+        <Search class="search"
+                @search="search($event)"
+                :searchFor="searchFor"
+                :method="sortMethod"/>
 
         <CreatePopUp v-if="showCreatePopUp"
                      name="kontakt"
@@ -88,6 +28,7 @@
             <div class="list-container">
                 <transition-group name="list">
                     <List v-for="contact in contacts"
+                          :fields="searchFor"
                           :key="contact._id"
                           :contact="contact"
                           v-if="$route.path === '/contacts'"
@@ -109,11 +50,14 @@
     import List from '../../components/modules/List.vue'
     import CustomInput from '../../components/partials/CustomInput.vue'
     import CreatePopUp from '../../components/modules/CreatePopUp.vue'
+    import Sorting from '../../components/modules/Sorting.vue'
+    import Search from '../../components/modules/Search.vue'
+    import {bus} from '../../main'
 
     export default {
         name: "Contacts",
         components: {
-            List, CustomInput, CreatePopUp
+            List, CustomInput, CreatePopUp, Sorting, Search
         },
         data(){
             return {
@@ -124,16 +68,31 @@
                 activePage: 1,
                 sortMethod: 'd_ct',
 
-                showCreatePopUp: false
+                showCreatePopUp: false,
+
+                searchFor: [
+                    {eng: 'firstname', pl: 'Imię'},
+                    {eng: 'surname', pl: 'Nazwisko'},
+                    {eng: 'business', pl: 'Firma'},
+                    {eng: 'recordOwner', pl: 'Właściciel rek.'},
+                    {eng: 'basicPhone', pl: 'Telefon'},
+                    {eng: 'basicEmail', pl: 'Email'},
+                ],
+
+                sortFields: [
+                    {pl: "Imieniu", short: 'fn'},
+                    {pl: "Nazwisku", short: 'sn'},
+                    {pl: "Firmie", short: 'b'},
+                    {pl: "Właśc. rek.", short: 'ro'},
+                    {pl: "Czasie dod.", short: 'ct'},
+                ]
             }
         },
         computed: {
             gridWidth(){
                 return this.$route.path === '/contacts' ? "2/11" : "2/12"
             },
-            isUsingFilters(){
-                return Object.values(this.searchValues).filter(value => value !== "" && value !== undefined).length > 0
-            }
+
         },
         created(){
             this.axios.get('/contact/list/1/d_ct')
@@ -144,6 +103,7 @@
                 .catch(err => console.log(err.response))
         },
         methods: {
+
             deleteFromTable(id){
                 this.contacts.find((item, index) =>{
                     if(item)
@@ -153,20 +113,12 @@
                 })
             },
 
-            sortTable(method){
-                //If there is any filter on, execute sorting trough that
-                if(this.isUsingFilters){
-                    this.search(method)
-                    return
-                }
-                // Else, search as usual
-                this.axios.get('/contact/list/1/' + method)
-                    .then(res =>{
-                        this.activePage = 1
-                        this.sortMethod = method //
-                        this.contacts = res.data.contacts
-                    })
-                    .catch(err => console.log(err.response))
+            sort(payload){
+                this.activePage = payload.activePage
+                this.sortMethod = payload.sortMethod
+                this.contacts = payload.contacts
+
+                bus.$emit('clearSearchValues')
             },
 
             changePage(page){
@@ -178,26 +130,10 @@
                     .catch(err => console.log(err.response))
             },
 
-            search(method = this.sortMethod){
-                this.sortMethod = method
+            search(payload){
+                this.sortMethod = payload.sortMethod
                 this.pages = 1 //disable pagination for filtering search
-                const filledInputs = []
-                // Keep in the array only the filled inputs
-                Object.keys(this.searchValues).forEach(key =>{
-                    if(this.searchValues[key]){
-                        filledInputs.push({[key]: this.searchValues[key]})
-                    }
-                })
-
-                let str = ''
-
-                filledInputs.forEach(input =>{
-                    str += `&${Object.keys(input)[0]}=${Object.values(input)[0]}`
-                })
-
-                this.axios.get(`/search/contact?sortBy=${method}${str}`)
-                    .then(res => this.contacts = res.data.result)
-                    .catch(err => console.log(err.response))
+                this.contacts = payload.contacts
             }
         }
 
@@ -205,6 +141,8 @@
 </script>
 
 <style scoped lang="scss">
+
+    @import '../../assets/css/variables.scss';
 
     .contacts {
         margin-top: 140px;
@@ -262,71 +200,11 @@
         .sorting {
             grid-row: 2;
             grid-column: 2/11;
-            background-color: #272528;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 40px;
-            color: #cacaca;
-
-            .sorting-title {
-                text-align: center;
-                margin-left: 20px;
-                font-weight: normal;
-                padding: 0 0 6px 0;
-                font-size: 16px;
-            }
-
-            section {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-                grid-gap: 10px;
-
-                .icon-container {
-                    display: grid;
-                    background-color: #312f32;
-                    grid-template-columns: 1fr 0.4fr 0.4fr;
-
-                    p {
-                        font-size: 12px;
-                        text-align: center;
-                        padding: 7px 0;
-                    }
-                    .icon {
-                        height: 100%;
-                        width: 65%;
-                        justify-self: end;
-                        align-self: center;
-                        cursor: pointer;
-                        color: #7b7b7b;
-                        transition: 150ms;
-                        padding: 0 8px;
-
-                        &:hover {
-                            background-color: #93393d;
-                            color: white;
-                        }
-                    }
-
-                    .active {
-                        background-color: #93393d;
-                        color: white;
-                    }
-                }
-            }
         }
 
         .search {
             grid-row: 3;
-            display: grid;
             grid-column: 2/11;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            grid-column-gap: 12px;
-            grid-row-gap: 6px;
-            padding: 10px 0 10px 10px;
-
-            input {
-                background-color: #323032;
-            }
         }
 
         .addNew {
@@ -384,6 +262,14 @@
                     background-color: #ec5a5b;
                     color: white;
                 }
+            }
+        }
+    }
+
+    @media (max-width: $tablet) {
+        .contacts {
+            .sorting {
+                grid-column: 2/12;
             }
         }
     }

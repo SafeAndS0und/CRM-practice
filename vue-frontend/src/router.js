@@ -51,6 +51,24 @@ export default new Router({
                 },
 
             ]
+        },
+
+        {
+            name: 'contractors',
+            path: '/contractors',
+            component: () => import('./views/modules/Contractors.vue'),
+            beforeEnter: middlewares.isLogged,
+            children: [
+                {
+                    path: "details/:id",
+                    component: () => import('./components/modules/BlockList.vue')
+                },
+                {
+                    path: "update/:id",
+                    component: () => import('./components/modules/Form.vue')
+                },
+
+            ]
         }
 
     ]

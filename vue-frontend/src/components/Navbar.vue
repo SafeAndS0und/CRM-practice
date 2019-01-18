@@ -73,7 +73,7 @@
 
             .name {
 
-                color: white;
+                color: #d7d7d7;
                 letter-spacing: 2px;
                 font-size: 14px;
                 line-height: 68px;
@@ -88,7 +88,7 @@
 
             .options{
                 margin-left: 8px;
-                color: #fdf8ff;
+                color: #9b9b9b;
                 position: absolute;
                 line-height: 34px;
                 top: 50%;

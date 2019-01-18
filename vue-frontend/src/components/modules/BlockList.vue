@@ -1,21 +1,51 @@
 <template>
     <div class="block-list">
 
-        <Block block-name="Informacje Podstawowe"
-               @quickUpdate="updateData($event)"
-               :fields="fields.basic"
-               :values="values.basic"
-               class="block"/>
-        <Block block-name="Informacje Kontaktowe"
-               @quickUpdate="updateData($event)"
-               :fields="fields.contact"
-               :values="values.contact"
-               class="block"/>
-        <Block block-name="Informacje Adresowe"
-               @quickUpdate="updateData($event)"
-               :fields="fields.address"
-               :values="values.address"
-               class="block"/>
+        <div v-if="moduleName === 'contacts'">
+            <Block block-name="Informacje Podstawowe"
+                   @quickUpdate="updateData($event)"
+                   :fields="fields.basic"
+                   :values="values.basic"
+                   class="block"/>
+            <Block block-name="Informacje Kontaktowe"
+                   @quickUpdate="updateData($event)"
+                   :fields="fields.contact"
+                   :values="values.contact"
+                   class="block"/>
+            <Block block-name="Informacje Adresowe"
+                   @quickUpdate="updateData($event)"
+                   :fields="fields.address"
+                   :values="values.address"
+                   class="block"/>
+        </div>
+
+        <div v-if="moduleName === 'contractors'">
+            <Block block-name="Informacje Podstawowe"
+                   @quickUpdate="updateData($event)"
+                   :fields="fields.basic"
+                   :values="values.basic"
+                   class="block"/>
+            <Block block-name="Informacje Kontaktowe"
+                   @quickUpdate="updateData($event)"
+                   :fields="fields.contact"
+                   :values="values.contact"
+                   class="block"/>
+            <Block block-name="Informacje Finansowe"
+                   @quickUpdate="updateData($event)"
+                   :fields="fields.address"
+                   :values="values.address"
+                   class="block"/>
+            <Block block-name="Informacje Rejestrowe"
+                   @quickUpdate="updateData($event)"
+                   :fields="fields.address"
+                   :values="values.address"
+                   class="block"/>
+            <Block block-name="Informacje Adresowe"
+                   @quickUpdate="updateData($event)"
+                   :fields="fields.address"
+                   :values="values.address"
+                   class="block"/>
+        </div>
 
         <div class="menu">
             <v-icon name="list-ul" class="icon" scale="1.5"
@@ -55,16 +85,33 @@
                 component: null
             }
         },
+        computed: {
+            moduleName(){
+                if(this.$route.path.includes('contacts')) return 'contacts'
+                if(this.$route.path.includes('contractors')) return 'contractors'
+                if(this.$route.path.includes('invoices')) return 'invoices'
+            }
+        },
         created(){
-            this.fields = contactData.fields
-            this.values = values
+            if(this.moduleName === 'contacts'){
+                //TODO: dynamic imports, refactor it
+                this.fields = contactData.fields
+                this.values = values
 
-            this.axios.get('/contact/c/' + this.$route.params.id)
-                .then(res =>{
-                    contactData.activateControllers(res.data.contact)
-                    this.values = values
-                })
-                .catch(err => console.log(err.response))
+                this.axios.get('/contact/c/' + this.$route.params.id)
+                    .then(res =>{
+                        contactData.activateControllers(res.data.contact)
+                        this.values = values
+                    })
+                    .catch(err => console.log(err.response))
+
+            }
+
+            if(this.moduleName === 'contractors'){
+
+            }
+
+
 
 
             this.axios.get('/comment/content/' + this.$route.params.id)
@@ -132,7 +179,6 @@
                 cursor: pointer;
                 transition: 250ms;
 
-
                 &:first-child:hover {
                     background-color: #2a80d0;
                     color: white;
@@ -145,7 +191,6 @@
                     background-color: #d04f50;
                     color: white;
                 }
-
 
             }
         }

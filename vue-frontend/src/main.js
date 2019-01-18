@@ -25,8 +25,10 @@ Vue.component('default-layout', def)
 Vue.component('empty-layout', empty)
 
 //Registering v-icon
-
 Vue.component('v-icon', Icon)
+
+// Making an event bus
+export const bus = new Vue();
 
 // use a gesture plugin
 const VueTouch = require('vue-touch')
