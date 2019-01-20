@@ -25,7 +25,11 @@
         computed: {
             isUsingFilters(){
                 return Object.values(this.searchValues).filter(value => value !== "" && value !== undefined).length > 0
-            }
+            },
+            shortenedModuleName(){
+                // e.g contacts => contact
+                return this.moduleName.substring(0, this.moduleName.length - 1)
+            },
         },
         created(){
             bus.$on('clearSearchValues', this.clearSearchValues)
@@ -46,13 +50,14 @@
                     str += `&${Object.keys(input)[0]}=${Object.values(input)[0]}`
                 })
 
-                this.axios.get(`/search/contact?sortBy=${this.method}${str}`)
+                this.axios.get(`/search/${this.shortenedModuleName}?sortBy=${this.method}${str}`)
                     .then(res =>{
+                        console.log(res.data)
                         this.$emit('isUsingFilters', this.isUsingFilters)
                         this.$emit('search', {
                             sortMethod: this.method,
                             page: 1,
-                            contacts: res.data.result
+                            moduleData: res.data.result
                         })
                     })
                     .catch(err => console.log(err))

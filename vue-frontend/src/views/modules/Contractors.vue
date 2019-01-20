@@ -1,9 +1,9 @@
 <template>
     <div class="contractors">
         <Sorting class="sorting"
-                 module-name="contractors"
+                 moduleName="contractors"
                  @sort="sort($event)"
-                 :sortFields="searchFor"
+                 :sortFields="sortFields"
         />
 
         <CreatePopUp v-if="showCreatePopUp"
@@ -12,7 +12,7 @@
                      @closePopUp="showCreatePopUp = false"/>
 
         <v-icon name="plus-circle" class="icon-new addNew"
-                v-if="$route.path.includes('contractors')"
+                v-if="$route.path === '/contractors'"
                 @click.native="showCreatePopUp = !showCreatePopUp"
                 scale="1.3"/>
 
@@ -25,15 +25,16 @@
 
         <div class="content" :style="{gridColumn: gridWidth }">
 
-            <router-view v-if="!$route.path.includes('contractors')"/>
+            <router-view v-if="$route.path !== 'contractors'"/>
 
             <div class="list-container">
                 <transition-group name="list">
                     <List v-for="contractor of contractors"
                           :fields="searchFor"
                           :key="contractor._id"
-                          :contact="contractor"
-                          v-if="$route.path.includes('contractors')"
+                          moduleName="contractors"
+                          :moduleObj="contractor"
+                          v-if="$route.path === '/contractors'"
                           @contactDeleted="deleteFromTable"
                           class="list"
                     />
@@ -78,25 +79,58 @@
                     {eng: 'webpage', pl: 'Strona Internetowa'},
                     {eng: 'basicPhone', pl: 'Telefon'},
                     {eng: 'recordOwner', pl: 'Właściciel rek.'},
-
                 ],
+
+                sortFields: [
+                    {pl: "Nazwie kontrahenta", short: 'n'},
+                    {pl: "Stronie Internetowej", short: 'w'},
+                    {pl: "Właścicielu rekordu", short: 'ro'},
+                    {pl: "Czasie dodania", short: 'ct'},
+
+                ]
             }
         },
         computed: {
             gridWidth(){
-                return this.$route.path.includes('contractors') ? "2/11" : "2/12"
+                return this.$route.path === '/contractors' ? "2/11" : "2/12"
             },
+
         },
 
         created(){
             this.axios.get('/contractor/list/1/d_ct')
                 .then(res =>{
-                    console.log(res.data)
                     this.pages = res.data.numOfPages
                     this.contractors = res.data.contractors
                 })
                 .catch(err => console.log(err.response))
         },
+
+        methods:{
+            deleteFromTable(id){
+                this.contractors.find((item, index) =>{
+                    if(item)
+                        if(item._id === id){
+                            this.contractors.splice(index, 1)
+                        }
+                })
+            },
+
+            sort(payload){
+                this.activePage = payload.activePage
+                this.sortMethod = payload.sortMethod
+                this.contractors = payload.moduleData
+
+                bus.$emit('clearSearchValues')
+            },
+
+            search(payload){
+                console.log(payload.moduleData)
+                this.sortMethod = payload.sortMethod
+                this.pages = 1 //disable pagination for filtering search
+                this.contractors = payload.moduleData
+            }
+        }
     }
 </script>
 

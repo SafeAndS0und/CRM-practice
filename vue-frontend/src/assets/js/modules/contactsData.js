@@ -1,10 +1,11 @@
 export const dictionary = [
     {
-        kind: 'basic: ',
+        kind: 'basic',
         data: [
-            {eng: 'name', pl: "Nazwa"},
+            {eng: 'firstname', pl: "Imię"},
+            {eng: 'surname', pl: "Nazwisko"},
             {eng: 'number', pl: "Numer"},
-            {eng: 'trade', pl: "Branża"},
+            {eng: 'business', pl: "Firma"},
             {eng: 'creationTime', pl: "Czas Utworzenia"},
             {eng: 'recordOwner', pl: "Właściciel"},
         ]
@@ -17,22 +18,11 @@ export const dictionary = [
             {eng: 'additionalPhone', pl: "Telefon dodatkowy"},
             {eng: 'basicEmail', pl: "Email podstawowy"},
             {eng: 'additionalEmail', pl: "Email dodatkowy"},
-            {eng: 'webpage', pl: "Strona Internetowa"},
-            {eng: 'fax', pl: "Fax"},
+            {eng: 'skype', pl: "Skype"},
             {eng: 'canContactViaEmail', pl: "Zgoda na kont. mail."},
             {eng: 'canContactViaPhone', pl: "Zgoda na kont. tel."},
         ]
     },
-
-    {
-        kind: 'registration',
-        data: [
-            {eng: 'nip', pl: "NIP"},
-            {eng: 'krs', pl: "KRS"},
-            {eng: 'regon', pl: "Regon"},
-        ]
-    },
-
     {
         kind: 'address',
         data: [
@@ -46,3 +36,5 @@ export const dictionary = [
         ]
     }
 ]
+
+export const blackList = ['number', 'creationTime', 'recordOwner', "Numer", "Czas Utworzenia", "Właściciel"]

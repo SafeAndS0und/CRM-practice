@@ -26,7 +26,7 @@
 
 <script>
     import CustomInput from '../partials/CustomInput.vue'
-    import {dictionary} from "../../assets/js/modules/contactData";
+    import {dictionary} from "../../assets/js/modules/contactsData";
     import translator from '../../assets/js/modules/translator'
 
     export default {

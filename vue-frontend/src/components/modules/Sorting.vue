@@ -25,17 +25,24 @@
                 sortMethod: "d_ct",
             }
         },
+        computed: {
+            shortenedModuleName(){
+                // e.g contacts => contact
+                return this.moduleName.substring(0, this.moduleName.length - 1)
+            },
+        },
         methods: {
             sortTable(method){
                 this.sortMethod = method
 
                 // Else, search as usual
-                this.axios.get('/contact/list/1/' + method)
+                this.axios.get(`/${this.shortenedModuleName}/list/1/` + method)
                     .then(res =>{
+                        console.log(res.data[this.moduleName])
                         this.$emit('sort', {
                             activePage: 1,
                             sortMethod: method,
-                            contacts: res.data.contacts
+                            moduleData: res.data[this.moduleName]
                         })
                     })
                     .catch(err => console.log(err.response))

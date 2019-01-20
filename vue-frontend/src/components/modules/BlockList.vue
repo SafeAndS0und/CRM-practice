@@ -1,61 +1,54 @@
 <template>
     <div class="block-list">
 
-        <div v-if="moduleName === 'contacts'">
+        <div v-if="moduleName === 'contacts' && blockData">
+
             <Block block-name="Informacje Podstawowe"
                    @quickUpdate="updateData($event)"
-                   :fields="fields.basic"
-                   :values="values.basic"
+                   :blockData="blockData[0]"
                    class="block"/>
             <Block block-name="Informacje Kontaktowe"
                    @quickUpdate="updateData($event)"
-                   :fields="fields.contact"
-                   :values="values.contact"
+                   :blockData="blockData[1]"
                    class="block"/>
             <Block block-name="Informacje Adresowe"
                    @quickUpdate="updateData($event)"
-                   :fields="fields.address"
-                   :values="values.address"
+                   :blockData="blockData[2]"
                    class="block"/>
+
         </div>
 
         <div v-if="moduleName === 'contractors'">
             <Block block-name="Informacje Podstawowe"
                    @quickUpdate="updateData($event)"
-                   :fields="fields.basic"
-                   :values="values.basic"
+                   :blockData="blockData[0]"
                    class="block"/>
             <Block block-name="Informacje Kontaktowe"
                    @quickUpdate="updateData($event)"
-                   :fields="fields.contact"
-                   :values="values.contact"
-                   class="block"/>
-            <Block block-name="Informacje Finansowe"
-                   @quickUpdate="updateData($event)"
-                   :fields="fields.address"
-                   :values="values.address"
+                   :blockData="blockData[1]"
                    class="block"/>
             <Block block-name="Informacje Rejestrowe"
                    @quickUpdate="updateData($event)"
-                   :fields="fields.address"
-                   :values="values.address"
+                   :blockData="blockData[2]"
                    class="block"/>
             <Block block-name="Informacje Adresowe"
-                   @quickUpdate="updateData($event)"
-                   :fields="fields.address"
-                   :values="values.address"
+                   :blockData="blockData[3]"
                    class="block"/>
+            <!--<Block block-name="Informacje Finansowe"-->
+            <!--@quickUpdate="updateData($event)"-->
+            <!--:blockData="blockData[4]"-->
+            <!--class="block"/>-->
         </div>
 
         <div class="menu">
             <v-icon name="list-ul" class="icon" scale="1.5"
-                    @click.native="$router.push('/contacts')"
+                    @click.native="$router.push('/' + moduleName)"
             />
             <v-icon name="pencil-alt" class="icon" scale="1.5"
-                    @click.native="$router.push('/contacts/update/' + $route.params.id)"
+                    @click.native="$router.push(`/${moduleName}/update/` + $route.params.id)"
             />
             <v-icon name="trash" class="icon" scale="1.5"
-                    @click.native="$router.push('/contacts')"
+                    @click.native="$router.push('/' + moduleName)"
             />
         </div>
 
@@ -68,9 +61,7 @@
 
 <script>
     import Block from '../../components/modules/Block.vue'
-    import {dictionary, values} from '../../assets/js/modules/contactData'
-    import contactData from '../../assets/js/modules/contactData'
-    import translate from '../../assets/js/modules/translator'
+    import controller from '../../assets/js/modules/controller'
 
     export default {
         name: "BlockList",
@@ -79,10 +70,11 @@
         },
         data(){
             return {
-                fields: {},
-                values: {},
                 comms: [],
-                component: null
+                component: null,
+                moduleData: null,
+                blockData: null
+
             }
         },
         computed: {
@@ -90,79 +82,78 @@
                 if(this.$route.path.includes('contacts')) return 'contacts'
                 if(this.$route.path.includes('contractors')) return 'contractors'
                 if(this.$route.path.includes('invoices')) return 'invoices'
+            },
+            shortenedModuleName(){
+                // e.g contacts => contact
+                return this.moduleName.substring(0, this.moduleName.length - 1)
+            },
+            type(){
+                switch(this.moduleName){
+                    case 'contacts':
+                        return 'c'
+                    case 'contractors':
+                        return 'k'
+                    case 'invoices':
+                        return 'i'
+                }
             }
         },
         created(){
-            if(this.moduleName === 'contacts'){
-                //TODO: dynamic imports, refactor it
-                this.fields = contactData.fields
-                this.values = values
+            // Dynamically load only the relevant data and assign it to a vue-data
+            import(`../../assets/js/modules/${this.moduleName}Data`)
+                .then(component =>{
+                    this.moduleData = component
+                    this.downloadData()
+                })
 
-                this.axios.get('/contact/c/' + this.$route.params.id)
+            setTimeout(() => console.log(this.moduleData), 500)
+
+            this.loadComments()
+        },
+        methods: {
+            downloadData(){
+                this.axios.get(`/${this.shortenedModuleName}/${this.type}/` + this.$route.params.id)
                     .then(res =>{
-                        contactData.activateControllers(res.data.contact)
-                        this.values = values
+                        this.blockData = controller.assignValues(this.moduleData.dictionary, res.data[this.shortenedModuleName])
+                    })
+                    .catch(err => console.log(err))
+            },
+
+            loadComments(){
+                this.axios.get('/comment/content/' + this.$route.params.id)
+                    .then(res =>{
+                        this.comms = res.data.result
+                        //import asychronically
+                        this.component = () => import('../../components/modules/Comments.vue')
                     })
                     .catch(err => console.log(err.response))
 
-            }
-
-            if(this.moduleName === 'contractors'){
-
-            }
+            },
 
 
-
-
-            this.axios.get('/comment/content/' + this.$route.params.id)
-                .then(res =>{
-                    this.comms = res.data.result
-                    //import asychronically
-                    this.component = () => import('../../components/modules/Comments.vue')
-                })
-                .catch(err => console.log(err.response))
-        },
-        methods: {
             updateData(updatedContact){ //eng field, value
-                const contactArr = []
-                //Make sorted array for an all-in-one array
-                Object.keys(this.values).forEach(type =>{
-                    this.values[type].forEach(value =>{
-                        contactArr.push(value)
-                    })
-                })
+                //        TODO SEARCH AND CHANGE VALUE IN CONTROLLER
 
-                const updatedContactData = {}
-                contactArr.map(contact =>{
-                    //if eng field doesnt equal the field given from the quick update
-                    if(translate(dictionary, contact.f) !== updatedContact.field){
-                        //Just translate the field on english and leave the value as it was
-                        updatedContactData[translate(dictionary, contact.f)] = contact.v
+                //     this.axios.patch(`/${this.moduleName.substring(0, this.moduleName.length - 1)}/${this.type}/` + this.$route.params.id, updatedContactData)
+                //         .then(res =>{
+                //             return this.axios.get(`/${this.moduleName.substring(0, this.moduleName.length - 1)}/${this.type}/` + this.$route.params.id)
+                //                 .then(res =>{
+                //                     this.values = this.makeValues(res.data, this.dictionary)
+                //                 })
+                //                 .catch(err => console.log(err))
+                //
+                //         })
+                //         .catch(err => console.log(err))
+                //
 
-                    } else{
-                        updatedContactData[updatedContact.field] = updatedContact.value
-                    }
-                })
-
-                this.axios.patch('/contact/c/' + this.$route.params.id, updatedContactData)
-                    .then(res =>{
-
-                        return this.axios.get('/contact/c/' + this.$route.params.id)
-                            .then(res =>{
-                                contactData.activateControllers(res.data.contact)
-                                this.values = values
-                            })
-                            .catch(err => console.log(err.response))
-
-                    })
-                    .catch(err => console.log(err))
-
-
+                // }
             }
         }
     }
 </script>
 <style scoped lang="scss">
+    @import '../../assets/css/variables.scss';
+
     .block-list {
 
         .menu {
@@ -204,5 +195,9 @@
             margin-top: 90px;
             margin-bottom: 50px;
         }
+    }
+
+    @media (max-width: $tablet) {
+
     }
 </style>

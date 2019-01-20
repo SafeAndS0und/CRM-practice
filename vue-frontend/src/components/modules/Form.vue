@@ -18,13 +18,13 @@
 
         <div class="menu">
             <v-icon name="list-ul" class="icon" scale="1.2"
-                    @click.native="$router.push('/contacts')"
+                    @click.native="$router.push('/' + moduleName)"
             />
             <v-icon name="address-card" class="icon" scale="1.35"
-                    @click.native="$router.push('/contacts/details/' + $route.params.id)"
+                    @click.native="$router.push(`/${moduleName}/details/` + $route.params.id)"
             />
             <v-icon name="trash" class="icon" scale="1.2"
-                    @click.native="$router.push('/contacts')"
+                    @click.native="$router.push('/' + moduleName)"
             />
         </div>
     </div>
@@ -32,7 +32,7 @@
 
 <script>
     import CustomInput from '../partials/CustomInput.vue'
-    import {dictionary, blackList} from "../../assets/js/modules/contactData";
+    import {dictionary, blackList} from "../../assets/js/modules/contactsData";
 
     export default {
         name: "New",
@@ -46,14 +46,16 @@
             }
         },
         computed: {
-            module(){
+            moduleName(){
                 if(this.$route.path.includes('contacts')) return 'contacts'
+                if(this.$route.path.includes('contractors')) return 'contractors'
+                if(this.$route.path.includes('invoices')) return 'invoices'
             }
         },
         created(){
             switch(this.module){
                 case 'contacts' :
-                    import('../../assets/js/modules/contactData')
+                    import('../../assets/js/modules/contactsData')
                         .then(module =>{
                             this.fields = JSON.parse(JSON.stringify(module.default.fields)) // copying so we would not change the source object
 

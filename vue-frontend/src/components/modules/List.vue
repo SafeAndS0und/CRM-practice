@@ -1,16 +1,16 @@
 <template>
     <div class="list">
-        <router-link :to="`/contacts/details/${contact._id}`">
+        <router-link :to="`/${moduleName}/details/${moduleObj._id}`">
             <article v-for="field of fields">
                 <h5>{{field.pl}}</h5>
-                <p>{{field.eng === 'recordOwner' ? contact[field.eng].surname : contact[field.eng]}}</p>
+                <p>{{field.eng === 'recordOwner' ? moduleObj[field.eng].surname : moduleObj[field.eng]}}</p>
             </article>
 
         </router-link>
 
         <div class="icons">
-            <v-icon name="trash" scale="1.2" @click.native="del(contact._id)" class="icon"/>
-            <v-icon name="pencil-alt" scale="1.2" class="icon" @click.native="$router.push('/contacts/update/' + contact._id)"/>
+            <v-icon name="trash" scale="1.2" @click.native="del(moduleObj._id)" class="icon"/>
+            <v-icon name="pencil-alt" scale="1.2" class="icon" @click.native="$router.push(`/${moduleName}/update/` + moduleObj._id)"/>
             <v-icon name="check-square" scale="1.2" class="icon" :class="{active: selected}" @click.native="select"/>
         </div>
     </div>
@@ -19,13 +19,26 @@
 <script>
     export default {
         name: "List",
-        props: {
-            contact: Object,
-            fields: Array
+        props: ['moduleObj', 'fields', 'moduleName'],
+        computed: {
+            type(){
+                switch(this.moduleName){
+                    case 'contacts':
+                        return 'c'
+                    case 'contractors':
+                        return 'k'
+                    case 'invoices':
+                        return 'i'
+                }
+            },
+            shortenedModuleName(){
+                // e.g contacts => contact
+                return this.moduleName.substring(0, this.moduleName.length - 1)
+            },
         },
         methods: {
             del(id){
-                this.axios.delete('/contact/c/' + id)
+                this.axios.delete(`/${this.shortenedModuleName}/${this.type}/` + id)
                     .then(res => {
                        this.$emit('contactDeleted', id)
                     })

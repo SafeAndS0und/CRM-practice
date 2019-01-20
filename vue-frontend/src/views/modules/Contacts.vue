@@ -5,7 +5,7 @@
                  @sort="sort($event)"
                  module-name="contacts"
                  :sortFields="sortFields"
-                 />
+        />
 
         <Search class="search"
                 @search="search($event)"
@@ -25,14 +25,15 @@
 
         <div class="content" :style="{gridColumn: gridWidth }">
 
-            <router-view v-if="$route.path !== '/contacts'"/>
+            <router-view v-if="$route.path !== '/contacts'" class="routerview"/>
 
             <div class="list-container">
                 <transition-group name="list">
                     <List v-for="contact in contacts"
                           :fields="searchFor"
                           :key="contact._id"
-                          :contact="contact"
+                          moduleName="contacts"
+                          :moduleObj="contact"
                           v-if="$route.path === '/contacts'"
                           @contactDeleted="deleteFromTable"
                           class="list"
@@ -117,7 +118,7 @@
             sort(payload){
                 this.activePage = payload.activePage
                 this.sortMethod = payload.sortMethod
-                this.contacts = payload.contacts
+                this.contacts = payload.moduleData
 
                 bus.$emit('clearSearchValues')
             },
@@ -134,7 +135,7 @@
             search(payload){
                 this.sortMethod = payload.sortMethod
                 this.pages = 1 //disable pagination for filtering search
-                this.contacts = payload.contacts
+                this.contacts = payload.moduleData
             }
         }
 
@@ -149,7 +150,6 @@
         margin-top: 140px;
         display: grid;
         grid-template-columns: repeat(12, 1fr);
-
 
         .sorting {
             grid-row: 2;
@@ -224,6 +224,11 @@
         .contacts {
             .sorting {
                 grid-column: 2/12;
+            }
+
+            .content {
+                grid-column: 1/13;
+
             }
         }
     }

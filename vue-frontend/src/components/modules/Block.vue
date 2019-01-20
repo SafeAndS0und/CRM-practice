@@ -2,13 +2,13 @@
     <section>
         <h1>{{blockName}}</h1>
         <div class="info">
-            <article v-for="(field, i) of fields"
-                     @click="!isCheckbox(field) ? togglePopup(i) : checkBoxActive[i] = !checkBoxActive[i]"
-                     :class="{'checkF': isCheckbox(field), 'checkT': checkBoxActive[i] && isCheckbox(field)}">
+            <article v-for="(field, i) of blockData.data"
+                     @click="!isCheckbox(field.pl) ? togglePopup(i) : checkBoxActive[i] = !checkBoxActive[i]"
+                     :class="{'checkF': isCheckbox(field.pl), 'checkT': checkBoxActive[i] && isCheckbox(field.pl)}">
 
                 <div class="popup" v-if="showPopup[i]">
                     <div class="top"></div>
-                    <div @click="makeCopy(field)">
+                    <div @click="makeCopy(field.value)">
                         <p>Kopiuj wartość</p>
                     </div>
                     <div @click="turnOnEdit(i)">
@@ -20,12 +20,12 @@
                     <div class="top"></div>
                 </div>
 
-                <h5>{{field}}</h5>
-                <p v-if="!editing[i]">{{(value(field) === false || value(field) === true) ? '' : value(field)}}</p>
+                <h5>{{field.pl}}</h5>
+                <p v-if="!editing[i]">{{(field.value === false || field.value === true) ? '' : field.value}}</p>
                 <CustomInput v-if="editing[i]"
                              placeholder="Edytuj"
                              :ref="'editInput'+i"
-                             @keydown.enter.native="updateSingular(field, i, $event)" class="editInput"/>
+                             @keydown.enter.native="updateSingular(field.eng, i, $event)" class="editInput"/>
             </article>
         </div>
 
@@ -34,17 +34,13 @@
 
 <script>
     import CustomInput from '../partials/CustomInput.vue'
-    import {dictionary} from '../../assets/js/modules/contactData'
+    import {dictionary} from '../../assets/js/modules/contactsData'
     import translate from '../../assets/js/modules/translator'
 
     export default {
         name: "Block",
         components: {CustomInput},
-        props: {
-            blockName: String,
-            fields: Array,
-            values: Array
-        },
+        props: ['blockName', 'blockData'],
         data(){
             return {
                 editing: {},
@@ -54,58 +50,44 @@
         },
         created(){
             //initalize editing obj and showPopup array so vue could 'react' to them
-            this.fields.map((field, i) =>{
-                this.$set(this.checkBoxActive, i , false)
+            this.blockData.data.map((field, i) =>{
+                this.$set(this.checkBoxActive, i, false)
                 this.$set(this.editing, i, false)
                 this.showPopup.push(false)
             })
 
         },
         methods: {
-
             isCheckbox(fieldName){
-                console.log(fieldName === 'Zgoda na kont. mail.' || fieldName === 'Zgoda na kont. tel.')
                 return fieldName === 'Zgoda na kont. mail.' || fieldName === 'Zgoda na kont. tel.'
             },
 
-            value(field){
-                const element = this.values.find(el => el.f === field)
-                if(element){
-                    if(element.f === "Właściciel") return element.v.surname
-                    else return element.v
-                }
-            },
             togglePopup(index){
+                console.log(this.showPopup)
                 // JS cant detect changes on an array, so we need to make another one
                 this.showPopup = this.showPopup.map((el, i) => i === index ? !el : false) //find the element and change its state
 
             },
             makeCopy(field){
-                navigator.clipboard.writeText(this.value(field))
+                navigator.clipboard.writeText(field.value)
             },
 
             turnOnEdit(i){
                 this.editing[i] = !this.editing[i]
                 const str = 'editInput' + i
-                this.$nextTick(() => {
+                this.$nextTick(() =>{
                     this.$refs[str][0].$el.focus()
                 })
             },
 
             updateSingular(field, i, e){
-
                 this.$emit('quickUpdate', {
-                    field: translate(dictionary, field),
+                    field: field,
                     value: e.target.value
                 })
-
                 this.editing[i] = false
                 this.showPopup[i] = false
-                this.$emit('quickUpdate')
-                    .then(() => {
-                        this.editing[i] = false
-                        this.showPopup[i] = false
-                    })
+
             }
         }
 
@@ -139,17 +121,17 @@
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             grid-gap: 5px;
 
-            .checkF{
+            .checkF {
                 color: white;
                 background-color: #55242b;
-                &:hover{
+                &:hover {
                     background-color: #5d242a;
                 }
             }
-            .checkT{
+            .checkT {
                 color: white;
                 background-color: #3164ac;
-                &:hover{
+                &:hover {
                     background-color: #3072b8;
                 }
             }
@@ -163,8 +145,6 @@
                 cursor: pointer;
                 border-radius: 2px;
                 position: relative;
-
-
 
                 .popup {
                     position: absolute;
