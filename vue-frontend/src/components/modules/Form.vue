@@ -1,16 +1,16 @@
 <template>
     <div class="new-container">
 
-        <div v-for="(value, key) of fields">
-            <p>{{key}}</p>
+        <div v-for="(kind, i) of moduleData">
+            <p>{{kind.kind}}</p>
             <section>
-                <article v-for="field of value">
-                    <CustomInput :placeholder="field" v-model="polishOutput[field]"/>
+                <article v-for="field of kind.data">
+                    <CustomInput :placeholder="field.pl" v-model="polishOutput[field.pl]"/>
                 </article>
             </section>
 
-            <!-- Make fields object into an array, take the last item and see if it matches with the current one from iteration -->
-            <button v-if="Object.keys(fields)[Object.keys(fields).length - 1] === key" @click="addContact">Zapisz
+            <!--Make fields object into an array, take the last item and see if it matches with the current one from iteration -->
+            <button v-if="moduleData.length - 1 === i " @click="addContact">Zapisz
             </button>
         </div>
         <p v-if="added" style="text-align: center; color: #518a57">Zapisano zmiany</p>
@@ -32,16 +32,16 @@
 
 <script>
     import CustomInput from '../partials/CustomInput.vue'
-    import {dictionary, blackList} from "../../assets/js/modules/contactsData";
 
     export default {
         name: "New",
         components: {CustomInput},
         data(){
             return {
-                fields: {},
-                polishOutput: {Nazwisko: ''}, // Keeps polish fields and values
-                englishOutput: {surname: ''}, // Keeps english fields and values
+                blackList: null,
+                moduleData: [],
+                polishOutput: {Nazwisko: '', Nazwa: ''}, // Keeps polish fields and values
+                englishOutput: {surname: '', name: ''}, // Keeps english fields and values
                 added: false
             }
         },
@@ -50,47 +50,62 @@
                 if(this.$route.path.includes('contacts')) return 'contacts'
                 if(this.$route.path.includes('contractors')) return 'contractors'
                 if(this.$route.path.includes('invoices')) return 'invoices'
+            },
+            shortenedModuleName(){
+                // e.g contacts => contact
+                return this.moduleName.substring(0, this.moduleName.length - 1)
+            },
+            type(){
+                switch(this.moduleName){
+                    case 'contacts':
+                        return 'c'
+                    case 'contractors':
+                        return 'k'
+                    case 'invoices':
+                        return 'i'
+                }
             }
         },
         created(){
-            switch(this.module){
-                case 'contacts' :
-                    import('../../assets/js/modules/contactsData')
-                        .then(module =>{
-                            this.fields = JSON.parse(JSON.stringify(module.default.fields)) // copying so we would not change the source object
+            import(`../../assets/js/modules/${this.moduleName}Data`)
+                .then(module =>{
+                    this.blackList = module.blackList
+                    this.moduleData = JSON.parse(JSON.stringify(module.dictionary)) // copying so we would not change the source object
 
-                            // Delete useless inputs
-                            blackList.forEach(field =>{
-                                let index = this.fields.basic.findIndex(f => f === field)
-                                if(index !== -1) this.fields.basic.splice(index, 1)
-                            })
+                    console.log(this.moduleData)
+                    // Delete useless inputs
+                    this.blackList.forEach(field =>{
+                        let index = this.moduleData[0].data.findIndex(obj => obj.eng === field)
+                        if(index !== -1) this.moduleData[0].data.splice(index, 1)
+                    })
+                })
+                .catch(err => console.log(err.response))
 
-                        })
-                        .catch(err => console.log(err.response))
-
-                    this.axios.get('/contact/c/' + this.$route.params.id)
-                        .then(res =>{
-                            // Replace polishOutput with requested data
-                            Object.keys(dictionary)
-                                .forEach(item =>{
-                                if(!blackList.find(el => el === item)){ // if the iterated item isnt in the black list
-                                    this.polishOutput[dictionary[item]] = res.data.contact[item] //Fill the inputs with data from server
+            this.axios.get(`/${this.shortenedModuleName}/${this.type}/` + this.$route.params.id)
+                .then(res =>{
+                    console.log('res', res)
+                    // Replace polishOutput with requested data
+                    this.moduleData
+                        .forEach(kind =>{
+                            kind.data.forEach(item => {
+                                if(!this.blackList.find(el => el === item.pl)){ // if the iterated item isnt in the black list
+                                    this.polishOutput[item.pl] = res.data[this.shortenedModuleName][item.eng] //Fill the inputs with data from server
                                 }
                             })
-                            console.log(this.polishOutput)
                         })
-                        .catch(err => console.log(err.response))
+                    console.log('polishO', this.polishOutput)
+                })
+                .catch(err => console.log(err))
 
-                    break;
-            }
+
         },
         methods: {
             addContact(){
-                Object.keys(dictionary).forEach(item =>{
+                Object.keys(this.moduleData).forEach(item =>{
                     this.englishOutput[item] = this.polishOutput[dictionary[item]] // create english field-value pair, for the server
                 })
 
-                this.axios.patch('/contact/c/' + this.$route.params.id, this.englishOutput)
+                this.axios.patch(`/${this.shortenedModuleName}/${this.type}/` + this.$route.params.id, this.englishOutput)
                     .then(res => this.added = true)
                     .catch(err => console.log(err.response))
             }
@@ -122,7 +137,6 @@
                 padding: 15px 0;
                 cursor: pointer;
                 transition: 250ms;
-
 
                 &:first-child:hover {
                     background-color: #2a80d0;

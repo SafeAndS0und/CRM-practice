@@ -1,6 +1,6 @@
 export const dictionary = [
     {
-        kind: 'basic: ',
+        kind: 'basic',
         data: [
             {eng: 'name', pl: "Nazwa"},
             {eng: 'number', pl: "Numer"},
@@ -46,3 +46,5 @@ export const dictionary = [
         ]
     }
 ]
+
+export const blackList = ['number', 'creationTime', 'recordOwner', "Numer", "Czas Utworzenia", "Właściciel"]

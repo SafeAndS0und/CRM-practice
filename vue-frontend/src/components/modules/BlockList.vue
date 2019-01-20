@@ -18,7 +18,7 @@
 
         </div>
 
-        <div v-if="moduleName === 'contractors'">
+        <div v-if="moduleName === 'contractors' && blockData">
             <Block block-name="Informacje Podstawowe"
                    @quickUpdate="updateData($event)"
                    :blockData="blockData[0]"
@@ -105,8 +105,6 @@
                     this.moduleData = component
                     this.downloadData()
                 })
-
-            setTimeout(() => console.log(this.moduleData), 500)
 
             this.loadComments()
         },
