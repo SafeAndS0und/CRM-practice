@@ -5,6 +5,8 @@ const Stats = require('../models/stats')
 exports.contractor_add = (req, res, next) => {
     const newContractor = {
         _id: mongoose.Types.ObjectId(),
+
+        name: req.body.name ? req.body.name : '',
         number: '',
         trade: req.body.trade ? req.body.trade : '',
         recordOwner: req.userData._id,
@@ -18,7 +20,6 @@ exports.contractor_add = (req, res, next) => {
         canContactViaEmail: req.body.canContactViaEmail ? req.body.canContactViaEmail : false,
         canContactViaPhone: req.body.canContactViaPhone ? req.body.canContactViaPhone : false,
         //registration information
-        canContactViaPhone: req.body.canContactViaPhone ? req.body.canContactViaPhone : false,
         nip: req.body.nip ? req.body.nip : '',
         krs: req.body.krs ? req.body.krs : '',
         regon: req.body.regon ? req.body.regon : '',
@@ -106,23 +107,17 @@ exports.contractor_list = (req, res, next) => {
             case 'd_n': //desc number
                 sortObj = {number: -1}
                 break;
-            case 'a_fn': //asc firstname
-                sortObj = {firstname: 1}
+            case 'a_w': //asc webpage
+                sortObj = {webpage: 1}
                 break;
-            case 'd_fn': //desc firstname
-                sortObj = {firstname: -1}
+            case 'd_w': //desc webpage
+                sortObj = {webpage: -1}
                 break;
-            case 'a_sn': //asc surname
-                sortObj = {surname: 1}
+            case 'a_p': //asc basicPhone
+                sortObj = {basicPhone: 1}
                 break;
-            case 'd_sn': //desc surname
-                sortObj = {surname: -1}
-                break;
-            case 'a_b': //asc business
-                sortObj = {business: 1}
-                break;
-            case 'd_b': //desc business
-                sortObj = {business: -1}
+            case 'd_p': //desc basicPhone
+                sortObj = {basicPhone: -1}
                 break;
             default: //default asc creation time
                 sortObj = {creationTime: 1}
@@ -133,7 +128,7 @@ exports.contractor_list = (req, res, next) => {
         .find({}, null, {skip: skipDocs, limit: docsPerPage})
         .populate('recordOwner', 'firstname surname')
         .sort(sortObj)
-        .select("_id number name webpage basicPhone recordOwner")
+        .select("_id name number webpage basicPhone recordOwner")
         .then(contractors => {
             return res.status(200).json({
                 numOfPages: numOfPages,
