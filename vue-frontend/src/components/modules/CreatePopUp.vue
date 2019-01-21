@@ -8,7 +8,7 @@
             <div class="before" v-if="!hide">
                 <h1>Dodaj nowy {{name}}</h1>
                 <p>Po dodaniu będzie istniała możliwość uzupełnienia reszty informacji</p>
-                <CustomInput :placeholder="input" v-model="contact[input]" v-for="input of inputs"/>
+                <CustomInput :placeholder="input.pl" v-model="moduleData[input.eng]" v-for="input of inputs"/>
                 <button @click="addContact">Dodaj</button>
             </div>
         </transition>
@@ -31,13 +31,13 @@
 
     export default {
         name: "CreatePopUp",
-        props: ['name', 'inputs'],
+        props: ['name', 'inputs', 'moduleName'],
         components: {
             CustomInput
         },
         data(){
             return {
-                contact: {},
+                moduleData: {},
                 added: false,
                 hide: false,
                 id: ''
@@ -47,10 +47,9 @@
             addContact(){
                 const obj = {}
                 this.inputs.forEach(field => {
-                    obj[translator(dictionary, field)] = this.contact[field]
+                    obj[field.eng] = this.moduleData[field.eng]
                 })
-
-                this.axios.post('/contact/addContact', obj)
+                this.axios.post(`/${this.moduleName}/addContractor`, obj)
                     .then(res => {
                         this.id = res.data.newContactId
                         this.hide = true
@@ -59,7 +58,7 @@
                     .catch(err => console.log(err.response))
             },
             goToEdit(){
-                this.$router.push('/contacts/update/' + this.id)
+                this.$router.push(`/${this.moduleName}s/update/` + this.id)
                 this.$emit('closePopUp')
             }
         }

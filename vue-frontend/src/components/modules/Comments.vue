@@ -15,7 +15,7 @@
 
         <article v-for="(comment, index) of commentsSorted">
             <h3>{{comment.author.firstname}} {{comment.author.surname}}</h3>
-            <span class="date">{{comment.postedAt}}</span>
+            <span class="date">{{new Date(comment.postedAt).toLocaleString()}}</span>
             <p>
                 {{comment.content}}
             </p>
@@ -30,7 +30,7 @@
 
             <article class="answer" v-for="reply of comment.replies">
                 <h3>{{reply.author.firstname}} {{reply.author.surname}}</h3>
-                <span class="date">{{reply.postedAt}}</span>
+                <span class="date">{{new Date(reply.postedAt).toLocaleString()}}</span>
                 <p>
                     {{reply.content}}
                 </p>

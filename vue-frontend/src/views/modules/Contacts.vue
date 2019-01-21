@@ -15,7 +15,8 @@
 
         <CreatePopUp v-if="showCreatePopUp"
                      name="kontakt"
-                     :inputs="['Imię', 'Nazwisko']"
+                     moduleName="contact"
+                     :inputs="[{pl: 'Imię', eng: 'firstname'}, {pl: 'Nazwisko', eng: 'surname'}]"
                      @closePopUp="showCreatePopUp = false"/>
 
         <v-icon name="plus-circle" class="icon-new addNew"

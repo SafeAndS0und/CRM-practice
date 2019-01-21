@@ -32,6 +32,7 @@
 
 <script>
     import CustomInput from '../partials/CustomInput.vue'
+    import translate from '../../assets/js/modules/translator'
 
     export default {
         name: "New",
@@ -41,7 +42,6 @@
                 blackList: null,
                 moduleData: [],
                 polishOutput: {Nazwisko: '', Nazwa: ''}, // Keeps polish fields and values
-                englishOutput: {surname: '', name: ''}, // Keeps english fields and values
                 added: false
             }
         },
@@ -72,7 +72,6 @@
                     this.blackList = module.blackList
                     this.moduleData = JSON.parse(JSON.stringify(module.dictionary)) // copying so we would not change the source object
 
-                    console.log(this.moduleData)
                     // Delete useless inputs
                     this.blackList.forEach(field =>{
                         let index = this.moduleData[0].data.findIndex(obj => obj.eng === field)
@@ -83,7 +82,6 @@
 
             this.axios.get(`/${this.shortenedModuleName}/${this.type}/` + this.$route.params.id)
                 .then(res =>{
-                    console.log('res', res)
                     // Replace polishOutput with requested data
                     this.moduleData
                         .forEach(kind =>{
@@ -93,7 +91,6 @@
                                 }
                             })
                         })
-                    console.log('polishO', this.polishOutput)
                 })
                 .catch(err => console.log(err))
 
@@ -101,11 +98,20 @@
         },
         methods: {
             addContact(){
-                Object.keys(this.moduleData).forEach(item =>{
-                    this.englishOutput[item] = this.polishOutput[dictionary[item]] // create english field-value pair, for the server
-                })
-
-                this.axios.patch(`/${this.shortenedModuleName}/${this.type}/` + this.$route.params.id, this.englishOutput)
+                const englishOutput = {}
+                Object
+                    .entries(this.polishOutput)
+                    .forEach(field => {
+                        this.moduleData.forEach(kind => {
+                            kind.data.forEach(dataObj => {
+                                if(dataObj.pl === field[0]){
+                                    englishOutput[dataObj.eng] = field[1]
+                                }
+                            })
+                        })
+                    })
+                console.log(englishOutput)
+                this.axios.patch(`/${this.shortenedModuleName}/${this.type}/` + this.$route.params.id, englishOutput)
                     .then(res => this.added = true)
                     .catch(err => console.log(err.response))
             }

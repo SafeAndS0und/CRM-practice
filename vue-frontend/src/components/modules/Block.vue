@@ -21,7 +21,7 @@
                 </div>
 
                 <h5>{{field.pl}}</h5>
-                <p v-if="!editing[i]">{{(field.value === false || field.value === true) ? '' : field.value}}</p>
+                <p v-if="!editing[i]">{{refactorValue(field.value, field.eng)}}</p>
                 <CustomInput v-if="editing[i]"
                              placeholder="Edytuj"
                              :ref="'editInput'+i"
@@ -58,6 +58,14 @@
 
         },
         methods: {
+
+            refactorValue(value, field){
+                if(value === false || value === true) return ''
+                else if(field === 'recordOwner') return value.firstname + ' ' + value.surname
+                else if(field === 'creationTime') return new Date(value).toLocaleString()
+                else return value
+            },
+
             isCheckbox(fieldName){
                 return fieldName === 'Zgoda na kont. mail.' || fieldName === 'Zgoda na kont. tel.'
             },
