@@ -3,7 +3,7 @@ const {JWT_KEY} = require('../../constants.json')
 
 module.exports = (req, res, next) => {
     if(!req.headers.authorization) return res.status(400).json({
-        msg: "Brak tokenu uwierzytelniającego. Proszę zalogować się ponownie.",
+        msg: "Brak tokenu uwierzytelniającego.",
         auth: false
     })
 
@@ -14,9 +14,8 @@ module.exports = (req, res, next) => {
         next()
     }
     catch(error) {
-        console.log("Błąd z sesją. Proszę zalogować się ponownie.")
         res.status(401).json({
-            msg: "Błąd z sesją. Proszę zalogować się ponownie.",
+            msg: "Błąd z sesją.",
             auth: false
         })
     }
