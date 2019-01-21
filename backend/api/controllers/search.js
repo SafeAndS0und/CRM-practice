@@ -11,6 +11,7 @@ exports.search = async (req, res, next) => {
     let errors = []
     let sort = ""
     let sortObj = {}
+    let selectString = ''
 
     //Sorting
     sort = req.query.sortBy
@@ -67,9 +68,11 @@ exports.search = async (req, res, next) => {
     switch(modelName) {
         case 'contact':
             model = Contact
+            selectString = '_id number firstname surname business basicEmail basicPhone recordOwner'
             break
         case 'contractor':
             model = Contractor
+            selectString = '_id name webpage basicPhone recordOwner'
             break
         default:
             model = null
@@ -85,12 +88,11 @@ exports.search = async (req, res, next) => {
     .find(query)
     .populate('recordOwner', 'firstname surname')
     .sort(sortObj)
-    .select('_id number firstname surname business basicEmail basicPhone recordOwner')
+    .select(selectString)
     .limit(15)
     .then(res => {
         result = res
-    })
-    .catch(err => {
+    }).catch(err => {
         errors.push(err)
     })
 

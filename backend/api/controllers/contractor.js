@@ -191,6 +191,7 @@ exports.contractor_update = (req, res, next) => {
 
     const updateContractor = {
         modificationTime: new Date(Date.now()).toISOString(),
+        name: req.body.name ? req.body.name : '',
         trade: req.body.trade ? req.body.trade : '',
         //contact
         basicPhone: req.body.basicPhone ? req.body.basicPhone : '',
@@ -223,12 +224,9 @@ exports.contractor_update = (req, res, next) => {
     .findOne({_id: contractor_id})
     .then(result => {
         if(result) {
-            console.log('CONTRACTOR FIND RESULT \n', result)
             Contractor
             .findOneAndUpdate({_id: result._id}, updateContractor)
             .then(contractor => {
-                console.log('RESULT ID \n', result._id)
-                console.log('UPDATED RESULT \n', contractor)
                 return res.status(200).json({
                     msg: `Zaktualizowano kontrahenta ${contractor.number}.`,
                     updated: true
