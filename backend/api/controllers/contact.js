@@ -46,7 +46,7 @@ exports.contact_addContact = (req, res, next) => {
                 .then(result => {
                     return res.status(201).json({
                         msg: 'Dodano nowy kontakt',
-                        newContactId: result._id,
+                        _id: result._id,
                         added: true
                     })
                 })

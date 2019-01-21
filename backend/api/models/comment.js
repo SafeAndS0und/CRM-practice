@@ -11,7 +11,7 @@ const commentSchema = mongoose.Schema({
     },
     postedAt: {
         type: Date,
-        default: Date.now()
+        default: Date.now
     },
     content: {
         type: String

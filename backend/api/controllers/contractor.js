@@ -50,7 +50,7 @@ exports.contractor_add = (req, res, next) => {
             .then(result => {
                 return res.status(201).json({
                     msg: 'Dodano nowego kontrahenta',
-                    newContractorId: result._id,
+                    _id: result._id,
                     added: true
                 })
             })
