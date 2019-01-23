@@ -28,6 +28,8 @@ const contactRouter = require('./api/routes/contact')
 const searchRouter = require('./api/routes/search')
 const commentRouter = require('./api/routes/comment')
 const contractorRouter = require('./api/routes/contractor')
+const invoiceRouter = require('./api/routes/invoice')
+const productRouter = require('./api/routes/product')
 
 //Use routes
 app.use('/user', userRouter)
@@ -35,6 +37,8 @@ app.use('/contact', contactRouter)
 app.use('/search', searchRouter)
 app.use('/comment', commentRouter)
 app.use('/contractor', contractorRouter)
+app.use('/invoice', invoiceRouter)
+app.use('/product', productRouter)
 
 //Handling error(Not found)
 app.use((req, res, next) => {
