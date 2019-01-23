@@ -149,8 +149,7 @@ exports.contractor_detailed = (req, res, next) => {
 
     if(!contractor_id || !mongoose.Types.ObjectId.isValid(contractor_id)) {
         return res.status(401).json({
-            msg: 'Brak lub niepoprawne id kontrahenta',
-            deleted: false
+            msg: 'Brak lub niepoprawne id kontrahenta'
         })
     }
 
@@ -185,7 +184,7 @@ exports.contractor_update = (req, res, next) => {
     if(!contractor_id || !mongoose.Types.ObjectId.isValid(contractor_id)) {
         return res.status(401).json({
             msg: 'Brak lub niepoprawne id kontrahenta',
-            deleted: false
+            updated: false
         })
     }
 

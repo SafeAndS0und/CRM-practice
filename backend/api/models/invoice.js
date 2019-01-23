@@ -18,7 +18,7 @@ const invoiceSchema = mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    contractor_id: {
+    contractor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'contractor'
     },

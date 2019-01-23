@@ -65,8 +65,6 @@ exports.getCommets = (req, res, next) => {
 exports.addReply = (req, res, next) => {
     let comment_id = req.body.comment_id
 
-    console.log(comment_id)
-
     let newReply = {
         _id: mongoose.Types.ObjectId(),
         comment_id: comment_id,
