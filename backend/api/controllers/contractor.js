@@ -2,6 +2,9 @@ const mongoose = require('mongoose')
 const Contractor = require('../models/contractor')
 const Stats = require('../models/stats')
 
+const invoiceController = require('../controllers/invoice')
+const productController = require('../controllers/product')
+
 exports.contractor_add = (req, res, next) => {
     const newContractor = {
         _id: mongoose.Types.ObjectId(),
@@ -265,6 +268,10 @@ exports.contractor_delete = (req, res, next) => {
             Contractor
             .deleteOne({_id: contractor_id})
             .then(result => {
+
+                invoiceController.setNumOfInvoices(contractor_id)
+                productController.updateAccountingBalance(contractor_id)
+                
                 return res.status(200).json({
                     msg: `Usunięto kontrahenta ${contractor.number}.`,
                     deleted: true
