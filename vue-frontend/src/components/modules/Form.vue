@@ -4,8 +4,15 @@
         <div v-for="(kind, i) of moduleData">
             <p>{{kind.kind}}</p>
             <section>
-                <article v-for="field of kind.data">
-                    <CustomInput :placeholder="field.pl" v-model="polishOutput[field.pl]"/>
+                <article v-for="(field, j) of kind.data">
+                    <CustomInput
+                            @click.native="isCheckbox(field.pl) ? toggleCheckbox(field.pl, j) : '' "
+
+                            :class="{'checkF': isCheckbox(field.pl) && !checkBoxActive[j],
+                            'checkT': checkBoxActive[j] && isCheckbox(field.pl)}"
+
+                            :placeholder="field.pl"
+                            v-model="polishOutput[field.pl]"/>
                 </article>
             </section>
 
@@ -41,11 +48,13 @@
             return {
                 blackList: null,
                 moduleData: [],
-                polishOutput: {Nazwisko: '', Nazwa: ''}, // Keeps polish fields and values
-                added: false
+                polishOutput: {Nazwisko: '', Nazwa: '', Opis: ''}, // Keeps polish fields and values
+                added: false,
+                checkBoxActive: {},
             }
         },
         computed: {
+
             moduleName(){
                 if(this.$route.path.includes('contacts')) return 'contacts'
                 if(this.$route.path.includes('contractors')) return 'contractors'
@@ -62,7 +71,7 @@
                     case 'contractors':
                         return 'k'
                     case 'invoices':
-                        return 'i'
+                        return 'f'
                 }
             }
         },
@@ -83,9 +92,13 @@
             this.axios.get(`/${this.shortenedModuleName}/${this.type}/` + this.$route.params.id)
                 .then(res =>{
                     // Replace polishOutput with requested data
+                    let index = 0
                     this.moduleData
                         .forEach(kind =>{
-                            kind.data.forEach(item => {
+                            kind.data.forEach((item, i) =>{
+                                this.$set(this.checkBoxActive, index, item.value)
+                                index++
+
                                 if(!this.blackList.find(el => el === item.pl)){ // if the iterated item isnt in the black list
                                     this.polishOutput[item.pl] = res.data[this.shortenedModuleName][item.eng] //Fill the inputs with data from server
                                 }
@@ -97,23 +110,62 @@
 
         },
         methods: {
+
+            refactorValue(value, field){
+                console.log(value, field)
+                if(value === false || value === true) return ''
+                else if(field === 'recordOwner') return value.firstname + ' ' + value.surname
+                else if(field === 'creationTime') return new Date(value).toLocaleString()
+                else if(field === 'contractor') return value.name
+                else if(field === 'status') return this.translateStatus(value)
+                else return value
+            },
+
+            translateStatus(status){
+                switch(status){
+                    case '1':
+                        return 'Wersja Robocza'
+                    case '2':
+                        return 'Wymaga Weryfikacji'
+                    case '3':
+                        return 'Zatwierdzona'
+                    case '4':
+                        return 'Wyksięgowana'
+                    case '5':
+                        return 'Zaksięgowana'
+                    case '6':
+                        return 'Anulowana'
+                }
+            },
+
+
+
+
             addContact(){
                 const englishOutput = {}
                 Object
                     .entries(this.polishOutput)
-                    .forEach(field => {
-                        this.moduleData.forEach(kind => {
-                            kind.data.forEach(dataObj => {
+                    .forEach(field =>{
+                        this.moduleData.forEach(kind =>{
+                            kind.data.forEach(dataObj =>{
                                 if(dataObj.pl === field[0]){
                                     englishOutput[dataObj.eng] = field[1]
                                 }
                             })
                         })
                     })
-                console.log(englishOutput)
                 this.axios.patch(`/${this.shortenedModuleName}/${this.type}/` + this.$route.params.id, englishOutput)
                     .then(res => this.added = true)
-                    .catch(err => console.log(err.response))
+                    .catch(err => console.log(err))
+            },
+
+            isCheckbox(fieldName){
+                return fieldName === 'Zgoda na kont. mail.' || fieldName === 'Zgoda na kont. tel.'
+            },
+
+            toggleCheckbox(field, index){
+                this.checkBoxActive[index] ? this.polishOutput[field] = false : this.polishOutput[field] = true
+                return !this.isCheckbox(field) ? '' : this.checkBoxActive[index] = !this.checkBoxActive[index]
             }
         }
     }
@@ -129,6 +181,21 @@
         border-radius: 5px;
         color: $blockFontC;
         padding: 15px;
+
+        .checkF {
+            color: white;
+            background-color: #55242b;
+            &:hover {
+                background-color: #5d242a;
+            }
+        }
+        .checkT {
+            color: white;
+            background-color: #3164ac;
+            &:hover {
+                background-color: #3072b8;
+            }
+        }
 
         .menu {
             display: grid;
@@ -200,6 +267,12 @@
                 }
 
             }
+        }
+    }
+
+    @media screen and (max-width: $tablet) {
+        .new-container {
+            border-radius: 0;
         }
     }
 

@@ -53,6 +53,8 @@
 
 <style scoped lang="scss">
 
+    @import '../../assets/css/variables.scss';
+
     .sorting {
         grid-row: 2;
         grid-column: 2/11;
@@ -106,6 +108,13 @@
                     color: white;
                 }
             }
+        }
+    }
+
+    @media screen and (max-width: $tablet) {
+        .sorting{
+            border-radius: 0;
+            padding: 13px;
         }
     }
 

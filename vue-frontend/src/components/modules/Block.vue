@@ -3,7 +3,7 @@
         <h1>{{blockName}}</h1>
         <div class="info">
             <article v-for="(field, i) of blockData.data"
-                     @click="!isCheckbox(field.pl) ? togglePopup(i) : checkBoxActive[i] = !checkBoxActive[i]"
+                     @click="togglePopup(i)"
                      :class="{'checkF': isCheckbox(field.pl), 'checkT': checkBoxActive[i] && isCheckbox(field.pl)}">
 
                 <div class="popup" v-if="showPopup[i]">
@@ -51,7 +51,7 @@
         created(){
             //initalize editing obj and showPopup array so vue could 'react' to them
             this.blockData.data.map((field, i) =>{
-                this.$set(this.checkBoxActive, i, false)
+                this.$set(this.checkBoxActive, i, field.value)
                 this.$set(this.editing, i, false)
                 this.showPopup.push(false)
             })
@@ -63,7 +63,26 @@
                 if(value === false || value === true) return ''
                 else if(field === 'recordOwner') return value.firstname + ' ' + value.surname
                 else if(field === 'creationTime') return new Date(value).toLocaleString()
+                else if(field === 'contractor') return value.name
+                else if(field === 'status') return this.translateStatus(value)
                 else return value
+            },
+
+            translateStatus(status){
+                    switch(status){
+                        case '1':
+                            return 'Wersja Robocza'
+                        case '2':
+                            return 'Wymaga Weryfikacji'
+                        case '3':
+                            return 'Zatwierdzona'
+                        case '4':
+                            return 'Wyksięgowana'
+                        case '5':
+                            return 'Zaksięgowana'
+                        case '6':
+                            return 'Anulowana'
+                    }
             },
 
             isCheckbox(fieldName){
@@ -71,7 +90,6 @@
             },
 
             togglePopup(index){
-                console.log(this.showPopup)
                 // JS cant detect changes on an array, so we need to make another one
                 this.showPopup = this.showPopup.map((el, i) => i === index ? !el : false) //find the element and change its state
 
@@ -107,6 +125,7 @@
     @import '../../assets/css/variables.scss';
 
     section {
+        box-sizing: border-box;
         width: 100%;
         background-color: $blockBgC;
         display: grid;
@@ -220,7 +239,12 @@
                 }
             }
         }
+    }
 
+    @media screen and (max-width: $tablet) {
+        section {
+            border-radius: 0;
+        }
     }
 
 </style>

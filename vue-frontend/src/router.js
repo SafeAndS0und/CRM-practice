@@ -69,6 +69,24 @@ export default new Router({
                 },
 
             ]
+        },
+
+        {
+            name: 'invoices',
+            path: '/invoices',
+            component: () => import('./views/modules/Invoices.vue'),
+            beforeEnter: middlewares.isLogged,
+            children: [
+                {
+                    path: "details/:id",
+                    component: () => import('./components/modules/BlockList.vue')
+                },
+                {
+                    path: "update/:id",
+                    component: () => import('./components/modules/Form.vue')
+                },
+
+            ]
         }
 
     ]

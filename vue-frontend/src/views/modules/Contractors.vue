@@ -36,7 +36,7 @@
                           moduleName="contractors"
                           :moduleObj="contractor"
                           v-if="$route.path === '/contractors'"
-                          @contactDeleted="deleteFromTable"
+                          @deleted="deleteFromTable"
                           class="list"
                     />
                 </transition-group>
@@ -213,10 +213,38 @@
         }
     }
 
-    @media (max-width: $tablet) {
-        .contacts {
+    @media screen and (max-width: $tablet) {
+        .contractors{
             .sorting {
+                grid-column: 1/13;
+            }
+
+            .content {
+                grid-row: 5;
+                grid-column: 1/13 !important;
+
+                .list {
+                    margin-bottom: 0;
+                }
+            }
+
+            .addNew {
                 grid-column: 2/12;
+                grid-row: 4;
+                width: 100%;
+            }
+            .icon-new {
+                background-color: #1e64ca;
+                /*box-sizing: border-box;*/
+                border-radius: 0;
+                color: white;
+                padding: 12px 0;
+                transition: 200ms;
+                margin-bottom: 15px;
+
+                &:hover {
+                    padding: 12px 0;
+                }
             }
         }
     }

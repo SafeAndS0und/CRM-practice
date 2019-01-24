@@ -44,7 +44,15 @@ export const dictionary = [
             {eng: 'voivodeship', pl: "Województwo"},
             {eng: 'country', pl: "Kraj"}
         ]
-    }
+    },
+
+    {
+        kind: 'financial',
+        data: [
+            {eng: 'sumOfInvoices', pl: "Suma Faktur"},
+            {eng: 'accountingBalance', pl: "Saldo Księgowe"},
+        ]
+    },
 ]
 
 export const blackList = ['number', 'creationTime', 'recordOwner', "Numer", "Czas Utworzenia", "Właściciel"]

@@ -15,7 +15,6 @@
                    @quickUpdate="updateData($event)"
                    :blockData="blockData[2]"
                    class="block"/>
-
         </div>
 
         <div v-if="moduleName === 'contractors' && blockData">
@@ -34,10 +33,28 @@
             <Block block-name="Informacje Adresowe"
                    :blockData="blockData[3]"
                    class="block"/>
-            <!--<Block block-name="Informacje Finansowe"-->
-            <!--@quickUpdate="updateData($event)"-->
-            <!--:blockData="blockData[4]"-->
-            <!--class="block"/>-->
+            <Block block-name="Informacje Finansowe"
+            @quickUpdate="updateData($event)"
+            :blockData="blockData[4]"
+            class="block"/>
+        </div>
+
+        <div v-if="moduleName === 'invoices' && blockData">
+            <Block block-name="Informacje Podstawowe"
+                   @quickUpdate="updateData($event)"
+                   :blockData="blockData[1]"
+                   class="block"/>
+            <Block block-name="Szczegóły Faktury"
+                   @quickUpdate="updateData($event)"
+                   :blockData="blockData[0]"
+                   class="block"/>
+            <Block block-name="Opis i Uwagi"
+                   @quickUpdate="updateData($event)"
+                   :blockData="blockData[2]"
+                   class="block"/>
+            <Block block-name="Informacje Adresowe"
+                   :blockData="blockData[3]"
+                   class="block"/>
         </div>
 
         <div class="menu">
@@ -94,7 +111,7 @@
                     case 'contractors':
                         return 'k'
                     case 'invoices':
-                        return 'i'
+                        return 'f'
                 }
             }
         },
@@ -130,23 +147,22 @@
 
 
             updateData(updatedContact){ //eng field, value
-                //        TODO SEARCH AND CHANGE VALUE IN CONTROLLER
+                const data = controller.toSimpleObj(this.blockData)
+                data[updatedContact.field] = updatedContact.value
 
-                //     this.axios.patch(`/${this.moduleName.substring(0, this.moduleName.length - 1)}/${this.type}/` + this.$route.params.id, updatedContactData)
-                //         .then(res =>{
-                //             return this.axios.get(`/${this.moduleName.substring(0, this.moduleName.length - 1)}/${this.type}/` + this.$route.params.id)
-                //                 .then(res =>{
-                //                     this.values = this.makeValues(res.data, this.dictionary)
-                //                 })
-                //                 .catch(err => console.log(err))
-                //
-                //         })
-                //         .catch(err => console.log(err))
-                //
+                this.axios.patch(`/${this.shortenedModuleName}/${this.type}/` + this.$route.params.id, data)
+                    .then(res =>{
+                        return this.axios.get(`/${this.shortenedModuleName}/${this.type}/` + this.$route.params.id)
+                            .then(res =>{
+                                controller.assignValues(this.moduleData.dictionary, res.data[this.shortenedModuleName])
+                            })
+                            .catch(err => console.log(err))
 
-                // }
+                    })
+                    .catch(err => console.log(err))
             }
         }
+
     }
 </script>
 <style scoped lang="scss">
@@ -195,7 +211,20 @@
         }
     }
 
-    @media (max-width: $tablet) {
+    @media screen and (max-width: $tablet) {
+        .block-list {
+
+            .menu {
+                display: grid;
+                width: 100%;
+                margin: 30px auto 0 auto;
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+            .block {
+                margin: 0;
+                width: 100%;
+            }
+        }
 
     }
 </style>

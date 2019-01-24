@@ -36,12 +36,13 @@
                           moduleName="contacts"
                           :moduleObj="contact"
                           v-if="$route.path === '/contacts'"
-                          @contactDeleted="deleteFromTable"
+                          @deleted="deleteFromTable"
                           class="list"
                     />
                 </transition-group>
             </div>
         </div>
+
 
         <div class="pagination" v-if="$route.path === '/contacts' && pages > 1">
             <p v-for="(page, index) of pages" :class="{active: index + 1 === activePage}" @click="changePage(index)">
@@ -221,15 +222,38 @@
         }
     }
 
-    @media (max-width: $tablet) {
+    @media screen and (max-width: $tablet) {
         .contacts {
             .sorting {
-                grid-column: 2/12;
+                grid-column: 1/13;
             }
 
             .content {
-                grid-column: 1/13;
+                grid-row: 5;
+                grid-column: 1/13 !important;
 
+                .list {
+                    margin-bottom: 0;
+                }
+            }
+
+            .addNew {
+                grid-column: 2/12;
+                grid-row: 4;
+                width: 100%;
+            }
+            .icon-new {
+                background-color: #1e64ca;
+                /*box-sizing: border-box;*/
+                border-radius: 0;
+                color: white;
+                padding: 12px 0;
+                transition: 200ms;
+                margin-bottom: 15px;
+
+                &:hover {
+                    padding: 12px 0;
+                }
             }
         }
     }
@@ -254,5 +278,6 @@
         filter: blur(6px);
         opacity: 0.5;
     }
+
 
 </style>

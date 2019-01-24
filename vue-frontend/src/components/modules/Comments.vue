@@ -3,7 +3,7 @@
 
         <h1>Komentarze</h1>
 
-        <article style="border-radius: 3px; margin-bottom: 50px">
+        <article style="margin-bottom: 50px">
             <h3 style="font-size: 17px">{{$store.state.user.firstname}} {{$store.state.user.surname}}</h3>
             <p>{{commentValue}}</p>
 
@@ -230,6 +230,17 @@
                 padding: 10px 0 10px 10px;
                 border-top: 1px solid #2d2d2d;
 
+            }
+        }
+    }
+
+    @media screen and (max-width: $tablet) {
+        .comments {
+
+            article {
+                box-sizing: border-box;
+                width: 100%;
+                border-radius: 0;
             }
         }
     }

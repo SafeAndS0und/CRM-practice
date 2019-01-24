@@ -8,5 +8,15 @@ export default {
             })
         })
         return dictionaryCopy
+    },
+
+    toSimpleObj(moduleData){
+        const simpleObj = {}
+        moduleData.forEach(kind => {
+            kind.data.forEach(info => {
+                simpleObj[info.eng] = info.value
+            })
+        })
+        return JSON.parse(JSON.stringify(simpleObj))
     }
 }

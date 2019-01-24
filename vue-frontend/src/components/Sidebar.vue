@@ -65,24 +65,24 @@
             }
             article:nth-child(1) {
                 border-top-right-radius: 3px;
-                background-color: $blockBgC;
+                background-color: #1a1a1a;
 
                 &:hover {
                     background-color: #1e5cb8;
                 }
             }
             article:nth-child(2) {
-                background-color:$blockBgC;
+                background-color:#1a1a1a;
 
                 &:hover {
                     background-color: #ca5e34;
                 }
             }
             article:nth-child(3) {
-                background-color: $blockBgC;
+                background-color: #1a1a1a;
                 border-bottom-right-radius: 3px;
                 &:hover {
-                    background-color: #b22f65;
+                    background-color: #b2384b;
                 }
             }
         }

@@ -32,11 +32,12 @@
             height: 100%;
 
             h3 {
+
                 position: absolute;
                 bottom: 15px;
                 right: 30px;
                 font-weight: lighter;
-                font-size: 14px;
+                font-size: 13px;
                 color: #767477;
             }
 

@@ -49,9 +49,9 @@
                 this.inputs.forEach(field => {
                     obj[field.eng] = this.moduleData[field.eng]
                 })
-                this.axios.post(`/${this.moduleName}/addContractor`, obj)
+                this.axios.post(`/${this.moduleName}`, obj)
                     .then(res => {
-                        this.id = res.data.newContactId
+                        this.id = res.data._id
                         this.hide = true
                         setTimeout(() => this.added = true, 500)
                     })
