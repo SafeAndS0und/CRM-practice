@@ -2,6 +2,10 @@ const mongoose = require('mongoose')
 
 const productSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
+    invoice: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'invoice'
+    },
     positionName: {
         type: String
     },

@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const Invoice = require('../models/invoice')
 const Product = require('../models/product')
 const Stats = require('../models/stats')
+const Contractor = require('../models/contractor')
 
 exports.invoice_add = async (req, res, next) => {
     const newInvoice = {
@@ -9,7 +10,7 @@ exports.invoice_add = async (req, res, next) => {
         recordOwner: req.userData._id,
         number: '',
         contractor: req.body.contractor ? req.body.contractor : '',
-        status: req.body.status ? req.body.status : '',
+        status: req.body.status ? req.body.status+"" : '',
         postDate: req.body.postDate ? req.body.postDate : '',
         dateOfImplementation: req.body.dateOfImplementation ? req.body.dateOfImplementation : '',
         paymentDeadline: req.body.paymentDeadline ? req.body.paymentDeadline : '',
@@ -38,7 +39,6 @@ exports.invoice_add = async (req, res, next) => {
         stats.numOfInvoices++
         newInvoice.number = `F${stats.numOfInvoices}`
 
-        console.log(newInvoice.number)
         stats
         .save((err, updatedStats) => {
             if(err) throw err
@@ -46,7 +46,14 @@ exports.invoice_add = async (req, res, next) => {
             const preparedInvoice = new Invoice(newInvoice)
             preparedInvoice
             .save()
-            .then(result => {
+            .then(async result => {
+
+                //Setting numOfInvoices in contractor
+                const sumOfInvoices = await Invoice.countDocuments({contractor: result.contractor})
+                await Contractor.findOneAndUpdate({_id: result.contractor}, {
+                    sumOfInvoices
+                })
+
                 return res.status(201).json({
                     msg: 'Dodano nową fakturę.',
                     _id: result._id,
@@ -101,6 +108,12 @@ exports.invoice_list = (req, res, next) => {
             case 'd_ro': //desc record owner
                 sortObj = {recordOwner: -1}
                 break;
+            case 'a_n': //asc number
+                sortObj = {number: 1}
+                break;
+            case 'd_n': //desc number
+                sortObj = {number: -1}
+                break;
             case 'a_s': //asc status
                 sortObj = {status: 1}
                 break;
@@ -139,7 +152,7 @@ exports.invoice_list = (req, res, next) => {
             }
         ])
         .sort(sortObj)
-        .select('_id contractor recordOwner status postDate signingPlace')
+        .select('_id number contractor recordOwner status postDate signingPlace')
         .then(invoices => {
             return res.status(200).json({
                 numOfPages: numOfPages,
@@ -187,6 +200,7 @@ exports.invoice_detailed = (req, res, next) => {
             model: 'product'
         }
     ])
+    .select('-invoice')
     .then(invoice => {
         if(invoice) {
             return res.status(200).json({
@@ -218,16 +232,24 @@ exports.invoice_delete = async (req, res, next) => {
     }
 
     Invoice
-    .deleteOne({_id: invoice_id})
-    .then(result => {
-        return res.status(400).json({
-            msg: 'Usunięto fakturę'
+    .findOneAndDelete({_id: invoice_id})
+    .then(async result => {
+        //Setting numOfInvoices in contractor
+        const sumOfInvoices = await Invoice.countDocuments({contractor: result.contractor})
+        await Contractor.findOneAndUpdate({_id: result.contractor}, {
+            sumOfInvoices
+        })
+
+        return res.status(200).json({
+            msg: 'Usunięto fakturę',
+            deleted: true
         })
     })
     .catch(err => {
         console.log(err)
         return res.status(400).json({
-            msg: 'Coś poszło nie tak.'
+            msg: 'Coś poszło nie tak.',
+            deleted: false
         })
     })
 }

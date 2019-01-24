@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const Invoice = require('../models/invoice')
 const Product = require('../models/product')
+const Contractor = require('../models/contractor')
 
 exports.product_add = async (req, res, next) => {
     const taxs = ["0", "5", "8", "23"]
@@ -24,6 +25,7 @@ exports.product_add = async (req, res, next) => {
 
     const newProduct = {
         _id: mongoose.Types.ObjectId(),
+        invoice: invoice_id,
         positionName: req.body.positionName,
         amount: req.body.amount ? req.body.amount : '',
         unit: req.body.unit ? req.body.unit : '',
@@ -65,7 +67,10 @@ exports.product_add = async (req, res, next) => {
 
         Invoice
         .findOneAndUpdate({_id: invoice_id}, {$push: {products: product._id}})
-        .then(result => {
+        .then(async updatedInvoice => {
+
+            await updateAccountingBalance(updatedInvoice.contractor)
+            
             return res.status(200).json({
                 msg: 'Dodano produkt do faktury',
                 added: true
@@ -91,8 +96,18 @@ exports.product_delete = async (req, res, next) => {
         })
     }
 
-    Product.deleteOne({_id: product_id})
-    .then(result => {
+    Product
+    .findOneAndDelete({_id: product_id})
+    .select('invoice _id')
+    .then(async deletedProduct => {
+        console.log(deletedProduct)
+
+        const contractor_id = await Invoice
+            .findOne({_id: deletedProduct.invoice})
+            .select('contractor')
+
+        await updateAccountingBalance(contractor_id.contractor)
+        
         return res.status(200).json({
             msg: 'Usunięto produkt',
             deleted: true
@@ -105,4 +120,40 @@ exports.product_delete = async (req, res, next) => {
             added: false
         })
     })
+}
+
+async function updateAccountingBalance(contractor_id) {
+    console.log('CONTRACTOR ID', contractor_id)
+    //getting all gross prices of invoices with status "3" (accepted)
+    const grossPriceOfInvoices = await Invoice
+    .find({contractor: contractor_id, status: "3"})
+    .populate({
+        path: 'products',
+        model: 'product',
+        select: 'grossPrice'
+    })
+    .select('products.grossPrice')
+    // console.log('gross', grossPriceOfInvoices.length)
+
+    let accountingBalance
+    if(grossPriceOfInvoices.length <= 0) {
+        accountingBalance = 0
+    }
+    else {
+        accountingBalance = grossPriceOfInvoices
+            .map( invoice => invoice.products
+                .map( v => v.grossPrice )
+                .reduce( (a,b) => a+b,0 )
+            )
+            .reduce( (a,b)=>a+b,0 )
+            .toFixed(2)
+    }
+    // console.log('2', contractor_id)
+    // console.log('aB', accountingBalance)
+
+    //setting accountingBalance
+    await Contractor.findOneAndUpdate({_id: contractor_id}, {
+        accountingBalance
+    })
+    console.log('3', contractor_id)
 }
