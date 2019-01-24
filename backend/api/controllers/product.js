@@ -65,11 +65,13 @@ exports.product_add = async (req, res, next) => {
     .save()
     .then(product => {
 
+        
+
         Invoice
         .findOneAndUpdate({_id: invoice_id}, {$push: {products: product._id}})
         .then(async updatedInvoice => {
 
-            await updateAccountingBalance(updatedInvoice.contractor)
+            await this.updateAccountingBalance(updatedInvoice.contractor)
             
             return res.status(200).json({
                 msg: 'Dodano produkt do faktury',
@@ -122,7 +124,7 @@ exports.product_delete = async (req, res, next) => {
     })
 }
 
-async function updateAccountingBalance(contractor_id) {
+exports.updateAccountingBalance = async function updateAccountingBalance(contractor_id) {
     console.log('CONTRACTOR ID', contractor_id)
     //getting all gross prices of invoices with status "3" (accepted)
     const grossPriceOfInvoices = await Invoice

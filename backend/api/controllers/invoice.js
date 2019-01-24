@@ -235,10 +235,7 @@ exports.invoice_delete = async (req, res, next) => {
     .findOneAndDelete({_id: invoice_id})
     .then(async result => {
         //Setting numOfInvoices in contractor
-        const sumOfInvoices = await Invoice.countDocuments({contractor: result.contractor})
-        await Contractor.findOneAndUpdate({_id: result.contractor}, {
-            sumOfInvoices
-        })
+        await this.updateNumOfInvoices(result.contractor)
 
         return res.status(200).json({
             msg: 'Usunięto fakturę',
@@ -251,5 +248,70 @@ exports.invoice_delete = async (req, res, next) => {
             msg: 'Coś poszło nie tak.',
             deleted: false
         })
+    })
+}
+
+exports.invoice_update = async (req, res, next) => {
+    const invoice_id = req.params.invoice_id
+
+    if(!invoice_id || !mongoose.Types.ObjectId.isValid(invoice_id)) {
+        return res.status(401).json({
+            msg: 'Brak lub niepoprawne id kontrahenta',
+            updated: false
+        })
+    }
+
+    const updateInvoice = {
+        modificationTime: new Date(Date.now()).toISOString(),
+        status: req.body.status ? req.body.status+"" : '',
+        postDate: req.body.postDate ? req.body.postDate : '',
+        dateOfImplementation: req.body.dateOfImplementation ? req.body.dateOfImplementation : '',
+        paymentDeadline: req.body.paymentDeadline ? req.body.paymentDeadline : '',
+        paymentMethod: req.body.paymentMethod ? req.body.paymentMethod : '',
+        bankAccount: req.body.bankAccount ? req.body.bankAccount : '',
+        signingPlace: req.body.signingPlace ? req.body.signingPlace : '',
+        //address
+        street: req.body.street ? req.body.street : '',
+        buildingNumber: req.body.buildingNumber ? req.body.buildingNumber : '',
+        apartmentNumber: req.body.apartmentNumber ? req.body.apartmentNumber : '',
+        postCode: req.body.postCode ? req.body.postCode : '',
+        city: req.body.city ? req.body.city : '',
+        voivodeship: req.body.voivodeship ? req.body.voivodeship : '',
+        country: req.body.country ? req.body.country : '',
+        //Descriptive information
+        description: req.body.description ? req.body.description : '',
+        notes: req.body.notes ? req.body.notes : ''
+    }
+
+    if(await Invoice.countDocuments({_id: invoice_id}) <= 0) {
+        return res.status(400).json({
+            msg: 'Podana faktura nie istnieje',
+            updated: false
+        })
+    }
+
+    Invoice
+    .findOneAndUpdate({_id: invoice_id}, updateInvoice)
+    .then(updatedInvoice => {
+        return res.status(200).json({
+            msg: `Zaktualizowano fakturę ${updatedInvoice.number}`,
+            updated: true
+        })
+    })
+    .catch(err => {
+        console.log(err)
+        return res.status(400).json({
+            msg: 'Coś poszło nie tak.',
+            updated: false
+        })
+    })
+
+
+}
+
+exports.updateNumOfInvoices = async function setNumOfInvoices(contractor_id) {
+    const sumOfInvoices = await Invoice.countDocuments({contractor: contractor_id})
+    await Contractor.findOneAndUpdate({_id: contractor_id}, {
+        sumOfInvoices
     })
 }
