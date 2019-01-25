@@ -1,6 +1,7 @@
 //Models
 const Contact = require('../models/contact')
 const Contractor = require('../models/contractor')
+const Invoice = require('../models/invoice')
 
 exports.search = async (req, res, next) => {
     const query = req.query
@@ -12,48 +13,67 @@ exports.search = async (req, res, next) => {
     let sort = ""
     let sortObj = {}
     let selectString = ''
+    let alert = ""
 
+    console.log(req.query.sortBy)
     //Sorting
-    sort = req.query.sortBy
+    if(req.query.sortBy == undefined || req.query.sortBy.search(/_/) == -1) {
+        errors.push(`Błędna składnia szukania 1(${req.query.sortBy})`)
+    }
+    else {
+        sort = req.query.sortBy.split('_')
+    }
     delete req.query.sortBy
 
-    switch(sort) {
-        case 'a_ct': //asc creation time
-            sortObj = {creationTime: 1}
+    if(sort[0] == 'a') sort[0] = 1
+    else if(sort[0] == 'd') sort[0] = -1
+    else {
+        errors.push(`Błędna składnia szukania 2(${sort[0]} ${sort[1]})`)
+    }
+
+    switch(sort[1]) {
+        case 'ct': //creation time
+            sortObj = {creationTime: sort[0]}
+            break
+        case 'ro': //record owner
+            sortObj = {recordOwner: sort[0]}
+            break
+        case 'n': //number
+            sortObj = {number: sort[0]}
+            break
+        case 'fn': //firstname
+            sortObj = {firstname: sort[0]}
+            break
+        case 'sn': //surname
+            sortObj = {surname: sort[0]}
+            break
+        case 'b': //business
+            sortObj = {business: sort[0]}
             break;
-        case 'd_ct': //desc creation time
-            sortObj = {creationTime: -1}
-            break;
-        case 'a_ro': //asc record owner
-            sortObj = {recordOwner: 1}
-            break;
-        case 'd_ro': //desc record owner
-            sortObj = {recordOwner: -1}
-            break;
-        case 'a_n': //asc number
-            sortObj = {number: 1}
-            break;
-        case 'd_n': //desc number
-            sortObj = {number: -1}
-            break;
-        case 'a_fn': //asc firstname
-            sortObj = {firstname: 1}
-            break;
-        case 'd_fn': //desc firstname
-            sortObj = {firstname: -1}
-            break;
-        case 'a_sn': //asc surname
-            sortObj = {surname: 1}
-            break;
-        case 'd_sn': //desc surname
-            sortObj = {surname: -1}
-            break;
-        case 'a_b': //asc business
-            sortObj = {business: 1}
-            break;
-        case 'd_b': //desc business
-            sortObj = {business: -1}
-            break;
+        case 'be'://basic email
+            sortObj = {basicEmail: sort[0]}
+            break
+        case 'bp'://basicPhone
+            sortObj = {basicPhone: sort[0]}
+            break
+        case 'name'://contractor name
+            sortObj = {name: sort[0]}
+            break
+        case 'wp': //webpage
+            sortObj = {webpage: sort[0]}
+            break
+        case 'c':
+            sortObj = {contractor: sort[0]}
+            break
+        case 's':
+            sortObj = {status: sort[0]}
+            break
+        case 'pd':
+            sortObj = {postDate: sort[0]}
+            break
+        case 'sp':
+            sortObj = {signingPlace: sort[0]}
+            break
         default: //default asc creation time
             sortObj = {creationTime: 1}
             break;
@@ -74,6 +94,10 @@ exports.search = async (req, res, next) => {
             model = Contractor
             selectString = '_id name webpage basicPhone recordOwner'
             break
+        case 'invoice':
+            model = Invoice
+            selectString = '_id number contractor recordOwner status postDate signingPlace'
+            break
         default:
             model = null
             break
@@ -82,7 +106,13 @@ exports.search = async (req, res, next) => {
     //If module doesn't exists
     if(model == null)
         errors.push('Podany model nie istnieje')
-    
+        
+    if(errors.length)
+        return res.status(400).json({
+            msg: 'Błąd',
+            errors
+        })
+
     //Query
     await model
     .find(query)
@@ -96,11 +126,6 @@ exports.search = async (req, res, next) => {
         errors.push(err)
     })
 
-    if(errors.length)
-        return res.status(400).json({
-            msg: 'Błąd',
-            errors
-        })
     
     return res.status(200).json({
         msg: 'values',
