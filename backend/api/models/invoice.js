@@ -26,13 +26,13 @@ const invoiceSchema = mongoose.Schema({
         type: String //(1- Wersja robocza,2-  Wymaga weryfikacji, 3- Zatwierdzona,4- Wyksięgowana,5- Zaksięgowana,6- Anulowana)
     },
     postDate: {
-        type: Date
+        type: String
     },
     dateOfImplementation: {
-        type: Date
+        type: String
     },
     paymentDeadline: {
-        type: Date
+        type: String
     },
     paymentMethod: {
         type: String //(1- Przelew, 2- Gotówka)

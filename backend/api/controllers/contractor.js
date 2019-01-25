@@ -271,9 +271,6 @@ exports.contractor_delete = (req, res, next) => {
             .then(async result => {
 
                 await Invoice.deleteMany({contractor: contractor_id})
-
-                // invoiceController.setNumOfInvoices(contractor_id)
-                // productController.updateAccountingBalance(contractor_id)
                 
                 return res.status(200).json({
                     msg: `Usunięto kontrahenta ${contractor.number}.`,
