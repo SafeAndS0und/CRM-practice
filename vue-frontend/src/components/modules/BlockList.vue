@@ -42,11 +42,11 @@
         <div v-if="moduleName === 'invoices' && blockData">
             <Block block-name="Informacje Podstawowe"
                    @quickUpdate="updateData($event)"
-                   :blockData="blockData[1]"
+                   :blockData="blockData[0]"
                    class="block"/>
             <Block block-name="Szczegóły Faktury"
                    @quickUpdate="updateData($event)"
-                   :blockData="blockData[0]"
+                   :blockData="blockData[1]"
                    class="block"/>
             <Block block-name="Opis i Uwagi"
                    @quickUpdate="updateData($event)"

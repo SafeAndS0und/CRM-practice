@@ -6,6 +6,7 @@
             <section>
                 <article v-for="(field, j) of kind.data">
                     <CustomInput
+                            v-if="regulations(polishOutput[field.pl], field.eng) === 'custom'"
                             @click.native="isCheckbox(field.pl) ? toggleCheckbox(field.pl, j) : '' "
 
                             :class="{'checkF': isCheckbox(field.pl) && !checkBoxActive[j],
@@ -13,6 +14,20 @@
 
                             :placeholder="field.pl"
                             v-model="polishOutput[field.pl]"/>
+                    <CustomTextArea
+                            v-if="regulations(polishOutput[field.pl], field.eng) === 'area'"
+                            :placeholder="field.pl"
+                            v-model="polishOutput[field.pl]"/>
+
+                    <input type="date"
+                           v-model="polishOutput[field.pl]"
+                           v-if="regulations(polishOutput[field.pl], field.eng) === 'date'"
+                    />
+
+                    <Select :fieldName="field.eng"
+                            v-model="polishOutput[field.pl]"
+                            v-if="regulations(polishOutput[field.pl], field.eng) === 'select'
+                   "/>
                 </article>
             </section>
 
@@ -39,11 +54,13 @@
 
 <script>
     import CustomInput from '../partials/CustomInput.vue'
-    import translate from '../../assets/js/modules/translator'
+    import CustomTextArea from '../partials/CustomTextArea.vue'
+    import Select from '../partials/Select.vue'
+    import controller from '../../assets/js/modules/controller'
 
     export default {
         name: "New",
-        components: {CustomInput},
+        components: {CustomInput, CustomTextArea, Select},
         data(){
             return {
                 blackList: null,
@@ -80,11 +97,13 @@
                 .then(module =>{
                     this.blackList = module.blackList
                     this.moduleData = JSON.parse(JSON.stringify(module.dictionary)) // copying so we would not change the source object
-
                     // Delete useless inputs
                     this.blackList.forEach(field =>{
                         let index = this.moduleData[0].data.findIndex(obj => obj.eng === field)
                         if(index !== -1) this.moduleData[0].data.splice(index, 1)
+
+                        index = this.moduleData[1].data.findIndex(obj => obj.eng === field)
+                        if(index !== -1) this.moduleData[1].data.splice(index, 1)
                     })
                 })
                 .catch(err => console.log(err.response))
@@ -98,7 +117,6 @@
                             kind.data.forEach((item, i) =>{
                                 this.$set(this.checkBoxActive, index, item.value)
                                 index++
-
                                 if(!this.blackList.find(el => el === item.pl)){ // if the iterated item isnt in the black list
                                     this.polishOutput[item.pl] = res.data[this.shortenedModuleName][item.eng] //Fill the inputs with data from server
                                 }
@@ -112,11 +130,9 @@
         methods: {
 
             refactorValue(value, field){
-                console.log(value, field)
                 if(value === false || value === true) return ''
                 else if(field === 'recordOwner') return value.firstname + ' ' + value.surname
                 else if(field === 'creationTime') return new Date(value).toLocaleString()
-                else if(field === 'contractor') return value.name
                 else if(field === 'status') return this.translateStatus(value)
                 else return value
             },
@@ -139,6 +155,14 @@
             },
 
 
+            regulations(value, field){
+                if(field === 'description' || field === 'notes') return 'area'
+                else if(field === 'postDate' ||
+                    field === 'dateOfImplementation' ||
+                    field === 'paymentDeadline') return 'date'
+                else if(field === 'status') return 'select'
+                else return 'custom'
+            },
 
 
             addContact(){
@@ -154,6 +178,8 @@
                             })
                         })
                     })
+
+                console.log(englishOutput)
                 this.axios.patch(`/${this.shortenedModuleName}/${this.type}/` + this.$route.params.id, englishOutput)
                     .then(res => this.added = true)
                     .catch(err => console.log(err))
@@ -246,6 +272,13 @@
 
                 article {
 
+                    input[type='date'] {
+                        background-color: $inputBgC;
+                        border: none;
+                        color: #b7b7b7;
+                        padding: 6px 10px;
+                        border-radius: 3px;
+                    }
                 }
 
             }

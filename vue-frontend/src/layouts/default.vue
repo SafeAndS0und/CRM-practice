@@ -76,12 +76,12 @@
         padding: 26px 30px;
         top: 0;
         left: 0;
-        color: #ebe1ef;
+        color: #b5acb9;
         transition: 200ms;
         cursor: pointer;
 
         &:hover, &:active {
-            color: #e7e7e7;
+            color: #ffffff;
             background-color: rgb(203, 63, 72);
         }
     }

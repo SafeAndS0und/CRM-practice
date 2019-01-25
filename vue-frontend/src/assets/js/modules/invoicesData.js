@@ -1,4 +1,14 @@
 export const dictionary = [
+
+    {
+        kind: 'details',
+        data: [
+            {eng: 'recordOwner', pl: "Właściciel"},
+            {eng: 'number', pl: "Numer"},
+            {eng: 'creationTime', pl: "Czas Utworzenia"},
+        ]
+    },
+
     {
         kind: 'invoiceDetails',
         data: [
@@ -10,15 +20,6 @@ export const dictionary = [
             {eng: 'paymentMethod', pl: "Forma Płatności"},
             {eng: 'bankAccount', pl: "Konto Bankowe"},
             {eng: 'signingPlace', pl: "Miejsce Wystawienia"},
-        ]
-    },
-
-    {
-        kind: 'details',
-        data: [
-            {eng: 'recordOwner', pl: "Właściciel"},
-            {eng: 'number', pl: "Numer"},
-            {eng: 'creationTime', pl: "Czas Utworzenia"},
         ]
     },
 
@@ -44,4 +45,4 @@ export const dictionary = [
     }
 ]
 
-export const blackList = ['number', 'creationTime', 'recordOwner', "Numer", "Czas Utworzenia", "Właściciel"]
+export const blackList = ['number', 'creationTime', 'recordOwner', "Numer", "Czas Utworzenia", "Właściciel", 'contractor', 'Kontrahent']

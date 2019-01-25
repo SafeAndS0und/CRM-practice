@@ -8,7 +8,7 @@
 
                 <div class="popup" v-if="showPopup[i]">
                     <div class="top"></div>
-                    <div @click="makeCopy(field.value)">
+                    <div @click="makeCopy(field)">
                         <p>Kopiuj wartość</p>
                     </div>
                     <div @click="turnOnEdit(i)">
@@ -95,7 +95,7 @@
 
             },
             makeCopy(field){
-                navigator.clipboard.writeText(field.value)
+                navigator.clipboard.writeText(this.refactorValue(field.value))
             },
 
             turnOnEdit(i){

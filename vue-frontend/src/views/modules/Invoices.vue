@@ -86,7 +86,7 @@
                 sortFields: [
                     {pl: "Data Wyst.", short: 'postDate'},
                     {pl: "Miejsce Wyst.", short: 'sp'},
-                    {pl: "Status", short: 'b'},
+                    {pl: "Status", short: 's'},
                     {pl: "Właśc. rek.", short: 'ro'},
                     {pl: "Czasie dod.", short: 'ct'},
                 ]
@@ -135,6 +135,7 @@
             },
 
             search(payload){
+                console.log(payload)
                 this.sortMethod = payload.sortMethod
                 this.pages = 1 //disable pagination for filtering search
                 this.invoices = payload.moduleData
