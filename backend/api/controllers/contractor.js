@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const Contractor = require('../models/contractor')
 const Stats = require('../models/stats')
+const Invoice = require('../models/invoice')
 
 const invoiceController = require('../controllers/invoice')
 const productController = require('../controllers/product')
@@ -267,10 +268,12 @@ exports.contractor_delete = (req, res, next) => {
         if(contractor) {
             Contractor
             .deleteOne({_id: contractor_id})
-            .then(result => {
+            .then(async result => {
 
-                invoiceController.setNumOfInvoices(contractor_id)
-                productController.updateAccountingBalance(contractor_id)
+                await Invoice.deleteMany({contractor: contractor_id})
+
+                // invoiceController.setNumOfInvoices(contractor_id)
+                // productController.updateAccountingBalance(contractor_id)
                 
                 return res.status(200).json({
                     msg: `Usunięto kontrahenta ${contractor.number}.`,
