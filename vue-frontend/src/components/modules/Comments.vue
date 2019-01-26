@@ -128,7 +128,7 @@
             width: 88%;
             margin: 20px auto 15px auto;
             padding: 16px 16px 35px 16px;
-            background-color: #191919;
+            background-color: #1f1f1f;
             position: relative;
             border-radius: 2px;
 
@@ -171,6 +171,7 @@
                 padding: 10px;
                 transition: 250ms;
                 cursor: pointer;
+                letter-spacing: 2px;
 
                 &:hover {
                     color: #cbcbcb;

@@ -55,6 +55,7 @@
             <Block block-name="Informacje Adresowe"
                    :blockData="blockData[3]"
                    class="block"/>
+            <Products :products="products" :invoice_id="invoice_id"/>
         </div>
 
         <div class="menu">
@@ -78,20 +79,22 @@
 
 <script>
     import Block from '../../components/modules/Block.vue'
+    import Products from '../../components/modules/Products.vue'
     import controller from '../../assets/js/modules/controller'
 
     export default {
         name: "BlockList",
         components: {
-            Block
+            Block,Products
         },
         data(){
             return {
                 comms: [],
                 component: null,
                 moduleData: null,
-                blockData: null
-
+                blockData: null,
+                invoice_id: null,
+                products:null
             }
         },
         computed: {
@@ -129,6 +132,8 @@
             downloadData(){
                 this.axios.get(`/${this.shortenedModuleName}/${this.type}/` + this.$route.params.id)
                     .then(res =>{
+                        this.invoice_id = res.data.invoice._id
+                        this.products = res.data.invoice.products
                         this.blockData = controller.assignValues(this.moduleData.dictionary, res.data[this.shortenedModuleName])
                     })
                     .catch(err => console.log(err))

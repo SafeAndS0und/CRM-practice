@@ -129,13 +129,13 @@
         },
         methods: {
 
-            refactorValue(value, field){
-                if(value === false || value === true) return ''
-                else if(field === 'recordOwner') return value.firstname + ' ' + value.surname
-                else if(field === 'creationTime') return new Date(value).toLocaleString()
-                else if(field === 'status') return this.translateStatus(value)
-                else return value
-            },
+            // refactorValue(value, field){
+            //     if(value === false || value === true) return ''
+            //     else if(field === 'recordOwner') return value.firstname + ' ' + value.surname
+            //     else if(field === 'creationTime') return new Date(value).toLocaleString()
+            //     else if(field === 'status') return this.translateStatus(value)
+            //     else return value
+            // },
 
             translateStatus(status){
                 switch(status){

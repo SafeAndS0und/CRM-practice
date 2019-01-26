@@ -49,7 +49,8 @@
                     str += `&${Object.keys(input)[0]}=${Object.values(input)[0]}`
                 })
 
-                console.log(this.shortenedModuleName, this.method, str)
+                console.log(str)
+
                 this.axios.get(`/search/${this.shortenedModuleName}?sortBy=${this.method}${str}`)
                     .then(res =>{
                         console.log(res)

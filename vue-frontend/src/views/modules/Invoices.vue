@@ -14,7 +14,7 @@
                 :method="sortMethod"/>
 
         <CreatePopUp v-if="showCreatePopUp"
-                     name="Fakturę"
+                     name="faktury"
                      moduleName="invoice"
                      :inputs="[{pl: 'Status', eng: 'status'}, {pl: 'Kontrahent', eng: 'contractor'}]"
                      @closePopUp="showCreatePopUp = false"/>
@@ -31,7 +31,7 @@
             <div class="list-container">
                 <transition-group name="list">
                     <List v-for="invoice in invoices"
-                          :fields="searchFor"
+                          :fields="fields"
                           :key="invoice._id"
                           moduleName="invoices"
                           :moduleObj="invoice"
@@ -75,8 +75,16 @@
 
                 showCreatePopUp: false,
 
-                searchFor: [
+                fields: [
                     {eng: 'contractor', pl: 'Kontrahent'},
+                    {eng: 'postDate', pl: 'Data Wystawienia'},
+                    {eng: 'status', pl: 'Status'},
+                    {eng: 'recordOwner', pl: 'Właściciel rek.'},
+                    {eng: 'signingPlace', pl: 'Miejsce Wystawienia'},
+                ],
+
+                searchFor: [
+                    {eng: 'name', pl: 'Kontrahent'},
                     {eng: 'postDate', pl: 'Data Wystawienia'},
                     {eng: 'status', pl: 'Status'},
                     {eng: 'recordOwner', pl: 'Właściciel rek.'},

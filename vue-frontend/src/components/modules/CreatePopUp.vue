@@ -6,9 +6,28 @@
 
         <transition name="t_before">
             <div class="before" v-if="!hide">
-                <h1>Dodaj nowy {{name}}</h1>
+                <h1>Dodawanie {{name}}</h1>
                 <p>Po dodaniu będzie istniała możliwość uzupełnienia reszty informacji</p>
-                <CustomInput :placeholder="input.pl" v-model="moduleData[input.eng]" v-for="input of inputs"/>
+
+                <CustomInput :placeholder="input.pl"
+                             v-if="moduleName !== 'invoice'"
+                             v-model="moduleData[input.eng]"
+                             v-for="input of inputs"
+                />
+
+                <Select v-model="moduleData[input.eng]"
+                        :fieldName=input.eng
+                        v-for="input of inputs"
+                        v-if="moduleName === 'invoice'"
+                        class="select"
+                        :contractors="searchedContractors"
+                />
+
+                <CustomInput placeholder="Wyszukaj Kontrahenta"
+                             v-if="moduleName === 'invoice'"
+                             @input.native="lookForContractor"
+                             v-model="contractorInput"/>
+
                 <button @click="addContact">Dodaj</button>
             </div>
         </transition>
@@ -26,6 +45,7 @@
 
 <script>
     import CustomInput from '../partials/CustomInput.vue'
+    import Select from '../partials/Select.vue'
     import {dictionary} from "../../assets/js/modules/contactsData";
     import translator from '../../assets/js/modules/translator'
 
@@ -33,24 +53,28 @@
         name: "CreatePopUp",
         props: ['name', 'inputs', 'moduleName'],
         components: {
-            CustomInput
+            CustomInput, Select
         },
         data(){
             return {
                 moduleData: {},
                 added: false,
                 hide: false,
-                id: ''
+                id: '',
+                contractorInput: '',
+                searchedContractors: null
             }
         },
-        methods:{
+        methods: {
             addContact(){
+
                 const obj = {}
-                this.inputs.forEach(field => {
+                this.inputs.forEach(field =>{
                     obj[field.eng] = this.moduleData[field.eng]
                 })
+                console.log(obj)
                 this.axios.post(`/${this.moduleName}`, obj)
-                    .then(res => {
+                    .then(res =>{
                         this.id = res.data._id
                         this.hide = true
                         setTimeout(() => this.added = true, 500)
@@ -60,6 +84,12 @@
             goToEdit(){
                 this.$router.push(`/${this.moduleName}s/update/` + this.id)
                 this.$emit('closePopUp')
+            },
+
+            lookForContractor(){
+                this.axios.get('/search/contractor?sortBy=a_ct&name=' + this.contractorInput)
+                    .then(res => this.searchedContractors = res.data.result)
+                    .catch(err => console.log(err))
             }
         }
     }
@@ -107,6 +137,10 @@
                 font-size: 13px;
                 color: #8a878c;
                 text-align: center;
+            }
+
+            select {
+                width: 100%;
             }
 
             button {
@@ -169,7 +203,6 @@
     .t_before-leave-to {
         opacity: 0;
     }
-
 
     .t_after-enter-active {
         opacity: 0;

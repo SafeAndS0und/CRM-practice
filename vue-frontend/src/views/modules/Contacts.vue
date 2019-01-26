@@ -14,7 +14,7 @@
                 :method="sortMethod"/>
 
         <CreatePopUp v-if="showCreatePopUp"
-                     name="kontakt"
+                     name="kontaktu"
                      moduleName="contact"
                      :inputs="[{pl: 'Imię', eng: 'firstname'}, {pl: 'Nazwisko', eng: 'surname'}]"
                      @closePopUp="showCreatePopUp = false"/>
