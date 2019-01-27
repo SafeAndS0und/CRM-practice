@@ -6,6 +6,9 @@ const productSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'invoice'
     },
+    description: {
+        type: String
+    },
     positionName: {
         type: String
     },
