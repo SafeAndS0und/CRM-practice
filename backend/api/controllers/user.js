@@ -211,3 +211,99 @@ exports.user_checkToken = (req, res, next) => {
         })
     }
 }
+
+exports.user_list = async (req, res, next) => {
+    const user = await User.findOne({_id: req.userData._id}).select('isAdmin')
+    if( ! user.isAdmin) return res.status(400).json({ msg: 'Nie masz uprawnień.' })
+
+    const usersList = await User.find({})
+    .select('-password')
+
+    return res.status(200).json({
+        usersList
+    })
+}
+
+exports.user_userData = async (req, res, next) => {
+    const userData = await User.findOne({_id: req.userData._id})
+    .select('-password')
+
+    return res.status(200).json({
+        userData
+    })
+}
+
+exports.user_updateNoAdmin = async (req, res, next) => {
+    const userData = await User.findOne({_id: req.userData._id})
+
+    const updatedUser = {
+        username: req.body.username ? req.body.username : '',
+        password: req.body.password ? await returnHashedPassword(req.body.password) : userData.password,
+        firstname: req.body.firstname ? req.body.firstname : '',
+        surname: req.body.surname ? req.body.surname : '',
+        birth: req.body.birth ? req.body.birth : '',
+        phone: req.body.phone ? req.body.phone : ''
+    }
+
+    await User.findOneAndUpdate({_id: req.userData._id}, updatedUser)
+
+    return res.status(200).json({
+        msg: 'Zaktualizowano dane'
+    })
+}
+
+exports.user_updateAdmin = async (req, res, next) => {
+    const userId = req.params.id
+    
+    if(!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(401).json({
+            msg: 'Brak lub niepoprawne id usera',
+        })
+    }
+
+    const userData = await User.findOne({_id: userId})
+
+    const updatedUser = {
+        username: req.body.username ? req.body.username : '',
+        password: req.body.password ? await returnHashedPassword(req.body.password) : userData.password,
+        firstname: req.body.firstname ? req.body.firstname : '',
+        surname: req.body.surname ? req.body.surname : '',
+        birth: req.body.birth ? req.body.birth : '',
+        phone: req.body.phone ? req.body.phone : ''
+    }
+
+    await User.findOneAndUpdate({_id: userId}, updatedUser)
+
+    return res.status(200).json({
+        msg: 'Zaktualizowano dane'
+    })
+}
+
+exports.user_delete = async (req, res, next) => {
+    const user = await User.findOne({_id: req.userData._id}).select('isAdmin')
+    if( ! user.isAdmin) return res.status(400).json({ msg: 'Nie masz uprawnień.' })
+    
+    const userId = req.params.id
+
+    if(!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(401).json({
+            msg: 'Brak lub niepoprawne id usera',
+        })
+    }
+
+    await User.findOneAndDelete({_id: userId})
+
+    return res.status(200).json({
+        msg: 'Usunięto użytkownika'
+    })
+}
+
+async function returnHashedPassword(password) {
+    const hashedPassword = await new Promise((resolve, reject) => {
+        bcrypt.hash(password, 12, function(err, hash) {
+            if (err) reject(err)
+            resolve(hash)
+        });
+    })
+    return hashedPassword
+}

@@ -20,7 +20,10 @@ const userSchema = mongoose.Schema({
         type: Boolean
     },
     birth: {
-        type: Date
+        type: String
+    },
+    phone: {
+        type: String
     }
 })
 
