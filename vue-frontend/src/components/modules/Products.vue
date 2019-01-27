@@ -165,7 +165,7 @@
 
                     p {
                         font-size: 13px;
-                        padding: 5px;
+                        padding: 6px;
                         background-color: #dcdcdc;
                         color: #49454b;
 
@@ -177,6 +177,10 @@
                         span {
                             font-size: 14px;
                             color: #131314;
+                        }
+
+                        &:nth-child(even){
+                            background-color: #e1e1e1;
                         }
                     }
 

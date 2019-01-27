@@ -1,7 +1,7 @@
 <template>
     <div class="dropdown">
-        <article class="profile">Profil</article>
-        <article class="options">Ustawienia</article>
+        <article class="profile" @click="$router.push('/profile')">Profil</article>
+        <article class="options" @click="$router.push('/admin/configuration')">Ustawienia</article>
         <article class="logout" @click="logout">Wyloguj się</article>
     </div>
 </template>
@@ -30,6 +30,7 @@
             height: 50px;
             text-align: center;
             line-height: 50px;
+            font-size: 15px;
             color: white;
             background-color: $blockBgC;
             width: 100%;

@@ -36,6 +36,18 @@ export default new Router({
         },
 
         {
+            path: '/profile',
+            component: () => import('./views/Profile.vue'),
+            beforeEnter: middlewares.isLogged,
+        },
+
+        {
+            path: '/admin/configuration',
+            component: () => import('./views/admin/Configuration.vue'),
+            beforeEnter: middlewares.isAdmin,
+        },
+
+        {
             name: 'contacts',
             path: '/contacts',
             component: () => import('./views/modules/Contacts.vue'),

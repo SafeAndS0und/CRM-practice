@@ -34,9 +34,9 @@
                    :blockData="blockData[3]"
                    class="block"/>
             <Block block-name="Informacje Finansowe"
-            @quickUpdate="updateData($event)"
-            :blockData="blockData[4]"
-            class="block"/>
+                   @quickUpdate="updateData($event)"
+                   :blockData="blockData[4]"
+                   class="block"/>
         </div>
 
         <div v-if="moduleName === 'invoices' && blockData">
@@ -85,7 +85,7 @@
     export default {
         name: "BlockList",
         components: {
-            Block,Products
+            Block, Products
         },
         data(){
             return {
@@ -94,7 +94,7 @@
                 moduleData: null,
                 blockData: null,
                 invoice_id: null,
-                products:null
+                products: null
             }
         },
         computed: {
@@ -132,8 +132,12 @@
             downloadData(){
                 this.axios.get(`/${this.shortenedModuleName}/${this.type}/` + this.$route.params.id)
                     .then(res =>{
-                        this.invoice_id = res.data.invoice._id
-                        this.products = res.data.invoice.products
+
+                        if(this.moduleName === 'invoices'){
+                            this.invoice_id = res.data.invoice._id
+                            this.products = res.data.invoice.products
+                        }
+
                         this.blockData = controller.assignValues(this.moduleData.dictionary, res.data[this.shortenedModuleName])
                     })
                     .catch(err => console.log(err))
