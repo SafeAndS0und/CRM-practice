@@ -242,7 +242,8 @@ exports.user_updateNoAdmin = async (req, res, next) => {
         firstname: req.body.firstname ? req.body.firstname : '',
         surname: req.body.surname ? req.body.surname : '',
         birth: req.body.birth ? req.body.birth : '',
-        phone: req.body.phone ? req.body.phone : ''
+        phone: req.body.phone ? req.body.phone : '',
+        email: req.body.email ? req.body.email : ''
     }
 
     await User.findOneAndUpdate({_id: req.userData._id}, updatedUser)
@@ -269,7 +270,8 @@ exports.user_updateAdmin = async (req, res, next) => {
         firstname: req.body.firstname ? req.body.firstname : '',
         surname: req.body.surname ? req.body.surname : '',
         birth: req.body.birth ? req.body.birth : '',
-        phone: req.body.phone ? req.body.phone : ''
+        phone: req.body.phone ? req.body.phone : '',
+        email: req.body.email ? req.body.email : ''
     }
 
     await User.findOneAndUpdate({_id: userId}, updatedUser)
