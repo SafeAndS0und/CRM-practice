@@ -26,6 +26,7 @@ exports.product_add = async (req, res, next) => {
     const newProduct = {
         _id: mongoose.Types.ObjectId(),
         invoice: invoice_id,
+        description: req.body.description ? req.body.description : '',
         positionName: req.body.positionName,
         amount: req.body.amount ? req.body.amount : '',
         unit: req.body.unit ? req.body.unit : '',
@@ -108,7 +109,7 @@ exports.product_delete = async (req, res, next) => {
             .findOne({_id: deletedProduct.invoice})
             .select('contractor')
 
-        await updateAccountingBalance(contractor_id.contractor)
+        await this.updateAccountingBalance(contractor_id.contractor)
         
         return res.status(200).json({
             msg: 'Usunięto produkt',
