@@ -17,7 +17,7 @@
         <div>
             <h3>Hasło</h3>
             <p v-if="!editing">**********</p>
-            <CustomInput v-model="userData['password']" v-if="editing"/>
+            <CustomInput  type=password v-model="userData['password']" v-if="editing"/>
         </div>
         <div>
             <h3>Email</h3>
@@ -31,8 +31,8 @@
         </div>
         <div>
             <h3>Data Urodzenia</h3>
-            <p v-if="!editing">{{userData['dateOfBirth']}}</p>
-            <CustomInput v-model="userData['dateOfBirth']" v-if="editing"/>
+            <p v-if="!editing">{{userData['birth']}}</p>
+            <CustomInput v-model="userData['birth']" v-if="editing"/>
         </div>
         <div>
             <h3>Rola admina</h3>
@@ -60,11 +60,17 @@
             }
         },
         created(){
-            this.userData
+            this.axios.get('/user')
+                .then(res => {
+                    this.userData = res.data.userData
+                })
+                .catch(err => console.log(err))
         },
         methods: {
             save(){
-                console.log(this.userData)
+                this.axios.put('/user', this.userData)
+                    .then(res => console.log(res))
+                    .catch(err => console.log(err))
                 this.editing = false
             }
         }
@@ -73,11 +79,12 @@
 
 <style scoped lang="scss">
     .profile{
-        margin-top: 120px;
-        padding: 10px;
+        padding-top: 120px;
+        height: 100vh;
         display: grid;
         justify-items: center;
-        background-color: #ebebeb;
+        grid-template-rows: repeat(auto-fill, 60px);
+        background-color: #f1f1f1;
 
         div {
             margin: auto;
@@ -117,8 +124,7 @@
             color: #4ba82f;
 
             &:hover{
-                background-color: #4ba82f;
-                color: white;
+                color: #367027;
             }
         }
 

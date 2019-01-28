@@ -270,13 +270,11 @@
     }
 
     .list-enter {
-        filter: blur(5px);
-        opacity: 0.5;
+        opacity: 0;
     }
 
     .list-leave-to {
-        filter: blur(6px);
-        opacity: 0.5;
+        opacity: 0;
     }
 
 
